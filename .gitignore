@@ -1,0 +1,15 @@
+*.exe
+*.dll
+*.pdb
+
+*.cache
+*.user
+*.suo
+
+bin
+obj
+
+/Build
+/ReleaseBuild
+
+/*.userprefs

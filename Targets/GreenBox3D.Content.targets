@@ -1,0 +1,187 @@
+<!-- 
+  Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+
+  This file is a proprietary part of GreenBox3D, disclosing the content
+  of this file without the owner consent may lead to legal actions
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Run after project build -->
+  <PropertyGroup>
+    <CoreBuildDependsOn>
+      BuildContentProjects;
+      $(CoreBuildDependsOn)
+    </CoreBuildDependsOn>
+
+    <CoreCleanDependsOn>
+      CleanContentProjects;
+      $(CoreCleanDependsOn)
+    </CoreCleanDependsOn>
+  </PropertyGroup>
+  
+  <!-- Get content reference list -->
+  <Target Name="_GetContentReferenceList">
+	<ItemGroup>
+	  <ContentReference Include="@(ProjectReference)" Condition="'%(ProjectReference.ReferenceType)' == 'Content'" />
+      <_MSBuildContentProjectExistent Include="@(ContentReference)" Condition="Exists('%(Identity)')" />
+      <_MSBuildContentProjectReferenceNonexistent Include="@(ContentReference)" Condition="!Exists('%(Identity)')" />
+	</ItemGroup>
+  </Target>
+  
+  <!-- Remove them from the default reference list -->
+  <PropertyGroup>
+    <BeforeAssignProjectConfigurationDependsOn>
+      _GetContentReferenceList
+    </BeforeAssignProjectConfigurationDependsOn>
+  </PropertyGroup>
+  
+  <Target
+    Name="BeforeAssignProjectConfiguration" 
+    DependsOnTargets="$(BeforeAssignProjectConfigurationDependsOn)"
+    BeforeTargets="AssignProjectConfiguration">
+
+    <ItemGroup>
+      <ProjectReference Remove="@(ContentReference)" />
+    </ItemGroup>
+  </Target>
+  
+  <!-- Set out output directory -->
+  <Target Name="SetParentOutputDir">
+    <CreateProperty Value="$(TargetDir)">
+      <Output TaskParameter="Value" PropertyName="ParentOutputDir"/>
+    </CreateProperty>
+    <CreateProperty Value="$(MSBuildProjectDirectory)\$(IntermediateOutputPath)">
+      <Output TaskParameter="Value" PropertyName="ParentIntermediateDir"/>
+    </CreateProperty>
+  </Target>
+  
+  <!-- Build the projects -->
+  <PropertyGroup>
+    <BuildContentProjectsDependsOn>
+      PrepareForBuild;
+      _GetContentReferenceList;
+      SetParentOutputDir
+    </BuildContentProjectsDependsOn>
+  </PropertyGroup>
+  
+  <Target
+    Name="BuildContentProjects"
+    DependsOnTargets="$(BuildContentProjectsDependsOn)"
+    Condition="'$(SkipNestedContentBuild)'!='true'" >
+	<MSBuild
+      Projects="@(_MSBuildContentProjectExistent)"
+      BuildInParallel="true"
+      Targets="$(ContentProjectBuildTargets)"
+      Properties="Configuration=$(Configuration); Platform=$(Platform); ParentOutputDir=$(ParentOutputDir); ParentIntermediateDir=$(ParentIntermediateDir); ParentProjectDir=$(ProjectDir)"
+      Condition="'@(_MSBuildContentProjectExistent)'!=''">
+
+      <Output TaskParameter="TargetOutputs" ItemName="_BuiltNestedContentFiles"/>
+    </MSBuild>
+  </Target>
+  
+  <!-- Clean the projects -->
+  <PropertyGroup>
+    <CleanContentProjectsDependsOn>
+      _GetContentReferenceList;
+      SetParentOutputDir
+    </CleanContentProjectsDependsOn>
+  </PropertyGroup>
+  
+  <Target
+    Name="CleanContentProjects"
+    DependsOnTargets="$(CleanContentProjectsDependsOn)">
+
+    <MSBuild
+      Projects="@(_MSBuildContentProjectExistent)"
+      Targets="Clean"
+      Properties="Configuration=$(Configuration); Platform=$(Platform); ParentOutputDir=$(ParentOutputDir); ParentIntermediateDir=$(ParentIntermediateDir)"
+      Condition="'@(_MSBuildContentProjectExistent)'!=''" />
+  </Target>
+  
+  <!-- Copy content -->
+  <PropertyGroup>
+    <GetCopyToOutputDirectoryItemsDependsOn>
+      $(GetCopyToOutputDirectoryItemsDependsOn);
+      GetCopyToOutputDirectoryContentProjectItems
+    </GetCopyToOutputDirectoryItemsDependsOn>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <GetCopyToOutputDirectoryContentProjectItemsDependsOn>
+      _GetContentReferenceList;
+      SetParentOutputDir
+    </GetCopyToOutputDirectoryContentProjectItemsDependsOn>
+  </PropertyGroup>
+
+  <Target
+    Name="GetCopyToOutputDirectoryContentProjectItems"
+    DependsOnTargets="$(GetCopyToOutputDirectoryContentProjectItemsDependsOn)">
+	
+    <MSBuild
+      Projects="@(_MSBuildContentProjectExistent)"
+      Targets="GetCopyToOutputDirectoryItems"
+      Properties="Configuration=$(Configuration); Platform=$(Platform); ParentOutputDir=$(ParentOutputDir); ParentIntermediateDir=$(ParentIntermediateDir)"
+      Condition="'@(_MSBuildContentProjectExistent)'!=''">
+
+      <Output TaskParameter="TargetOutputs" ItemName="_AllNestedContentProjectItemsWithTargetPath"/>
+    </MSBuild>
+	
+	<Warning Text="@(_AllNestedContentProjectItemsWithTargetPath)" />
+
+    <CreateItem
+      Include="@(_AllNestedContentProjectItemsWithTargetPath->'%(FullPath)')"
+      Condition="'%(_AllNestedContentProjectItemsWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_AllNestedContentProjectItemsWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"
+                >
+      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
+      <Output TaskParameter="Include" ItemName="_NestedContentItemsToCopyToOutputDirectoryAlways"
+              Condition="'%(_AllNestedContentProjectItemsWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
+      <Output TaskParameter="Include" ItemName="_NestedContentItemsToCopyToOutputDirectory"
+              Condition="'%(_AllNestedContentProjectItemsWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
+    </CreateItem>
+  </Target>
+
+  <Target
+      Name="_CopySourceItemsToOutputDirectory"
+      DependsOnTargets="
+            GetCopyToOutputDirectoryItems;
+            _CopyOutOfDateSourceItemsToOutputDirectory;
+            _CopyOutOfDateSourceItemsToOutputDirectoryAlways;
+            GetCopyToOutputDirectoryContentProjectItems;
+            _CopyOutOfDateNestedContentItemsToOutputDirectory;
+            _CopyOutOfDateNestedContentItemsToOutputDirectoryAlways;" />
+
+  <Target
+      Name="_CopyOutOfDateNestedContentItemsToOutputDirectory"
+      Condition=" '@(_NestedContentItemsToCopyToOutputDirectory)' != '' "
+      Inputs="@(_NestedContentItemsToCopyToOutputDirectory)"
+      Outputs="@(_NestedContentItemsToCopyToOutputDirectory->'$(OutDir)%(TargetPath)')">
+
+    <Copy
+        SourceFiles = "@(_NestedContentItemsToCopyToOutputDirectory)"
+        DestinationFiles = "@(_NestedContentItemsToCopyToOutputDirectory->'$(OutDir)%(TargetPath)')">
+
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+    </Copy>
+  </Target>
+
+  <Target
+      Name="_CopyOutOfDateNestedContentItemsToOutputDirectoryAlways"
+      Condition=" '@(_NestedContentItemsToCopyToOutputDirectoryAlways)' != '' ">
+	  
+    <Copy
+        SourceFiles = "@(_NestedContentItemsToCopyToOutputDirectoryAlways)"
+        DestinationFiles = "@(_NestedContentItemsToCopyToOutputDirectoryAlways->'$(OutDir)%(TargetPath)')">
+
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+    </Copy>
+  </Target>
+  
+  <PropertyGroup>
+    <GenerateManifestsDependsOn>
+      _GetContentRefferences;
+      _CopySourceItemsToOutputDirectory;
+      ReadContentCacheFile;
+      $(GenerateManifestsDependsOn)
+    </GenerateManifestsDependsOn>
+  </PropertyGroup>
+</Project>

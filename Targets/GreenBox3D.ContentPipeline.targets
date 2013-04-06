@@ -1,0 +1,253 @@
+<!-- 
+  Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+
+  This file is a proprietary part of GreenBox3D, disclosing the content
+  of this file without the owner consent may lead to legal actions
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(GB3DDevToolsPath)|$(Configuration)' == '|Debug'">
+    <GB3DDevToolsPath>..\..\Build\</GB3DDevToolsPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(GB3DDevToolsPath)|$(Configuration)' == '|Release'">
+    <GB3DDevToolsPath>..\..\ReleaseBuild\</GB3DDevToolsPath>
+  </PropertyGroup>
+  
+  <UsingTask TaskName="BuildContent" AssemblyFile="$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll" />
+  <UsingTask TaskName="CleanContent" AssemblyFile="$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll" />
+  <UsingTask TaskName="GetLastBuiltFiles" AssemblyFile="$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll" />
+
+  <!-- Check DevTools presence -->
+  <Target Name="_CheckGB3DDevTools">    
+    <Error Condition="Exists('$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll')" Text="GreenBox3D Developer Tools are missing or not correctly installed" />
+  </Target>
+  
+  <!-- Create file list -->
+  <Target 
+    Name="_BuildContentLists" 
+    Condition="'$(BuildingProject)'=='true'">
+
+    <CreateItem Include="@(Compile)">
+      <Output ItemName="PipelineContent" TaskParameter="Include"/>
+    </CreateItem>
+  </Target>
+
+  <!-- MSBuild targets -->
+  <Target
+    Name="CreateManifestResourceNames"
+    Condition="false"
+    DependsOnTargets="$(CreateManifestResourceNamesDependsOn)"/>
+
+  <!-- Build -->
+  <Target 
+    Name="CoreCompile"
+    DependsOnTargets="$(CoreCompileDependsOn);_CheckGB3DDevTools" 
+    Condition="'$(BuildingProject)'=='true'">
+
+    <PropertyGroup Condition="'$(Target)'=='Rebuild'">
+      <RebuildAll>True</RebuildAll>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Target)'!='Rebuild'">
+      <RebuildAll>False</RebuildAll>
+    </PropertyGroup>
+
+    <BuildContent
+      BuildConfiguration="$(Configuration)"
+      IntermediateDirectory="$(ProjectDir)$(IntermediateOutputPath)"
+      OutputDirectory="$(ParentOutputDir)$(ContentRootDirectory)"
+      PipelineAssemblies="@(ReferencePath)"
+      PipelineAssemblyDependencies="@(ReferenceDependencyPaths)"
+      RootDirectory="$(ProjectDir)"
+      SourceAssets="@(PipelineContent)"
+      RebuildAll="$(RebuildAll)">
+      <Output ItemName="PipelineOutputContentFiles" TaskParameter="OutputContentFiles"/>
+    </BuildContent>
+    
+    <!-- Cache -->
+    <AssignTargetPath
+      Files="@(PipelineOutputContentFiles)"
+      RootFolder="$(ProjectDir)">
+      <Output TaskParameter="AssignedFiles" ItemName="_OutputCacheFilesWithTargetPath"/>
+    </AssignTargetPath>
+
+    <CreateItem
+      Include="@(ContentWithTargetPath->'%(FullPath)')"
+      Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(ContentWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'">
+      <Output TaskParameter="Include" ItemName="_PipelineOutputCacheFilesWithTargetPath"/>
+    </CreateItem>
+
+    <CreateItem
+      Include="@(Compile->'%(FullPath)')"
+      Condition="'%(Compile.CopyToOutputDirectory)'=='Always' or '%(Compile.CopyToOutputDirectory)'=='PreserveNewest'">
+      <Output TaskParameter="Include" ItemName="_CacheCompileItemsToCopy"/>
+    </CreateItem>
+    
+    <AssignTargetPath Files="@(_CacheCompileItemsToCopy)" RootFolder="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="AssignedFiles" ItemName="_CacheCompileItemsToCopyWithTargetPathTemp" />
+    </AssignTargetPath>
+    
+    <CreateItem
+      Include="@(_CacheCompileItemsToCopyWithTargetPathTemp)"
+      AdditionalMetadata="TargetPath=$(ContentRootDirectoryDir)%(_CacheCompileItemsToCopyWithTargetPathTemp.TargetPath)">
+      <Output TaskParameter="Include" ItemName="_CacheCompileItemsToCopyWithTargetPath"/>
+    </CreateItem>
+
+    <CreateItem Include="@(_CacheCompileItemsToCopyWithTargetPath)">
+      <Output TaskParameter="Include" ItemName="_PipelineOutputCacheFilesWithTargetPath"/>
+    </CreateItem>
+
+    <CreateItem
+        Include="@(_NoneWithTargetPath->'%(FullPath)')"
+        Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_NoneWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'">
+      <Output TaskParameter="Include" ItemName="_PipelineOutputCacheFilesWithTargetPath"/>
+    </CreateItem>
+
+    <WriteLinesToFile
+      File="$(ParentIntermediateDir)cachefile-$(ProjectGuid)-targetpath.txt"
+      Lines="@(_PipelineOutputCacheFilesWithTargetPath->'%(TargetPath)')"
+      Overwrite="true" />
+  </Target>
+  
+  <!-- Clean -->
+  <Target Name="ContentClean" DependsOnTargets="_CheckGB3DDevTools">
+  
+  </Target>
+  
+  <!-- Get Built Files -->
+  <Target Name="GetBuiltContentWithTargetPaths" Outputs="@(BuiltContentWithTargetPaths)">
+    <!--<GetLastOutputs
+      IntermediateDirectory="$(ProjectDir)$(IntermediateOutputPath)">
+      <Output TaskParameter="OutputContentFiles" ItemName="LastBuiltContentFiles" />
+    </GetLastOutputs>-->
+
+    <CreateItem
+      Include="@(PipelineContent)"
+      AdditionalMetadata="CopyToOutputDirectory=PreserveNewest">
+      <Output TaskParameter="Include" ItemName="LastBuiltContentFilesPreserveNewest"/>
+    </CreateItem>
+    
+    <AssignTargetPath
+      Files="@(LastBuiltContentFilesPreserveNewest)"
+      RootFolder="$(ParentOutputDir)">
+      <Output TaskParameter="AssignedFiles" ItemName="BuiltContentWithTargetPaths" />
+    </AssignTargetPath>
+  </Target>
+  
+  <!-- Target Paths -->
+  <Target Name="AssignTargetPaths">
+    <AssignTargetPath Files="@(Content)" RootFolder="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="AssignedFiles" ItemName="ContentWithTargetPathTemp" />
+    </AssignTargetPath>
+
+    <CreateItem
+      Include="@(ContentWithTargetPathTemp)"
+      AdditionalMetadata="TargetPath=$(ContentRootDirectoryDir)%(ContentWithTargetPathTemp.TargetPath)">
+      <Output TaskParameter="Include" ItemName="ContentWithTargetPath"/>
+    </CreateItem>
+
+    <AssignTargetPath Files="@(None)" RootFolder="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="AssignedFiles" ItemName="_NoneWithTargetPathTemp" />
+    </AssignTargetPath>
+
+    <CreateItem
+      Include="@(_NoneWithTargetPathTemp)"
+      AdditionalMetadata="TargetPath=$(ContentRootDirectoryDir)%(_NoneWithTargetPathTemp.TargetPath)">
+      <Output TaskParameter="Include" ItemName="_NoneWithTargetPath"/>
+    </CreateItem>
+  </Target>
+  
+  <!-- Microsoft.Common.targets must be imported before it overrides -->
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+
+  <PropertyGroup>
+    <!-- This is normally specified by the parent code project, but we'll define it when content is being built stand-alone. -->
+    <ParentOutputDir Condition="'$(ParentOutputDir)'==''">$(TargetDir)</ParentOutputDir>
+
+    <!-- Have our content build run when the user builds the project. -->
+    <CoreCompileDependsOn>_BuildContentLists</CoreCompileDependsOn>
+
+    <!-- Have our clean targets run when the user cleans the project (also invoked by Rebuild). -->
+    <CleanDependsOn>
+      ContentClean;
+      $(CleanDependsOn)
+    </CleanDependsOn>
+
+    <ContentRootDirectory Condition="'$(ContentRootDirectory)' == ''">$(ProjectName)</ContentRootDirectory>
+    <ContentRootDirectoryDir Condition="'$(ContentRootDirectoryDir)' == '' and '$(ContentRootDirectory)' != '.'">$(ContentRootDirectory)</ContentRootDirectoryDir>
+    <ContentRootDirectoryDir Condition="'$(ContentRootDirectoryDir)' != '' and !HasTrailingSlash('$(ContentRootDirectoryDir)')">$(ContentRootDirectory)\</ContentRootDirectoryDir>
+  </PropertyGroup>
+  
+  <!-- Get Ouput Files -->
+  <PropertyGroup>
+    <GetCopyToOutputDirectoryItemsDependsOn>
+      GetBuiltContentWithTargetPaths;
+      AssignTargetPaths
+    </GetCopyToOutputDirectoryItemsDependsOn>
+  </PropertyGroup>
+
+  <Target
+      Name="GetCopyToOutputDirectoryItems"
+      Outputs="@(AllItemsFullPathWithTargetPath)"
+      DependsOnTargets="$(GetCopyToOutputDirectoryItemsDependsOn)">
+
+    <CreateItem
+        Include="@(BuiltContentWithTargetPaths->'%(FullPath)')"
+        Condition="'%(BuiltContentWithTargetPaths.CopyToOutputDirectory)'=='Always' or '%(BuiltContentWithTargetPaths.CopyToOutputDirectory)'=='PreserveNewest'"
+                >
+      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
+              Condition="'%(BuiltContentWithTargetPaths.CopyToOutputDirectory)'=='Always'"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
+              Condition="'%(BuiltContentWithTargetPaths.CopyToOutputDirectory)'=='PreserveNewest'"/>
+    </CreateItem>
+
+    <!-- Get source items from this project. -->
+    <CreateItem
+        Include="@(ContentWithTargetPath->'%(FullPath)')"
+        Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(ContentWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"
+                >
+      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
+              Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
+              Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
+    </CreateItem>
+
+    <CreateItem
+        Include="@(Compile->'%(FullPath)')"
+        Condition="'%(Compile.CopyToOutputDirectory)'=='Always' or '%(Compile.CopyToOutputDirectory)'=='PreserveNewest'">
+      <Output TaskParameter="Include" ItemName="_CompileItemsToCopy"/>
+    </CreateItem>
+    <AssignTargetPath Files="@(_CompileItemsToCopy)" RootFolder="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="AssignedFiles" ItemName="_CompileItemsToCopyWithTargetPathTemp" />
+    </AssignTargetPath>
+    <CreateItem
+      Include="@(_CompileItemsToCopyWithTargetPathTemp)"
+      AdditionalMetadata="TargetPath=$(ContentRootDirectoryDir)%(_CompileItemsToCopyWithTargetPathTemp.TargetPath)">
+      <Output TaskParameter="Include" ItemName="_CompileItemsToCopyWithTargetPath"/>
+    </CreateItem>
+    <CreateItem Include="@(_CompileItemsToCopyWithTargetPath)">
+      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
+              Condition="'%(_CompileItemsToCopyWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
+              Condition="'%(_CompileItemsToCopyWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
+    </CreateItem>
+
+    <CreateItem
+        Include="@(_NoneWithTargetPath->'%(FullPath)')"
+        Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_NoneWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"
+                >
+      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
+              Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
+              Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
+    </CreateItem>
+  </Target>
+  
+  <!-- The parent project should do this -->
+  <Target Name="CopyFilesToOutputDirectory" />
+</Project>

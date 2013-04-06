@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenBox3D", "GreenBox3D\GreenBox3D.csproj", "{33B775DD-55E6-402D-BA64-49078EDBC11A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenBox3D.ContentPipeline", "GreenBox3D.ContentPipeline\GreenBox3D.ContentPipeline.csproj", "{3BD45E60-D6E2-41AF-9F7B-9033F702D1F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenBox3D.ContentPipeline.Task", "GreenBox3D.ContentPipeline.Task\GreenBox3D.ContentPipeline.Task.csproj", "{DA3DDFD3-A95F-4A51-9B96-1C63DEF5D6D1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platform", "Platform", "{8842518A-82FB-4834-A867-AE0F88B170EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenBox3D.Platform.Windows", "Platform\GreenBox3D.Platform.Windows\GreenBox3D.Platform.Windows.csproj", "{CA17FAA1-57B4-4A07-92D1-F928B5731535}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{33B775DD-55E6-402D-BA64-49078EDBC11A}.Debug|x86.ActiveCfg = Debug|x86
+		{33B775DD-55E6-402D-BA64-49078EDBC11A}.Debug|x86.Build.0 = Debug|x86
+		{33B775DD-55E6-402D-BA64-49078EDBC11A}.Release|x86.ActiveCfg = Release|x86
+		{33B775DD-55E6-402D-BA64-49078EDBC11A}.Release|x86.Build.0 = Release|x86
+		{3BD45E60-D6E2-41AF-9F7B-9033F702D1F9}.Debug|x86.ActiveCfg = Debug|x86
+		{3BD45E60-D6E2-41AF-9F7B-9033F702D1F9}.Debug|x86.Build.0 = Debug|x86
+		{3BD45E60-D6E2-41AF-9F7B-9033F702D1F9}.Release|x86.ActiveCfg = Release|x86
+		{3BD45E60-D6E2-41AF-9F7B-9033F702D1F9}.Release|x86.Build.0 = Release|x86
+		{CA17FAA1-57B4-4A07-92D1-F928B5731535}.Debug|x86.ActiveCfg = Debug|x86
+		{CA17FAA1-57B4-4A07-92D1-F928B5731535}.Debug|x86.Build.0 = Debug|x86
+		{CA17FAA1-57B4-4A07-92D1-F928B5731535}.Release|x86.ActiveCfg = Release|x86
+		{CA17FAA1-57B4-4A07-92D1-F928B5731535}.Release|x86.Build.0 = Release|x86
+		{DA3DDFD3-A95F-4A51-9B96-1C63DEF5D6D1}.Debug|x86.ActiveCfg = Debug|x86
+		{DA3DDFD3-A95F-4A51-9B96-1C63DEF5D6D1}.Debug|x86.Build.0 = Debug|x86
+		{DA3DDFD3-A95F-4A51-9B96-1C63DEF5D6D1}.Release|x86.ActiveCfg = Release|x86
+		{DA3DDFD3-A95F-4A51-9B96-1C63DEF5D6D1}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CA17FAA1-57B4-4A07-92D1-F928B5731535} = {8842518A-82FB-4834-A867-AE0F88B170EE}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = GreenBox3D\GreenBox3D.csproj
+	EndGlobalSection
+EndGlobal

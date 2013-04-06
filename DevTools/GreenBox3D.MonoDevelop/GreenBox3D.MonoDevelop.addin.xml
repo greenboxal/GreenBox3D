@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Addin namespace   = "GreenBox3D.MonoDevelop"
+       id          = "GreenBox3D"
+       name        = "GreenBox3D"
+       author      = "The GreenBox Development LLC"
+       copyright   = "Copyright (c) 2013 The GreenBox Development LLC"
+       url         = "http://www.greenboxdev.com"
+       description = "Provides integration with GreenBox3D."
+       category    = "IDE Extensions"
+       version     = "1.0">
+	
+	<Dependencies>
+		<Addin id="::MonoDevelop.Ide" version="4.0" />
+	</Dependencies>
+</Addin>  

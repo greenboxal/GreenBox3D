@@ -1,0 +1,6 @@
+<WorkspaceItem ctype="Workspace">
+  <Items>
+    <Item>Engine\Engine.sln</Item>
+    <Item>Plugins\Plugins.sln</Item>
+  </Items>
+</WorkspaceItem>

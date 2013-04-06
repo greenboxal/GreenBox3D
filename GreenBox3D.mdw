@@ -1,0 +1,7 @@
+<WorkspaceItem ctype="Workspace">
+  <Items>
+    <Item>Source\Source.mdw</Item>
+    <Item>Test\Test.mdw</Item>
+    <Item>DevTools\DevTools.sln</Item>
+  </Items>
+</WorkspaceItem>

@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{33B775DD-55E6-402D-BA64-49078EDBC11A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GreenBox3D</RootNamespace>
+    <AssemblyName>GreenBox3D</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\..\Build\$(Configuration)\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>..\..\..\Build\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConfigurationProvider.cs" />
+    <Compile Include="ConsoleManager.cs" />
+    <Compile Include="Content\ContentCachePolicy.cs" />
+    <Compile Include="Content\ContentHeader.cs" />
+    <Compile Include="Content\ContentManager.cs" />
+    <Compile Include="Content\ContentReader.cs" />
+    <Compile Include="Content\ContentTypeReader.cs" />
+    <Compile Include="Content\ContentTypeReaderAttribute.cs" />
+    <Compile Include="Content\DefaultRuntimeContentLoader.cs" />
+    <Compile Include="Content\FileManager.cs" />
+    <Compile Include="Content\FolderFileLoader.cs" />
+    <Compile Include="Content\IContentTypeReader.cs" />
+    <Compile Include="Content\IFileLoader.cs" />
+    <Compile Include="Content\IRuntimeContentLoader.cs" />
+    <Compile Include="Content\Loaders\ShaderLoader.cs" />
+    <Compile Include="Content\Loaders\Texture2DLoader.cs" />
+    <Compile Include="CVar.cs" />
+    <Compile Include="DefaultLogger.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="GameTime.cs" />
+    <Compile Include="Graphics\BufferManager.cs" />
+    <Compile Include="Graphics\Detail\CompiledInputVariable.cs" />
+    <Compile Include="Graphics\Detail\CompiledInputVariableCollection.cs" />
+    <Compile Include="Graphics\Detail\CompiledPass.cs" />
+    <Compile Include="Graphics\Detail\CompiledPassCollection.cs" />
+    <Compile Include="Graphics\Detail\CompiledShader.cs" />
+    <Compile Include="Graphics\Detail\CompiledShaderCollection.cs" />
+    <Compile Include="Graphics\Detail\CompiledVariable.cs" />
+    <Compile Include="Graphics\Detail\CompiledVariableCollection.cs" />
+    <Compile Include="Graphics\Detail\ShaderType.cs" />
+    <Compile Include="Graphics\ITexture.cs" />
+    <Compile Include="Graphics\ITexture2D.cs" />
+    <Compile Include="Graphics\IVertexBuffer.cs" />
+    <Compile Include="Graphics\Enums\BufferUsage.cs" />
+    <Compile Include="Graphics\Enums\ClearOptions.cs" />
+    <Compile Include="Graphics\Enums\DepthFormat.cs" />
+    <Compile Include="Graphics\IHardwareBuffer.cs" />
+    <Compile Include="Graphics\IIndexBuffer.cs" />
+    <Compile Include="Graphics\Enums\EffectParameterClass.cs" />
+    <Compile Include="Graphics\Enums\EffectParameterType.cs" />
+    <Compile Include="Graphics\GraphicsDevice.cs" />
+    <Compile Include="Graphics\GraphicsResource.cs" />
+    <Compile Include="Graphics\TextureCollection.cs" />
+    <Compile Include="Graphics\IGraphicsDeviceManager.cs" />
+    <Compile Include="Graphics\Enums\IndexElementSize.cs" />
+    <Compile Include="Graphics\IGraphicsResource.cs" />
+    <Compile Include="Graphics\IVertexType.cs" />
+    <Compile Include="Graphics\VertexDeclaration.cs" />
+    <Compile Include="Graphics\VertexElement.cs" />
+    <Compile Include="Graphics\VertexElementFormat.cs" />
+    <Compile Include="Graphics\VertexElementUsage.cs" />
+    <Compile Include="Graphics\VertexPositionNormalColor.cs" />
+    <Compile Include="IConsoleCommand.cs" />
+    <Compile Include="IConsoleSink.cs" />
+    <Compile Include="Input\IKeyboard.cs" />
+    <Compile Include="Input\IMouse.cs" />
+    <Compile Include="Input\Keyboard.cs" />
+    <Compile Include="Input\KeyboardState.cs" />
+    <Compile Include="Input\KeyModifiers.cs" />
+    <Compile Include="Input\Keys.cs" />
+    <Compile Include="Graphics\PresentationParameters.cs" />
+    <Compile Include="Graphics\Enums\PrimitiveType.cs" />
+    <Compile Include="Graphics\Enums\RenderTargetUsage.cs" />
+    <Compile Include="Graphics\Enums\SurfaceFormat.cs" />
+    <Compile Include="Graphics\Viewport.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="ILogRouter.cs" />
+    <Compile Include="Input\ButtonState.cs" />
+    <Compile Include="Input\IInputManager.cs" />
+    <Compile Include="Input\IKeyboardFilter.cs" />
+    <Compile Include="Input\IMouseFilter.cs" />
+    <Compile Include="Input\KeyState.cs" />
+    <Compile Include="Input\Mouse.cs" />
+    <Compile Include="Input\MouseButton.cs" />
+    <Compile Include="Input\MouseState.cs" />
+    <Compile Include="IServiceManager.cs" />
+    <Compile Include="LogLevel.cs" />
+    <Compile Include="LogManager.cs" />
+    <Compile Include="Math\BezierCurve.cs" />
+    <Compile Include="Math\BezierCurveCubic.cs" />
+    <Compile Include="Math\BezierCurveQuadric.cs" />
+    <Compile Include="Math\Box2.cs" />
+    <Compile Include="Math\Color.cs" />
+    <Compile Include="Math\Functions.cs" />
+    <Compile Include="Math\Half.cs" />
+    <Compile Include="Math\MathHelper.cs" />
+    <Compile Include="Math\Matrix3d.cs" />
+    <Compile Include="Math\Matrix4.cs" />
+    <Compile Include="Math\Matrix4d.cs" />
+    <Compile Include="Math\Point.cs" />
+    <Compile Include="Math\Quaternion.cs" />
+    <Compile Include="Math\Quaterniond.cs" />
+    <Compile Include="Math\Rectangle.cs" />
+    <Compile Include="Math\Size.cs" />
+    <Compile Include="Math\Vector2.cs" />
+    <Compile Include="Math\Vector2d.cs" />
+    <Compile Include="Math\Vector2h.cs" />
+    <Compile Include="Math\Vector3.cs" />
+    <Compile Include="Math\Vector3d.cs" />
+    <Compile Include="Math\Vector3h.cs" />
+    <Compile Include="Math\Vector4.cs" />
+    <Compile Include="Math\Vector4d.cs" />
+    <Compile Include="Math\Vector4h.cs" />
+    <Compile Include="Platform\GamePlatform.cs" />
+    <Compile Include="Platform\GamePlatformAttribute.cs" />
+    <Compile Include="Platform\IGameWindow.cs" />
+    <Compile Include="Platform\IPlatformController.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\ContentCrc32.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Graphics\Effects\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

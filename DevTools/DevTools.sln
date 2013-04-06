@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenBox3D.MonoDevelop", "GreenBox3D.MonoDevelop\GreenBox3D.MonoDevelop.csproj", "{94E87422-353C-47C8-A8C2-52C062EE9581}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94E87422-353C-47C8-A8C2-52C062EE9581}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94E87422-353C-47C8-A8C2-52C062EE9581}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94E87422-353C-47C8-A8C2-52C062EE9581}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94E87422-353C-47C8-A8C2-52C062EE9581}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = GreenBox3D.MonoDevelop\GreenBox3D.MonoDevelop.csproj
+	EndGlobalSection
+EndGlobal

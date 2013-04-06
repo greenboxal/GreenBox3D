@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{3BD45E60-D6E2-41AF-9F7B-9033F702D1F9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GreenBox3D.ContentPipeline</RootNamespace>
+    <AssemblyName>GreenBox3D.ContentPipeline</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <RestorePackages>true</RestorePackages>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\..\Build\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>..\..\..\Build\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes.cs" />
+    <Compile Include="CompilerServices\BuildCache.cs" />
+    <Compile Include="CompilerServices\BuildCacheEntry.cs" />
+    <Compile Include="CompilerServices\BuildCoordinator.cs" />
+    <Compile Include="CompilerServices\BuildCoordinatorSettings.cs" />
+    <Compile Include="CompilerServices\BuildParameters.cs" />
+    <Compile Include="CompilerServices\ILoggerHelper.cs" />
+    <Compile Include="ContentImporter.cs" />
+    <Compile Include="ContentImporterContext.cs" />
+    <Compile Include="ContentProcessor.cs" />
+    <Compile Include="ContentProcessorContext.cs" />
+    <Compile Include="ContentTypeWriter.cs" />
+    <Compile Include="Graphics\CompiledShaderUtils.cs" />
+    <Compile Include="Graphics\Shading\Ast\CompilationUnit.cs" />
+    <Compile Include="Graphics\Shading\Ast\InputVariable.cs" />
+    <Compile Include="Graphics\Shading\Ast\InputVariableCollection.cs" />
+    <Compile Include="Graphics\Shading\Ast\Pass.cs" />
+    <Compile Include="Graphics\Shading\Ast\PassCollection.cs" />
+    <Compile Include="Graphics\Shading\Ast\Shader.cs" />
+    <Compile Include="Graphics\Shading\Ast\Variable.cs" />
+    <Compile Include="Graphics\Shading\Ast\VariableCollection.cs" />
+    <Compile Include="Graphics\Shading\Parser.cs" />
+    <Compile Include="Graphics\Shading\Scanner.cs" />
+    <Compile Include="Graphics\Shading\ShaderCompiler.cs" />
+    <Compile Include="Graphics\Shading\Token.cs" />
+    <Compile Include="Graphics\Shading\TokenType.cs" />
+    <Compile Include="IContentImporter.cs" />
+    <Compile Include="IContentProcessor.cs" />
+    <Compile Include="IContentTypeWriter.cs" />
+    <Compile Include="Importers\ShaderImporter.cs" />
+    <Compile Include="Processors\ShaderProcessor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Writers\ContentWriter.cs" />
+    <Compile Include="Writers\ShaderTypeWriter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GreenBox3D\GreenBox3D.csproj">
+      <Project>{33B775DD-55E6-402D-BA64-49078EDBC11A}</Project>
+      <Name>GreenBox3D</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
