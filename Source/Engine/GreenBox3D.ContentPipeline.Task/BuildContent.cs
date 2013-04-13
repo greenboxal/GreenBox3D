@@ -13,11 +13,8 @@ using GreenBox3D.ContentPipeline.CompilerServices;
 
 namespace GreenBox3D.ContentPipeline.Task
 {
-    [LoadInSeparateAppDomain]
-    public class BuildContent : AppDomainIsolatedTask
+    public class BuildContent : Microsoft.Build.Utilities.Task
     {
-        private ITaskItem[] _outputFiles;
-
         [Required]
         public ITaskItem[] SourceAssets { get; set; }
 
@@ -32,41 +29,31 @@ namespace GreenBox3D.ContentPipeline.Task
 
         public string OutputDirectory { get; set; }
 
-        public bool RebuildAll { get; set; }
-
-        [Output]
-        public ITaskItem[] OutputContentFiles { get { return _outputFiles; } }
-
         public string RootDirectory { get; set; }
 
         public override bool Execute()
         {
             // We use this isolation to permit developers to rebuild their pipeline libraries without getting locked by MSBuild AppDomain
-            //using (IsolationAppDomain isolation = new IsolationAppDomain())
-            //{
-            IsolationProxy proxy = new IsolationProxy();// isolation.CreateProxy<IsolationProxy>();
-
-                BuildCoordinatorSettings settings = new BuildCoordinatorSettings()
-                {
-                    BuildConfiguration = BuildConfiguration,
-                    IntermediateDirectory = IntermediateDirectory,
-                    OutputDirectory = OutputDirectory,
-                    BasePath = RootDirectory,
-                    RebuildAll = RebuildAll
-                };
-
-                return proxy.Execute(Log, settings, SourceAssets, PipelineAssemblies, out _outputFiles);
-            //}
+            using (IsolationAppDomain isolation = new IsolationAppDomain())
+                return isolation.CreateProxy<IsolationProxy>().Execute(Log, SourceAssets, PipelineAssemblies, BuildConfiguration, IntermediateDirectory, OutputDirectory, RootDirectory);
         }
 
         private class IsolationProxy : MarshalByRefObject
         {
-            public bool Execute(TaskLoggingHelper log, BuildCoordinatorSettings settings, ITaskItem[] sourceAssets, ITaskItem[] references, out ITaskItem[] outputFiles)
+            public bool Execute(TaskLoggingHelper log, ITaskItem[] sourceAssets, ITaskItem[] pipelineAssemblies, string buildConfiguration, string intermediateDirectory, string outputDirectory, string rootDirectory)
             {
+                BuildCoordinatorSettings settings = new BuildCoordinatorSettings()
+                {
+                    BuildConfiguration = buildConfiguration,
+                    IntermediateDirectory = intermediateDirectory,
+                    OutputDirectory = outputDirectory,
+                    BasePath = rootDirectory
+                };
+
                 BuildCoordinator build = new BuildCoordinator(settings, new MSBuildLoggerHelper(log));
 
-                if (references != null)
-                    foreach (ITaskItem item in references)
+                if (pipelineAssemblies != null)
+                    foreach (ITaskItem item in pipelineAssemblies)
                         build.LoadReference(Assembly.Load(AssemblyName.GetAssemblyName(item.ItemSpec)));
 
                 build.StartBuild();
@@ -108,8 +95,6 @@ namespace GreenBox3D.ContentPipeline.Task
                     if (!build.RequestBuild(item.ItemSpec, parameters))
                         result = false;
                 }
-
-                outputFiles = Array.ConvertAll<string, ITaskItem>(build.GetOutputFiles(), (s) => new TaskItem(s));
 
                 build.FinishBuild();
                 return result;

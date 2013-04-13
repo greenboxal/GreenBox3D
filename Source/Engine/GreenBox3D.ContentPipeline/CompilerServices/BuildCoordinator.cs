@@ -207,6 +207,7 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
                 entry.LastBuilt = true;
                 entry.Timestamp = File.GetLastWriteTimeUtc(fullPath);
+                entry.OutputFiles.Add(outputFilename);
 
                 _newCache.Add(entry);
             }
@@ -220,6 +221,9 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
         public void AddDependency(BuildCacheEntry entry, string filename)
         {
+            if (Path.IsPathRooted(filename))
+                filename = new Uri(_settings.BasePath).MakeRelativeUri(new Uri(filename)).ToString();
+
             string fullPath = Path.Combine(_settings.BasePath, filename);
 
             if (entry.Filename == filename)
@@ -302,6 +306,38 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
                     return true;
 
             return false;
+        }
+
+        public void CleanAll()
+        {
+            if (_cache != null || _cache.LoadFrom(Path.Combine(_settings.IntermediateDirectory, "PipelineBuildCache.cache")))
+            {
+                foreach (BuildCacheEntry entry in _cache)
+                {
+                    foreach (string file in entry.OutputFiles)
+                    {
+                        string path = Path.Combine(_settings.OutputDirectory, file);
+
+                        if (File.Exists(path))
+                            File.Delete(path);
+                    }
+                }
+
+                File.Delete(Path.Combine(_settings.IntermediateDirectory, "PipelineBuildCache.cache"));
+            }
+        }
+
+        public string[] GetLastBuiltFiles()
+        {
+            List<string> files = new List<string>();
+
+            if (_cache != null || _cache.LoadFrom(Path.Combine(_settings.IntermediateDirectory, "PipelineBuildCache.cache")))
+                foreach (BuildCacheEntry entry in _cache)
+                    if (entry.LastBuilt)
+                        foreach (string file in entry.OutputFiles)
+                            files.Add(file);
+
+            return files.ToArray();
         }
     }
 }

@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="..\..\Source\Engine\GreenBox3D\LogLevel.cs">
+    <Files>
+      <File FileName="..\..\DevTools\GreenBox3D.MonoDevelop\GreenBox3D.MonoDevelop.addin.xml" Line="17" Column="45" />
+      <File FileName="..\..\DevTools\GreenBox3D.MonoDevelop\ContentProjectBinding.cs" Line="12" Column="52" />
+      <File FileName="..\..\Source\Engine\GreenBox3D\LogLevel.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

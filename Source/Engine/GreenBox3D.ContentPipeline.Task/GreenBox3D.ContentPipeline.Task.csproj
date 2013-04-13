@@ -51,6 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuildContent.cs" />
+    <Compile Include="CleanContent.cs" />
+    <Compile Include="GetLastOutputs.cs" />
     <Compile Include="IsolationAppDomain.cs" />
     <Compile Include="MSBuildLoggerHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

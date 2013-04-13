@@ -21,11 +21,11 @@
   
   <!-- Get content reference list -->
   <Target Name="_GetContentReferenceList">
-	<ItemGroup>
-	  <ContentReference Include="@(ProjectReference)" Condition="'%(ProjectReference.ReferenceType)' == 'Content'" />
-      <_MSBuildContentProjectExistent Include="@(ContentReference)" Condition="Exists('%(Identity)')" />
-      <_MSBuildContentProjectReferenceNonexistent Include="@(ContentReference)" Condition="!Exists('%(Identity)')" />
-	</ItemGroup>
+	  <ItemGroup>
+	    <ContentReference Include="@(ProjectReference)" Condition="'%(ProjectReference.ReferenceType)' == 'Content'" />
+        <_MSBuildContentProjectExistent Include="@(ContentReference)" Condition="Exists('%(Identity)')" />
+        <_MSBuildContentProjectReferenceNonexistent Include="@(ContentReference)" Condition="!Exists('%(Identity)')" />
+	  </ItemGroup>
   </Target>
   
   <!-- Remove them from the default reference list -->
@@ -126,7 +126,7 @@
       <Output TaskParameter="TargetOutputs" ItemName="_AllNestedContentProjectItemsWithTargetPath"/>
     </MSBuild>
 	
-	<Warning Text="@(_AllNestedContentProjectItemsWithTargetPath)" />
+	  <Warning Text="@(_AllNestedContentProjectItemsWithTargetPath)" />
 
     <CreateItem
       Include="@(_AllNestedContentProjectItemsWithTargetPath->'%(FullPath)')"

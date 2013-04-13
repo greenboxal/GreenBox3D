@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Addin namespace   = "GreenBox3D.MonoDevelop"
+<Addin namespace   = "GreenBox3D.MDAddin"
        id          = "GreenBox3D"
-       name        = "GreenBox3D"
+       name        = "GreenBox3D Integration for MonoDevelop"
        author      = "The GreenBox Development LLC"
        copyright   = "Copyright (c) 2013 The GreenBox Development LLC"
-       url         = "http://www.greenboxdev.com"
+       url         = "http://www.greenboxdev.com/"
        description = "Provides integration with GreenBox3D."
-       category    = "IDE Extensions"
+       category    = "IDE extensions"
        version     = "1.0">
 	
 	<Dependencies>
 		<Addin id="::MonoDevelop.Ide" version="4.0" />
 	</Dependencies>
+    
+    <Extension path = "/MonoDevelop/ProjectModel/MSBuildItemTypes">
+		<DotNetProject 
+			guid="{a9c0170a-c183-4616-b02b-39cc0a4791f0}" 
+			import="$(MSBuildExtensionsPath)\GreenBox3D\GreenBox3D.ContentPipeline.targets" 
+			extension="gbcontentproj" />
+	</Extension>
+	
+	<Extension path = "/MonoDevelop/Ide/ProjectTemplates">
+		<ProjectTemplate id= "ContentProject" resource = "ContentProject.xpt.xml"/>
+	</Extension>
 </Addin>  

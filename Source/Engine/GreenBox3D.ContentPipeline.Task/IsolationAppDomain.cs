@@ -19,7 +19,8 @@ namespace GreenBox3D.ContentPipeline.Task
 
             _domain = AppDomain.CreateDomain(us.GetName().Name, (Evidence)null, new AppDomainSetup()
             {
-                ApplicationBase = Path.GetDirectoryName(us.Location)
+                ApplicationBase = Path.GetDirectoryName(us.Location),
+                ShadowCopyFiles = "True"
             });
         }
 

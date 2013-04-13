@@ -16,5 +16,9 @@ Global
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = GreenBox3D.MonoDevelop\GreenBox3D.MonoDevelop.csproj
+		Policies = $0
+		$0.StandardHeader = $1
+		$1.Text = @GreenBox3D\n\nCopyright (c) 2013 The GreenBox Development Inc.\nCopyright (c) 2013 Mono.Xna Team and Contributors\n\nLicensed under MIT license terms.
+		$1.IncludeInNewFiles = True
 	EndGlobalSection
 EndGlobal

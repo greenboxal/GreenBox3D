@@ -2,6 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{2F4AE659-CF75-4D7A-B862-378C42B1E943}</ProjectGuid>
+    <ProjectTypeGuid>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
@@ -39,5 +40,11 @@
     <None Include="Shaders\Simple\Simple.frag" />
     <None Include="Shaders\Simple\Simple.vert" />
   </ItemGroup>
-  <Import Project="..\..\Targets\GreenBox3D.ContentPipeline.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Source\Engine\GreenBox3D.ContentPipeline\GreenBox3D.ContentPipeline.csproj">
+      <Project>{3bd45e60-d6e2-41af-9f7b-9033f702d1f9}</Project>
+      <Name>GreenBox3D.ContentPipeline</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\..\..\Targets\GreenBox3D.ContentPipeline.targets" />
 </Project>

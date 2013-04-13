@@ -16,5 +16,12 @@ Global
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = GreenBox3D.Awesomium\GreenBox3D.Awesomium.csproj
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = Hierarchical
+		$1.ResourceNamePolicy = FileFormatDefault
+		$0.StandardHeader = $2
+		$2.Text = @GreenBox3D\n\nCopyright (c) 2013 The GreenBox Development Inc.\nCopyright (c) 2013 Mono.Xna Team and Contributors\n\nLicensed under MIT license terms.
+		$2.IncludeInNewFiles = True
 	EndGlobalSection
 EndGlobal

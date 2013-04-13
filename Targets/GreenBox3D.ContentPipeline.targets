@@ -6,17 +6,13 @@
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Condition="'$(GB3DDevToolsPath)|$(Configuration)' == '|Debug'">
-    <GB3DDevToolsPath>..\..\Build\</GB3DDevToolsPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(GB3DDevToolsPath)|$(Configuration)' == '|Release'">
-    <GB3DDevToolsPath>..\..\ReleaseBuild\</GB3DDevToolsPath>
+  <PropertyGroup Condition="'$(GB3DDevToolsPath)' == ''">
+    <GB3DDevToolsPath>..\Build\$(Configuration)\</GB3DDevToolsPath>
   </PropertyGroup>
   
   <UsingTask TaskName="BuildContent" AssemblyFile="$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll" />
   <UsingTask TaskName="CleanContent" AssemblyFile="$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll" />
-  <UsingTask TaskName="GetLastBuiltFiles" AssemblyFile="$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll" />
+  <UsingTask TaskName="GetLastOutputs" AssemblyFile="$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll" />
 
   <!-- Check DevTools presence -->
   <Target Name="_CheckGB3DDevTools">    
@@ -45,85 +41,31 @@
     DependsOnTargets="$(CoreCompileDependsOn);_CheckGB3DDevTools" 
     Condition="'$(BuildingProject)'=='true'">
 
-    <PropertyGroup Condition="'$(Target)'=='Rebuild'">
-      <RebuildAll>True</RebuildAll>
-    </PropertyGroup>
-    
-    <PropertyGroup Condition="'$(Target)'!='Rebuild'">
-      <RebuildAll>False</RebuildAll>
-    </PropertyGroup>
-
     <BuildContent
       BuildConfiguration="$(Configuration)"
       IntermediateDirectory="$(ProjectDir)$(IntermediateOutputPath)"
       OutputDirectory="$(ParentOutputDir)$(ContentRootDirectory)"
       PipelineAssemblies="@(ReferencePath)"
-      PipelineAssemblyDependencies="@(ReferenceDependencyPaths)"
       RootDirectory="$(ProjectDir)"
-      SourceAssets="@(PipelineContent)"
-      RebuildAll="$(RebuildAll)">
-      <Output ItemName="PipelineOutputContentFiles" TaskParameter="OutputContentFiles"/>
-    </BuildContent>
-    
-    <!-- Cache -->
-    <AssignTargetPath
-      Files="@(PipelineOutputContentFiles)"
-      RootFolder="$(ProjectDir)">
-      <Output TaskParameter="AssignedFiles" ItemName="_OutputCacheFilesWithTargetPath"/>
-    </AssignTargetPath>
-
-    <CreateItem
-      Include="@(ContentWithTargetPath->'%(FullPath)')"
-      Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(ContentWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'">
-      <Output TaskParameter="Include" ItemName="_PipelineOutputCacheFilesWithTargetPath"/>
-    </CreateItem>
-
-    <CreateItem
-      Include="@(Compile->'%(FullPath)')"
-      Condition="'%(Compile.CopyToOutputDirectory)'=='Always' or '%(Compile.CopyToOutputDirectory)'=='PreserveNewest'">
-      <Output TaskParameter="Include" ItemName="_CacheCompileItemsToCopy"/>
-    </CreateItem>
-    
-    <AssignTargetPath Files="@(_CacheCompileItemsToCopy)" RootFolder="$(MSBuildProjectDirectory)">
-      <Output TaskParameter="AssignedFiles" ItemName="_CacheCompileItemsToCopyWithTargetPathTemp" />
-    </AssignTargetPath>
-    
-    <CreateItem
-      Include="@(_CacheCompileItemsToCopyWithTargetPathTemp)"
-      AdditionalMetadata="TargetPath=$(ContentRootDirectoryDir)%(_CacheCompileItemsToCopyWithTargetPathTemp.TargetPath)">
-      <Output TaskParameter="Include" ItemName="_CacheCompileItemsToCopyWithTargetPath"/>
-    </CreateItem>
-
-    <CreateItem Include="@(_CacheCompileItemsToCopyWithTargetPath)">
-      <Output TaskParameter="Include" ItemName="_PipelineOutputCacheFilesWithTargetPath"/>
-    </CreateItem>
-
-    <CreateItem
-        Include="@(_NoneWithTargetPath->'%(FullPath)')"
-        Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_NoneWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'">
-      <Output TaskParameter="Include" ItemName="_PipelineOutputCacheFilesWithTargetPath"/>
-    </CreateItem>
-
-    <WriteLinesToFile
-      File="$(ParentIntermediateDir)cachefile-$(ProjectGuid)-targetpath.txt"
-      Lines="@(_PipelineOutputCacheFilesWithTargetPath->'%(TargetPath)')"
-      Overwrite="true" />
+      SourceAssets="@(PipelineContent)" />
   </Target>
   
   <!-- Clean -->
   <Target Name="ContentClean" DependsOnTargets="_CheckGB3DDevTools">
-  
+    <CleanContent
+      IntermediateDirectory="$(ProjectDir)$(IntermediateOutputPath)"
+      OutputDirectory="$(ParentOutputDir)$(ContentRootDirectory)" />
   </Target>
   
   <!-- Get Built Files -->
   <Target Name="GetBuiltContentWithTargetPaths" Outputs="@(BuiltContentWithTargetPaths)">
-    <!--<GetLastOutputs
+    <GetLastOutputs
       IntermediateDirectory="$(ProjectDir)$(IntermediateOutputPath)">
       <Output TaskParameter="OutputContentFiles" ItemName="LastBuiltContentFiles" />
-    </GetLastOutputs>-->
+    </GetLastOutputs>
 
     <CreateItem
-      Include="@(PipelineContent)"
+      Include="@(LastBuiltContentFiles)"
       AdditionalMetadata="CopyToOutputDirectory=PreserveNewest">
       <Output TaskParameter="Include" ItemName="LastBuiltContentFilesPreserveNewest"/>
     </CreateItem>

@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
+
 using GreenBox3D.ContentPipeline.CompilerServices;
 
 namespace GreenBox3D.ContentPipeline.Task
 {
-    public class MSBuildLoggerHelper : ILoggerHelper
+    internal class MSBuildLoggerHelper : GreenBox3D.ContentPipeline.CompilerServices.ILoggerHelper
     {
         private readonly TaskLoggingHelper _helper;
 
