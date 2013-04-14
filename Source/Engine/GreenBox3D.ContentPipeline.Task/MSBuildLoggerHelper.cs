@@ -1,17 +1,22 @@
-﻿using System;
+﻿// MSBuildLoggerHelper.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-
 using GreenBox3D.ContentPipeline.CompilerServices;
 
 namespace GreenBox3D.ContentPipeline.Task
 {
-    internal class MSBuildLoggerHelper : GreenBox3D.ContentPipeline.CompilerServices.ILoggerHelper
+    internal class MSBuildLoggerHelper : ILoggerHelper
     {
         private readonly TaskLoggingHelper _helper;
 
@@ -20,18 +25,23 @@ namespace GreenBox3D.ContentPipeline.Task
             _helper = helper;
         }
 
-        public void Log(MessageLevel level, string errorCode, string file, int lineNumber, int columnNumber, int endLineNumber, int endColumnNumber, string message, params object[] messageArgs)
+        public void Log(MessageLevel level, string errorCode, string file, int lineNumber, int columnNumber,
+                        int endLineNumber, int endColumnNumber, string message, params object[] messageArgs)
         {
             switch (level)
             {
                 case MessageLevel.None:
-                    _helper.LogMessage(null, errorCode, null, file, lineNumber, columnNumber, endLineNumber, endColumnNumber, MessageImportance.Normal, "{0}", string.Format(message, messageArgs));
+                    _helper.LogMessage(null, errorCode, null, file, lineNumber, columnNumber, endLineNumber,
+                                       endColumnNumber, MessageImportance.Normal, "{0}",
+                                       string.Format(message, messageArgs));
                     break;
                 case MessageLevel.Warning:
-                    _helper.LogWarning(null, errorCode, null, file, lineNumber, columnNumber, endLineNumber, endColumnNumber, "{0}", string.Format(message, messageArgs));
+                    _helper.LogWarning(null, errorCode, null, file, lineNumber, columnNumber, endLineNumber,
+                                       endColumnNumber, "{0}", string.Format(message, messageArgs));
                     break;
                 case MessageLevel.Error:
-                    _helper.LogError(null, errorCode, null, file, lineNumber, columnNumber, endLineNumber, endColumnNumber, "{0}", string.Format(message, messageArgs));
+                    _helper.LogError(null, errorCode, null, file, lineNumber, columnNumber, endLineNumber,
+                                     endColumnNumber, "{0}", string.Format(message, messageArgs));
                     break;
                 default:
                     throw new NotSupportedException();
@@ -40,7 +50,8 @@ namespace GreenBox3D.ContentPipeline.Task
 
         // FIXME: Take care with this, if any custom exception is passed down through our isolated AppDomain the assembly will be locked down by devenv or msbuild process
         // This was already fixed on the normal Log() by formating the message on our AppDomain
-        public void Log(MessageLevel level, Exception exception, bool showStacktrace = false, bool showDetail = false, string file = null)
+        public void Log(MessageLevel level, Exception exception, bool showStacktrace = false, bool showDetail = false,
+                        string file = null)
         {
             switch (level)
             {

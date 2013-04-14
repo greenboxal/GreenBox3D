@@ -1,26 +1,9 @@
-#region --- License ---
-/*
-Copyright (c) 2006 - 2008 The Open Toolkit library.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
- */
-#endregion
+// Matrix3d.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Runtime.InteropServices;
@@ -28,7 +11,7 @@ using System.Runtime.InteropServices;
 namespace GreenBox3D
 {
     // Todo: Remove this warning when the code goes public.
-    #pragma warning disable 3019
+#pragma warning disable 3019
 #if false
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
@@ -822,5 +805,5 @@ namespace GreenBox3D
         #endregion
     }
 #endif
-    #pragma warning restore 3019
+#pragma warning restore 3019
 }

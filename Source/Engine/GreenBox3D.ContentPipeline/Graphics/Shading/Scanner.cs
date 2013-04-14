@@ -1,4 +1,11 @@
-﻿using System;
+﻿// Scanner.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,11 +16,12 @@ namespace GreenBox3D.ContentPipeline.Graphics.Shading
 {
     public class Scanner
     {
-        private TextReader _reader;
-        private int _line, _column;
-        private string _filename;
+        private readonly string _filename;
+        private readonly TextReader _reader;
         private char _ch;
+        private int _column;
         private bool _isEof;
+        private int _line;
 
         public Scanner(string filename, TextReader reader)
         {
@@ -191,7 +199,7 @@ namespace GreenBox3D.ContentPipeline.Graphics.Shading
             {
                 text += _ch;
                 Next();
-            } 
+            }
             while (char.IsNumber(_ch));
 
             token.Type = TokenType.Number;

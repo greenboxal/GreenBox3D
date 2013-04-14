@@ -1,9 +1,9 @@
-﻿// GreenBox3D
+﻿// MouseState.cs
 // 
-// Copyright (c) 2013 The GreenBox Development Inc.
-// Copyright (c) 2013 Mono.Xna Team and Contributors
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
 // 
-// Licensed under MIT license terms.
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,8 @@ namespace GreenBox3D.Input
 
         #region Constructors and Destructors
 
-        public MouseState(int x, int y, int scrollWheel, ButtonState leftButton, ButtonState middleButton, ButtonState rightButton)
+        public MouseState(int x, int y, int scrollWheel, ButtonState leftButton, ButtonState middleButton,
+                          ButtonState rightButton)
         {
             _x = x;
             _y = y;
@@ -41,14 +42,51 @@ namespace GreenBox3D.Input
 
         #region Public Properties
 
-        public ButtonState LeftButton { get { return _leftButton; } set { _leftButton = value; } }
-        public ButtonState MiddleButton { get { return _middleButton; } set { _middleButton = value; } }
-        public ButtonState RightButton { get { return _rightButton; } set { _rightButton = value; } }
-        public int ScrollWheelValue { get { return _scrollWheelValue; } set { _scrollWheelValue = value; } }
-        public int X { get { return _x; } set { _x = value; } }
-        public ButtonState XButton1 { get { return ButtonState.Released; } }
-        public ButtonState XButton2 { get { return ButtonState.Released; } }
-        public int Y { get { return _y; } set { _y = value; } }
+        public ButtonState LeftButton
+        {
+            get { return _leftButton; }
+            set { _leftButton = value; }
+        }
+
+        public ButtonState MiddleButton
+        {
+            get { return _middleButton; }
+            set { _middleButton = value; }
+        }
+
+        public ButtonState RightButton
+        {
+            get { return _rightButton; }
+            set { _rightButton = value; }
+        }
+
+        public int ScrollWheelValue
+        {
+            get { return _scrollWheelValue; }
+            set { _scrollWheelValue = value; }
+        }
+
+        public int X
+        {
+            get { return _x; }
+            set { _x = value; }
+        }
+
+        public ButtonState XButton1
+        {
+            get { return ButtonState.Released; }
+        }
+
+        public ButtonState XButton2
+        {
+            get { return ButtonState.Released; }
+        }
+
+        public int Y
+        {
+            get { return _y; }
+            set { _y = value; }
+        }
 
         #endregion
 
@@ -56,7 +94,9 @@ namespace GreenBox3D.Input
 
         public static bool operator ==(MouseState left, MouseState right)
         {
-            return left._x == right._x && left._y == right._y && left._leftButton == right._leftButton && left._middleButton == right._middleButton && left._rightButton == right._rightButton && left._scrollWheelValue == right._scrollWheelValue;
+            return left._x == right._x && left._y == right._y && left._leftButton == right._leftButton &&
+                   left._middleButton == right._middleButton && left._rightButton == right._rightButton &&
+                   left._scrollWheelValue == right._scrollWheelValue;
         }
 
         public static bool operator !=(MouseState left, MouseState right)

@@ -1,15 +1,20 @@
-﻿using System;
+﻿// WindowsGraphicsDevice.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
-
 using GreenBox3D.Graphics;
 using GreenBox3D.Graphics.Detail;
 using GreenBox3D.Platform.Windows.Graphics.Shading;
-
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
@@ -18,83 +23,28 @@ namespace GreenBox3D.Platform.Windows.Graphics
     public class WindowsGraphicsDevice : GraphicsDevice
     {
         private static readonly ILogger Log = LogManager.GetLogger(typeof(WindowsGraphicsDevice));
+        private readonly BufferManager _bufferManager;
+        private readonly Dictionary<int, GraphicsContext> _contexts;
+
+        private readonly GraphicsMode _graphicsMode;
+        private readonly GraphicsContext _mainContext;
+        private readonly WindowsGamePlatform _platform;
+        private readonly PresentationParameters _presentationParameters;
+        private readonly ShaderManager _shaderManager;
+        private readonly TextureCollection _textures;
+        private readonly WindowsGameWindow _window;
 
         internal GLShader ActiveShader;
         private GLIndexBuffer _indices;
         private bool _indicesDirty;
         private GLVertexBuffer _vertices;
         private bool _verticesDirty;
-
-        private readonly WindowsGamePlatform _platform;
-        private readonly WindowsGameWindow _window;
-
-        private readonly GraphicsContext _mainContext;
-        private readonly Dictionary<int, GraphicsContext> _contexts;
-
-        private readonly GraphicsMode _graphicsMode;
+        private Viewport _viewport;
 
         private bool _vsync;
-        public bool VSync
-        {
-            get { return _vsync; }
-            set
-            {
-                if (_vsync != value)
-                {
-                    if (value)
-                        _mainContext.SwapInterval = -1;
-                    else
-                        _mainContext.SwapInterval = 0;
 
-                    _vsync = value;
-                }
-            }
-        }
-
-        private BufferManager _bufferManager;
-        public override BufferManager BufferManager { get { return _bufferManager; } }
-
-        private ShaderManager _shaderManager;
-        public override ShaderManager ShaderManager { get { return _shaderManager; } }
-
-        private TextureCollection _textures;
-        public override TextureCollection Textures { get { return _textures; } }
-
-        private PresentationParameters _presentationParameters;
-        public override PresentationParameters PresentationParameters { get { return _presentationParameters; } }
-
-        private Viewport _viewport;
-        public override Viewport Viewport
-        {
-            get { return _viewport; }
-            set
-            {
-                _viewport = value;
-
-                // TODO: Reimplement after render target reimplementation
-                //if (IsRenderTargetBound)
-                //    GL.Viewport(value.X, value.Y, value.Width, value.Height);
-                //else
-
-                GL.Viewport(value.X, PresentationParameters.BackBufferHeight - value.Y - value.Height, value.Width, value.Height);
-                // GL.DepthRange(value.MinDepth, value.MaxDepth);
-            }
-        }
-
-        public override IIndexBuffer Indices
-        {
-            get { return _indices; }
-            set
-            {
-                if (_indices != value)
-                {
-                    _indicesDirty = true;
-                    _indices = value as GLIndexBuffer;
-                }
-            }
-        }
-
-        public WindowsGraphicsDevice(WindowsGamePlatform platform, PresentationParameters parameters, WindowsGameWindow window)
+        public WindowsGraphicsDevice(WindowsGamePlatform platform, PresentationParameters parameters,
+                                     WindowsGameWindow window)
         {
             _platform = platform;
             _window = window;
@@ -128,7 +78,8 @@ namespace GreenBox3D.Platform.Windows.Graphics
                         break;
                 }
 
-                _graphicsMode = new GraphicsMode(new ColorFormat(r, g, b, a), depth, stencil, parameters.MultiSampleCount);
+                _graphicsMode = new GraphicsMode(new ColorFormat(r, g, b, a), depth, stencil,
+                                                 parameters.MultiSampleCount);
             }
 
             _mainContext = CreateNewContext(Thread.CurrentThread.ManagedThreadId);
@@ -138,6 +89,74 @@ namespace GreenBox3D.Platform.Windows.Graphics
             Log.Message("OpenGL context acquired: {0}", _mainContext);
 
             _textures = new GLTextureCollection();
+        }
+
+        public bool VSync
+        {
+            get { return _vsync; }
+            set
+            {
+                if (_vsync != value)
+                {
+                    if (value)
+                        _mainContext.SwapInterval = -1;
+                    else
+                        _mainContext.SwapInterval = 0;
+
+                    _vsync = value;
+                }
+            }
+        }
+
+        public override BufferManager BufferManager
+        {
+            get { return _bufferManager; }
+        }
+
+        public override ShaderManager ShaderManager
+        {
+            get { return _shaderManager; }
+        }
+
+        public override TextureCollection Textures
+        {
+            get { return _textures; }
+        }
+
+        public override PresentationParameters PresentationParameters
+        {
+            get { return _presentationParameters; }
+        }
+
+        public override Viewport Viewport
+        {
+            get { return _viewport; }
+            set
+            {
+                _viewport = value;
+
+                // TODO: Reimplement after render target reimplementation
+                //if (IsRenderTargetBound)
+                //    GL.Viewport(value.X, value.Y, value.Width, value.Height);
+                //else
+
+                GL.Viewport(value.X, PresentationParameters.BackBufferHeight - value.Y - value.Height, value.Width,
+                            value.Height);
+                // GL.DepthRange(value.MinDepth, value.MaxDepth);
+            }
+        }
+
+        public override IIndexBuffer Indices
+        {
+            get { return _indices; }
+            set
+            {
+                if (_indices != value)
+                {
+                    _indicesDirty = true;
+                    _indices = value as GLIndexBuffer;
+                }
+            }
         }
 
         protected override bool MakeCurrentInternal()
@@ -188,7 +207,8 @@ namespace GreenBox3D.Platform.Windows.Graphics
             GL.Clear(mask);
         }
 
-        public override void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertex, int numVertices, int startIndex, int primitiveCount)
+        public override void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertex, int numVertices,
+                                                   int startIndex, int primitiveCount)
         {
             if (Indices == null)
                 throw new InvalidOperationException("Indices must be set before calling this method");
@@ -203,7 +223,8 @@ namespace GreenBox3D.Platform.Windows.Graphics
             var indexElementCount = GetElementCountArray(primitiveType, primitiveCount);
             var target = GetBeginMode(primitiveType);
 
-            GL.DrawElementsBaseVertex(target, indexElementCount, _indices.DrawElementsType, indexOffsetInBytes, baseVertex);
+            GL.DrawElementsBaseVertex(target, indexElementCount, _indices.DrawElementsType, indexOffsetInBytes,
+                                      baseVertex);
         }
 
         public override void DrawPrimitives(PrimitiveType primitiveType, int startVertex, int primitiveCount)
@@ -220,7 +241,9 @@ namespace GreenBox3D.Platform.Windows.Graphics
             GL.DrawArrays(GetBeginMode(primitiveType), startVertex, primitiveCount);
         }
 
-        public override void DrawUserIndexedPrimitives<T>(PrimitiveType primitiveType, T[] vertexData, int vertexOffset, int vertexCount, int[] indexData, int indexOffset, int primitiveCount)
+        public override void DrawUserIndexedPrimitives<T>(PrimitiveType primitiveType, T[] vertexData, int vertexOffset,
+                                                          int vertexCount, int[] indexData, int indexOffset,
+                                                          int primitiveCount)
         {
             if (ActiveShader == null)
                 throw new InvalidOperationException("An Effect must be applied before calling this method");
@@ -239,13 +262,15 @@ namespace GreenBox3D.Platform.Windows.Graphics
             unsafe
             {
                 fixed (int* indicesPtr = &indexData[0])
-                    GL.DrawElementsBaseVertex(GetBeginMode(primitiveType), primitiveCount, DrawElementsType.UnsignedInt, (IntPtr)(&indicesPtr[indexOffset]), vertexOffset);
+                    GL.DrawElementsBaseVertex(GetBeginMode(primitiveType), primitiveCount, DrawElementsType.UnsignedInt,
+                                              (IntPtr)(&indicesPtr[indexOffset]), vertexOffset);
             }
 
             handle.Free();
         }
 
-        public override void DrawUserPrimitives<T>(PrimitiveType primitiveType, T[] vertexData, int vertexOffset, int primitiveCount)
+        public override void DrawUserPrimitives<T>(PrimitiveType primitiveType, T[] vertexData, int vertexOffset,
+                                                   int primitiveCount)
         {
             if (ActiveShader == null)
                 throw new InvalidOperationException("An Effect must be applied before calling this method");
@@ -295,7 +320,8 @@ namespace GreenBox3D.Platform.Windows.Graphics
 
         private GraphicsContext CreateNewContext(int threadId)
         {
-            OpenTK.Platform.Windows.WinWindowInfo window = new OpenTK.Platform.Windows.WinWindowInfo(_window.NativeHandle, null);
+            OpenTK.Platform.Windows.WinWindowInfo window =
+                new OpenTK.Platform.Windows.WinWindowInfo(_window.NativeHandle, null);
             GraphicsContext context = new GraphicsContext(_graphicsMode, window, 4, 2, GraphicsContextFlags.Default);
 
             _contexts[threadId] = context;

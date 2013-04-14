@@ -1,9 +1,15 @@
-﻿using System;
+﻿// VertexDeclarationImplementation.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using GreenBox3D.Graphics;
 using GreenBox3D.Graphics.Detail;
 using OpenTK.Graphics.OpenGL;
@@ -15,10 +21,10 @@ namespace GreenBox3D.Platform.Windows.Graphics
         private static VertexDeclarationImplementation _lastUsed;
         private static IntPtr _lastUsedPointer;
         private static IShader _lastUsedShader;
+        private readonly GLVertexElement[] _elements;
 
-        private WindowsGraphicsDevice _graphicsDevice;
-        private VertexDeclaration _vertexDeclaration;
-        private GLVertexElement[] _elements;
+        private readonly WindowsGraphicsDevice _graphicsDevice;
+        private readonly VertexDeclaration _vertexDeclaration;
 
         public VertexDeclarationImplementation(WindowsGraphicsDevice graphicsDevice, VertexDeclaration vertexDeclaration)
         {
@@ -58,7 +64,8 @@ namespace GreenBox3D.Platform.Windows.Graphics
                 if (element != null)
                 {
                     GL.EnableVertexAttribArray(input.Index);
-                    GL.VertexAttribPointer(input.Index, gle.ElementCount, gle.VertexAttribPointerType, !gle.IsNormalized, _vertexDeclaration.VertexStride, baseAddress + element.Offset);
+                    GL.VertexAttribPointer(input.Index, gle.ElementCount, gle.VertexAttribPointerType, !gle.IsNormalized,
+                                           _vertexDeclaration.VertexStride, baseAddress + element.Offset);
                 }
                 else
                 {

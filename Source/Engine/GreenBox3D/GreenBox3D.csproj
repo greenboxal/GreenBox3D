@@ -55,12 +55,11 @@
     <Compile Include="Content\ContentReader.cs" />
     <Compile Include="Content\ContentTypeReader.cs" />
     <Compile Include="Content\ContentTypeReaderAttribute.cs" />
-    <Compile Include="Content\DefaultRuntimeContentLoader.cs" />
+    <Compile Include="Content\RuntimeContentLoader.cs" />
     <Compile Include="Content\FileManager.cs" />
     <Compile Include="Content\FolderFileLoader.cs" />
     <Compile Include="Content\IContentTypeReader.cs" />
     <Compile Include="Content\IFileLoader.cs" />
-    <Compile Include="Content\IRuntimeContentLoader.cs" />
     <Compile Include="Content\Loaders\ShaderLoader.cs" />
     <Compile Include="Content\Loaders\Texture2DLoader.cs" />
     <Compile Include="CVar.cs" />

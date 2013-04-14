@@ -1,9 +1,15 @@
-﻿using System;
+﻿// WindowsGamePlatform.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using GreenBox3D.Graphics;
 using GreenBox3D.Input;
 using GreenBox3D.Platform.Windows.Graphics;
@@ -15,32 +21,33 @@ namespace GreenBox3D.Platform.Windows
     public class WindowsGamePlatform : GamePlatform
     {
         private static readonly ILogger Log = LogManager.GetLogger(typeof(WindowsGamePlatform));
-        private bool _running;
         private bool _doPostDispose;
-        private bool _skipFrame;
 
         private WindowsGameWindow _gameWindow;
         private GraphicsDeviceManager _graphicsDeviceManager;
         private InputManager _inputManager;
-
-        public override bool Running { get { return _running; } }
-        public override IGameWindow Window { get { return _gameWindow; } }
-
-        public override bool VSync
-        {
-            get
-            {
-                return ((WindowsGraphicsDevice)_graphicsDeviceManager.GraphicsDevice).VSync;
-            }
-            set
-            {
-                ((WindowsGraphicsDevice)_graphicsDeviceManager.GraphicsDevice).VSync = value;
-            }
-        }
+        private bool _running;
+        private bool _skipFrame;
 
         public WindowsGamePlatform(IPlatformController controller)
             : base(controller)
         {
+        }
+
+        public override bool Running
+        {
+            get { return _running; }
+        }
+
+        public override IGameWindow Window
+        {
+            get { return _gameWindow; }
+        }
+
+        public override bool VSync
+        {
+            get { return ((WindowsGraphicsDevice)_graphicsDeviceManager.GraphicsDevice).VSync; }
+            set { ((WindowsGraphicsDevice)_graphicsDeviceManager.GraphicsDevice).VSync = value; }
         }
 
         public override void Run()

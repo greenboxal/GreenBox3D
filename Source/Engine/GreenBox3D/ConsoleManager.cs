@@ -1,4 +1,11 @@
-﻿using System;
+﻿// ConsoleManager.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,8 +19,6 @@ namespace GreenBox3D
         private static readonly Dictionary<string, IConsoleCommand> _commands;
         private static readonly List<IConsoleSink> _sinks;
 
-        public static IReadOnlyDictionary<string, IConsoleCommand> Commands { get { return _commands; } }
-
         static ConsoleManager()
         {
             _commands = new Dictionary<string, IConsoleCommand>();
@@ -22,6 +27,11 @@ namespace GreenBox3D
 #if DEBUG
             _sinks.Add(new SystemConsoleSink());
 #endif
+        }
+
+        public static IReadOnlyDictionary<string, IConsoleCommand> Commands
+        {
+            get { return _commands; }
         }
 
         public static void RegisterConsoleSink(IConsoleSink sink)

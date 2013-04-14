@@ -1,27 +1,51 @@
-﻿using System;
+﻿// GLShader.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using GreenBox3D.Graphics;
 using GreenBox3D.Graphics.Detail;
 using OpenTK.Graphics.OpenGL;
-
 using ShaderParameter = GreenBox3D.Graphics.Detail.ShaderParameter;
 
 namespace GreenBox3D.Platform.Windows.Graphics.Shading
 {
     public class GLShader : GraphicsResource, IShader
     {
-        private string _name;
-        private int _version;
-        private string _fallback;
-        private bool _isValid;
+        private readonly string _fallback;
+        private readonly ShaderInput[] _input;
+        private readonly string _name;
+        private readonly ShaderParameterCollection _parameters;
+        private readonly ShaderPassCollection _passes;
+        private readonly int _version;
         private bool _created;
-        private ShaderInput[] _input;
-        private ShaderParameterCollection _parameters;
-        private ShaderPassCollection _passes;
+        private bool _isValid;
+
+        public GLShader(GraphicsDevice graphicsDevice, string name, int version, string fallback, ShaderInput[] input,
+                        ShaderParameter[] parameters, IShaderPass[] passes)
+            : base(graphicsDevice)
+        {
+            _name = name;
+            _version = version;
+            _fallback = fallback;
+            _input = input;
+
+            _parameters = new ShaderParameterCollection();
+            _passes = new ShaderPassCollection();
+
+            foreach (ShaderParameter parameter in parameters)
+                _parameters.Add(new GLShaderParameter(parameter));
+
+            foreach (IShaderPass pass in passes)
+                _passes.Add(pass);
+        }
 
         public string Name
         {
@@ -64,24 +88,6 @@ namespace GreenBox3D.Platform.Windows.Graphics.Shading
         }
 
         public int ParametersSize { get; private set; }
-
-        public GLShader(GraphicsDevice graphicsDevice, string name, int version, string fallback, ShaderInput[] input, ShaderParameter[] parameters, IShaderPass[] passes)
-            : base(graphicsDevice)
-        {
-            _name = name;
-            _version = version;
-            _fallback = fallback;
-            _input = input;
-
-            _parameters = new ShaderParameterCollection();
-            _passes = new ShaderPassCollection();
-
-            foreach (ShaderParameter parameter in parameters)
-                _parameters.Add(new GLShaderParameter(parameter));
-
-            foreach (IShaderPass pass in passes)
-                _passes.Add(pass);
-        }
 
         public int GetInputIndex(VertexElementUsage usage, int usageIndex)
         {

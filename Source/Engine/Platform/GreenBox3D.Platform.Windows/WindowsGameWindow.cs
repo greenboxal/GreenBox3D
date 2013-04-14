@@ -1,4 +1,11 @@
-﻿using System;
+﻿// WindowsGameWindow.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -6,7 +13,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-
 using GreenBox3D.Graphics;
 using GreenBox3D.Input;
 using GreenBox3D.Platform.Windows.Input;
@@ -19,65 +25,27 @@ namespace GreenBox3D.Platform.Windows
         private static int _classCounter;
 
         private readonly PresentationParameters _creationParameters;
+        private readonly List<Keys> _keys;
         private readonly WindowsGamePlatform _platform;
-
-        private bool _disposed;
-        private IntPtr _class;
-        private IntPtr _handle;
-        private InputManager _inputManager;
-
-        // GarbageCollector guard
         private NativeMethods.WndProc _callback;
 
-        private MouseState _mouseState;
-        private List<Keys> _keys;
+        private IntPtr _class;
+        private bool _disposed;
+        private IntPtr _handle;
+        private InputManager _inputManager;
+        private bool _isActive;
+        private bool _isFullscreen;
 
-        private string _title;
-        public string Title { get { return _title; } set { SetTitle(value); } }
+        // GarbageCollector guard
+
+        private MouseState _mouseState;
 
         private Point _position;
-        public Point Position { get { return _position; } set { SetPosition(value); } }
+        private bool _resizable;
+        private bool _showCursor;
 
         private Point _size;
-        public Point Size { get { return _size; } }
-
-        public IntPtr NativeHandle { get { return _handle; } }
-
-        private bool _isFullscreen;
-        public bool IsFullscreen { get { return _isFullscreen; } }
-
-        private bool _isActive;
-        public bool IsActive { get { return _isActive; } }
-
-        private bool _showCursor;
-        public bool ShowCursor
-        {
-            get { return _showCursor; }
-            set
-            {
-                _showCursor = value;
-                NativeMethods.SetCursor(_showCursor ? NativeMethods.LoadCursor(IntPtr.Zero, NativeMethods.IDC_STANDARD_CURSORS.IDC_ARROW) : IntPtr.Zero);
-            }
-        }
-
-        private bool _resizable;
-        public bool Resizable
-        {
-            get { return _resizable; }
-            set
-            {
-                _resizable = value;
-
-                NativeMethods.WindowStyles ws = (NativeMethods.WindowStyles)NativeMethods.GetWindowLong(_handle, NativeMethods.GWL_STYLE);
-
-                if (_resizable)
-                    ws |= NativeMethods.WindowStyles.WS_SIZEFRAME | NativeMethods.WindowStyles.WS_MAXIMIZEBOX;
-                else
-                    ws &= ~(NativeMethods.WindowStyles.WS_SIZEFRAME | NativeMethods.WindowStyles.WS_MAXIMIZEBOX);
-
-                NativeMethods.SetWindowLong(_handle, NativeMethods.GWL_STYLE, (int)ws);
-            }
-        }
+        private string _title;
 
         public WindowsGameWindow(WindowsGamePlatform platform, PresentationParameters parameters)
         {
@@ -95,6 +63,113 @@ namespace GreenBox3D.Platform.Windows
             NativeMethods.SetFocus(_handle);
         }
 
+        public IntPtr NativeHandle
+        {
+            get { return _handle; }
+        }
+
+        public bool IsFullscreen
+        {
+            get { return _isFullscreen; }
+        }
+
+        public bool IsActive
+        {
+            get { return _isActive; }
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                if (_class != IntPtr.Zero)
+                    NativeMethods.UnregisterClass(_class, Marshal.GetHINSTANCE(typeof(WindowsGameWindow).Module));
+
+                if (_handle != IntPtr.Zero)
+                    NativeMethods.DestroyWindow(_handle);
+
+                _disposed = true;
+            }
+        }
+
+        public string Title
+        {
+            get { return _title; }
+            set { SetTitle(value); }
+        }
+
+        public Point Position
+        {
+            get { return _position; }
+            set { SetPosition(value); }
+        }
+
+        public Point Size
+        {
+            get { return _size; }
+        }
+
+        public bool ShowCursor
+        {
+            get { return _showCursor; }
+            set
+            {
+                _showCursor = value;
+                NativeMethods.SetCursor(_showCursor
+                                            ? NativeMethods.LoadCursor(IntPtr.Zero,
+                                                                       NativeMethods.IDC_STANDARD_CURSORS.IDC_ARROW)
+                                            : IntPtr.Zero);
+            }
+        }
+
+        public bool Resizable
+        {
+            get { return _resizable; }
+            set
+            {
+                _resizable = value;
+
+                NativeMethods.WindowStyles ws =
+                    (NativeMethods.WindowStyles)NativeMethods.GetWindowLong(_handle, NativeMethods.GWL_STYLE);
+
+                if (_resizable)
+                    ws |= NativeMethods.WindowStyles.WS_SIZEFRAME | NativeMethods.WindowStyles.WS_MAXIMIZEBOX;
+                else
+                    ws &= ~(NativeMethods.WindowStyles.WS_SIZEFRAME | NativeMethods.WindowStyles.WS_MAXIMIZEBOX);
+
+                NativeMethods.SetWindowLong(_handle, NativeMethods.GWL_STYLE, (int)ws);
+            }
+        }
+
+        public void Resize(int width, int height)
+        {
+            _size = new Point(width, height);
+            _platform.WindowResized();
+        }
+
+        KeyboardState IKeyboard.GetState()
+        {
+            return new KeyboardState(_keys.ToArray());
+        }
+
+        MouseState IMouse.GetState()
+        {
+            // FIXME: Temporary, use WM_INPUT perhaps
+
+            NativeMethods.POINT p = new NativeMethods.POINT();
+            NativeMethods.GetCursorPos(ref p);
+
+            _mouseState.X = p.X;
+            _mouseState.Y = p.Y;
+
+            return _mouseState;
+        }
+
+        void IMouse.SetPosition(int x, int y)
+        {
+            NativeMethods.SetCursorPos(x, y);
+        }
+
         ~WindowsGameWindow()
         {
             Dispose();
@@ -107,7 +182,8 @@ namespace GreenBox3D.Platform.Windows
             _callback = WndProc;
 
             cls.cbSize = Marshal.SizeOf(cls);
-            cls.style = NativeMethods.ClassStyles.OwnDC | NativeMethods.ClassStyles.HorizontalRedraw | NativeMethods.ClassStyles.VerticalRedraw;
+            cls.style = NativeMethods.ClassStyles.OwnDC | NativeMethods.ClassStyles.HorizontalRedraw |
+                        NativeMethods.ClassStyles.VerticalRedraw;
             cls.lpfnWndProc = _callback;
             cls.cbClsExtra = 0;
             cls.cbWndExtra = 0;
@@ -132,15 +208,22 @@ namespace GreenBox3D.Platform.Windows
             {
                 SetFullScreen(true);
                 wsx = NativeMethods.WindowStylesEx.WS_EX_APPWINDOW | NativeMethods.WindowStylesEx.WS_EX_TOPMOST;
-                ws = NativeMethods.WindowStyles.WS_POPUP | NativeMethods.WindowStyles.WS_CLIPSIBLINGS | NativeMethods.WindowStyles.WS_CLIPCHILDREN;
+                ws = NativeMethods.WindowStyles.WS_POPUP | NativeMethods.WindowStyles.WS_CLIPSIBLINGS |
+                     NativeMethods.WindowStyles.WS_CLIPCHILDREN;
             }
             else
             {
                 wsx = NativeMethods.WindowStylesEx.WS_EX_APPWINDOW | NativeMethods.WindowStylesEx.WS_EX_WINDOWEDGE;
-                ws = NativeMethods.WindowStyles.WS_CAPTION | NativeMethods.WindowStyles.WS_OVERLAPPED | NativeMethods.WindowStyles.WS_SYSMENU | NativeMethods.WindowStyles.WS_MINIMIZE | NativeMethods.WindowStyles.WS_SIZEFRAME | NativeMethods.WindowStyles.WS_CLIPSIBLINGS | NativeMethods.WindowStyles.WS_CLIPCHILDREN;
+                ws = NativeMethods.WindowStyles.WS_CAPTION | NativeMethods.WindowStyles.WS_OVERLAPPED |
+                     NativeMethods.WindowStyles.WS_SYSMENU | NativeMethods.WindowStyles.WS_MINIMIZE |
+                     NativeMethods.WindowStyles.WS_SIZEFRAME | NativeMethods.WindowStyles.WS_CLIPSIBLINGS |
+                     NativeMethods.WindowStyles.WS_CLIPCHILDREN;
             }
 
-            _handle = NativeMethods.CreateWindowEx(wsx, _class, "GreenBox3D", ws, 128, 128, _creationParameters.BackBufferWidth, _creationParameters.BackBufferHeight, IntPtr.Zero, IntPtr.Zero, Marshal.GetHINSTANCE(typeof(WindowsGameWindow).Module), IntPtr.Zero);
+            _handle = NativeMethods.CreateWindowEx(wsx, _class, "GreenBox3D", ws, 128, 128,
+                                                   _creationParameters.BackBufferWidth,
+                                                   _creationParameters.BackBufferHeight, IntPtr.Zero, IntPtr.Zero,
+                                                   Marshal.GetHINSTANCE(typeof(WindowsGameWindow).Module), IntPtr.Zero);
 
             if (_handle == IntPtr.Zero)
                 throw new Win32Exception(Marshal.GetLastWin32Error(), "Error creating Window");
@@ -179,14 +262,16 @@ namespace GreenBox3D.Platform.Windows
                 mod.dmBitsPerPel = 32;
                 mod.dmFields = NativeMethods.DM.BitsPerPixel | NativeMethods.DM.PelsWidth | NativeMethods.DM.PelsHeight;
 
-                if (NativeMethods.ChangeDisplaySettings(ref mod, NativeMethods.CDS.Fullscreen) != NativeMethods.DISP_CHANGE.Successful)
+                if (NativeMethods.ChangeDisplaySettings(ref mod, NativeMethods.CDS.Fullscreen) !=
+                    NativeMethods.DISP_CHANGE.Successful)
                     throw new Win32Exception(Marshal.GetLastWin32Error(), "Error changing display mode");
             }
             else
             {
                 mod.dmSize = (short)Marshal.SizeOf(mod);
 
-                if (NativeMethods.ChangeDisplaySettings(ref mod, NativeMethods.CDS.Reset) != NativeMethods.DISP_CHANGE.Successful)
+                if (NativeMethods.ChangeDisplaySettings(ref mod, NativeMethods.CDS.Reset) !=
+                    NativeMethods.DISP_CHANGE.Successful)
                     throw new Win32Exception(Marshal.GetLastWin32Error(), "Error changing display mode");
             }
 
@@ -204,30 +289,10 @@ namespace GreenBox3D.Platform.Windows
             }
         }
 
-        public void Resize(int width, int height)
-        {
-            _size = new Point(width, height);
-            _platform.WindowResized();
-        }
-
         public void Close()
         {
             NativeMethods.DestroyWindow(_handle);
             _handle = IntPtr.Zero;
-        }
-
-        public void Dispose()
-        {
-            if (!_disposed)
-            {
-                if (_class != IntPtr.Zero)
-                    NativeMethods.UnregisterClass(_class, Marshal.GetHINSTANCE(typeof(WindowsGameWindow).Module));
-
-                if (_handle != IntPtr.Zero)
-                    NativeMethods.DestroyWindow(_handle);
-
-                _disposed = true;
-            }
         }
 
         private unsafe IntPtr WndProc(IntPtr hWnd, NativeMethods.WM msg, IntPtr wParam, IntPtr lParam)
@@ -300,7 +365,8 @@ namespace GreenBox3D.Platform.Windows
                     {
                         int pcbSize = sizeof(NativeMethods.RawInput);
                         NativeMethods.RawInput raw = new NativeMethods.RawInput();
-                        NativeMethods.GetRawInputData(lParam, NativeMethods.RawInputCommand.Input, out raw, ref pcbSize, sizeof(NativeMethods.RawInputHeader));
+                        NativeMethods.GetRawInputData(lParam, NativeMethods.RawInputCommand.Input, out raw, ref pcbSize,
+                                                      sizeof(NativeMethods.RawInputHeader));
 
                         // FIXME
                         if (raw.Header.Type == NativeMethods.RawInputType.Mouse)
@@ -382,7 +448,6 @@ namespace GreenBox3D.Platform.Windows
                                 break;
                         }
 
-
                         lock (_inputManager._mouseFilters)
                         {
                             foreach (IMouseFilter filter in _inputManager._mouseFilters)
@@ -449,29 +514,6 @@ namespace GreenBox3D.Platform.Windows
             }
 
             _inputManager = manager;
-        }
-
-        MouseState IMouse.GetState()
-        {
-            // FIXME: Temporary, use WM_INPUT perhaps
-
-            NativeMethods.POINT p = new NativeMethods.POINT();
-            NativeMethods.GetCursorPos(ref p);
-
-            _mouseState.X = p.X;
-            _mouseState.Y = p.Y;
-
-            return _mouseState;
-        }
-
-        void IMouse.SetPosition(int x, int y)
-        {
-            NativeMethods.SetCursorPos(x, y);
-        }
-
-        KeyboardState IKeyboard.GetState()
-        {
-            return new KeyboardState(_keys.ToArray());
         }
     }
 }

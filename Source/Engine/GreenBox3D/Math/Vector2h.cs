@@ -1,26 +1,9 @@
-#region --- License ---
-/*
-Copyright (c) 2006 - 2008 The Open Toolkit library.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
- */
-#endregion
+// Vector2h.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.IO;
@@ -29,7 +12,6 @@ using System.Runtime.Serialization;
 
 namespace GreenBox3D
 {
-
     /// <summary>2-component Vector of the Half type. Occupies 4 Byte total.</summary>
     [Serializable, StructLayout(LayoutKind.Sequential)]
     public struct Vector2h : ISerializable, IEquatable<Vector2h>
@@ -47,7 +29,7 @@ namespace GreenBox3D
         #region Constructors
 
         /// <summary>
-        /// Constructs a new instance.
+        ///     Constructs a new instance.
         /// </summary>
         /// <param name="value">The value that will initialize this instance.</param>
         public Vector2h(Half value)
@@ -57,7 +39,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Constructs a new instance.
+        ///     Constructs a new instance.
         /// </summary>
         /// <param name="value">The value that will initialize this instance.</param>
         public Vector2h(Single value)
@@ -67,7 +49,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half2 instance will avoid conversion and copy directly from the Half parameters.
+        ///     The new Half2 instance will avoid conversion and copy directly from the Half parameters.
         /// </summary>
         /// <param name="x">An Half instance of a 16-bit half-precision floating-point number.</param>
         /// <param name="y">An Half instance of a 16-bit half-precision floating-point number.</param>
@@ -78,7 +60,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half2 instance will convert the 2 parameters into 16-bit half-precision floating-point.
+        ///     The new Half2 instance will convert the 2 parameters into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="x">32-bit single-precision floating-point number.</param>
         /// <param name="y">32-bit single-precision floating-point number.</param>
@@ -89,7 +71,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half2 instance will convert the 2 parameters into 16-bit half-precision floating-point.
+        ///     The new Half2 instance will convert the 2 parameters into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="x">32-bit single-precision floating-point number.</param>
         /// <param name="y">32-bit single-precision floating-point number.</param>
@@ -101,7 +83,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half2 instance will convert the Vector2 into 16-bit half-precision floating-point.
+        ///     The new Half2 instance will convert the Vector2 into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="v">OpenTK.Vector2</param>
         public Vector2h(Vector2 v)
@@ -111,7 +93,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half2 instance will convert the Vector2 into 16-bit half-precision floating-point.
+        ///     The new Half2 instance will convert the Vector2 into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="v">OpenTK.Vector2</param>
         /// <param name="throwOnError">Enable checks that will throw if the conversion result is not meaningful.</param>
@@ -122,8 +104,8 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half2 instance will convert the Vector2 into 16-bit half-precision floating-point.
-        /// This is the fastest constructor.
+        ///     The new Half2 instance will convert the Vector2 into 16-bit half-precision floating-point.
+        ///     This is the fastest constructor.
         /// </summary>
         /// <param name="v">OpenTK.Vector2</param>
         public Vector2h(ref Vector2 v)
@@ -133,7 +115,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half2 instance will convert the Vector2 into 16-bit half-precision floating-point.
+        ///     The new Half2 instance will convert the Vector2 into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="v">OpenTK.Vector2</param>
         /// <param name="throwOnError">Enable checks that will throw if the conversion result is not meaningful.</param>
@@ -144,7 +126,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half2 instance will convert the Vector2d into 16-bit half-precision floating-point.
+        ///     The new Half2 instance will convert the Vector2d into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="v">OpenTK.Vector2d</param>
         public Vector2h(Vector2d v)
@@ -154,7 +136,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half2 instance will convert the Vector2d into 16-bit half-precision floating-point.
+        ///     The new Half2 instance will convert the Vector2d into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="v">OpenTK.Vector2d</param>
         /// <param name="throwOnError">Enable checks that will throw if the conversion result is not meaningful.</param>
@@ -165,8 +147,8 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half2 instance will convert the Vector2d into 16-bit half-precision floating-point.
-        /// This is the faster constructor.
+        ///     The new Half2 instance will convert the Vector2d into 16-bit half-precision floating-point.
+        ///     This is the faster constructor.
         /// </summary>
         /// <param name="v">OpenTK.Vector2d</param>
         public Vector2h(ref Vector2d v)
@@ -176,7 +158,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half2 instance will convert the Vector2d into 16-bit half-precision floating-point.
+        ///     The new Half2 instance will convert the Vector2d into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="v">OpenTK.Vector2d</param>
         /// <param name="throwOnError">Enable checks that will throw if the conversion result is not meaningful.</param>
@@ -191,7 +173,7 @@ namespace GreenBox3D
         #region Half -> Single
 
         /// <summary>
-        /// Returns this Half2 instance's contents as Vector2.
+        ///     Returns this Half2 instance's contents as Vector2.
         /// </summary>
         /// <returns>OpenTK.Vector2</returns>
         public Vector2 ToVector2()
@@ -200,7 +182,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Returns this Half2 instance's contents as Vector2d.
+        ///     Returns this Half2 instance's contents as Vector2d.
         /// </summary>
         public Vector2d ToVector2d()
         {
@@ -259,8 +241,8 @@ namespace GreenBox3D
         /// <param name="context"></param>
         public Vector2h(SerializationInfo info, StreamingContext context)
         {
-            this.X = (Half)info.GetValue("X", typeof(Half));
-            this.Y = (Half)info.GetValue("Y", typeof(Half));
+            X = (Half)info.GetValue("X", typeof(Half));
+            Y = (Half)info.GetValue("Y", typeof(Half));
         }
 
         /// <summary>Used by ISerialize to serialize the object.</summary>
@@ -268,8 +250,8 @@ namespace GreenBox3D
         /// <param name="context"></param>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("X", this.X);
-            info.AddValue("Y", this.Y);
+            info.AddValue("X", X);
+            info.AddValue("Y", Y);
         }
 
         #endregion ISerializable
@@ -301,7 +283,7 @@ namespace GreenBox3D
         /// <returns>True, if other is equal to this instance; false otherwise.</returns>
         public bool Equals(Vector2h other)
         {
-            return (this.X.Equals(other.X) && this.Y.Equals(other.Y));
+            return (X.Equals(other.X) && Y.Equals(other.Y));
         }
 
         #endregion

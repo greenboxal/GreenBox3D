@@ -1,9 +1,9 @@
-﻿// GreenBox3D
+﻿// KeyboardState.cs
 // 
-// Copyright (c) 2013 The GreenBox Development Inc.
-// Copyright (c) 2013 Mono.Xna Team and Contributors
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
 // 
-// Licensed under MIT license terms.
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Collections.Generic;
@@ -15,15 +15,11 @@ namespace GreenBox3D.Input
 {
     public struct KeyboardState
     {
-        // Used for the common situation where GetPressedKeys will return an empty array
-
         #region Static Fields
 
         private static readonly Keys[] _Empty = new Keys[0];
 
         #endregion
-
-        // Array of 256 bits:
 
         #region Fields
 
@@ -73,7 +69,10 @@ namespace GreenBox3D.Input
 
         #region Public Indexers
 
-        public KeyState this[Keys key] { get { return InternalGetKey(key) ? KeyState.Down : KeyState.Up; } }
+        public KeyState this[Keys key]
+        {
+            get { return InternalGetKey(key) ? KeyState.Down : KeyState.Up; }
+        }
 
         #endregion
 
@@ -81,7 +80,8 @@ namespace GreenBox3D.Input
 
         public static bool operator ==(KeyboardState a, KeyboardState b)
         {
-            return a._Keys0 == b._Keys0 && a._Keys1 == b._Keys1 && a._Keys2 == b._Keys2 && a._Keys3 == b._Keys3 && a._Keys4 == b._Keys4 && a._Keys5 == b._Keys5 && a._Keys6 == b._Keys6 && a._Keys7 == b._Keys7;
+            return a._Keys0 == b._Keys0 && a._Keys1 == b._Keys1 && a._Keys2 == b._Keys2 && a._Keys3 == b._Keys3 &&
+                   a._Keys4 == b._Keys4 && a._Keys5 == b._Keys5 && a._Keys6 == b._Keys6 && a._Keys7 == b._Keys7;
         }
 
         public static bool operator !=(KeyboardState a, KeyboardState b)
@@ -101,7 +101,8 @@ namespace GreenBox3D.Input
 
         public Keys[] GetPressedKeys()
         {
-            uint count = CountBits(_Keys0) + CountBits(_Keys1) + CountBits(_Keys2) + CountBits(_Keys3) + CountBits(_Keys4) + CountBits(_Keys5) + CountBits(_Keys6) + CountBits(_Keys7);
+            uint count = CountBits(_Keys0) + CountBits(_Keys1) + CountBits(_Keys2) + CountBits(_Keys3) +
+                         CountBits(_Keys4) + CountBits(_Keys5) + CountBits(_Keys6) + CountBits(_Keys7);
 
             if (count == 0)
                 return _Empty;
@@ -285,5 +286,9 @@ namespace GreenBox3D.Input
         }
 
         #endregion
+
+        // Used for the common situation where GetPressedKeys will return an empty array
+
+        // Array of 256 bits:
     }
 }

@@ -1,7 +1,9 @@
-﻿// This file is part of GreenBox3D
-//
-// Copyright (c) 2013 The GreenBox Development Inc., all rights reserved
-// Redistributing this file without express authorization may lead to legal actions
+﻿// Program.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Collections.Generic;
@@ -12,14 +14,12 @@ using System.Threading.Tasks;
 
 namespace TestApp
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            //using (TestGame game = new TestGame())
-            //    game.Run();
-
-
+            using (TestGame game = new TestGame())
+                game.Run();
         }
     }
 }

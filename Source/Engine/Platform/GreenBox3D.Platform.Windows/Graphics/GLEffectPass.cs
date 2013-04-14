@@ -1,9 +1,15 @@
-﻿using System;
+﻿// GLEffectPass.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using GreenBox3D.Graphics;
 using GreenBox3D.Platform.Windows.Graphics.Shading;
 using OpenTK.Graphics.OpenGL;
@@ -70,7 +76,8 @@ namespace GreenBox3D.Platform.Windows.Graphics
                         {
                             for (int i = 0; i < parameter.Textures.Length; i++)
                             {
-                                _pass.GraphicsDevice.Textures[parameter.Parameter.TextureUnit + i] = parameter.Textures[i];
+                                _pass.GraphicsDevice.Textures[parameter.Parameter.TextureUnit + i] =
+                                    parameter.Textures[i];
                                 applyTextures = true;
                             }
                         }

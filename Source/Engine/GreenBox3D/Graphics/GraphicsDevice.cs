@@ -1,4 +1,11 @@
-﻿using System;
+﻿// GraphicsDevice.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +17,7 @@ namespace GreenBox3D.Graphics
     {
         [ThreadStatic]
         private static GraphicsDevice _currentDevice;
+
         public static GraphicsDevice ActiveDevice
         {
             get { return _currentDevice; }
@@ -22,10 +30,7 @@ namespace GreenBox3D.Graphics
 
         public abstract TextureCollection Textures { get; }
         public abstract IIndexBuffer Indices { get; set; }
-
-        public GraphicsDevice()
-        {
-        }
+        public abstract void Dispose();
 
         public void MakeCurrent()
         {
@@ -47,15 +52,21 @@ namespace GreenBox3D.Graphics
 
         public abstract void Clear(ClearOptions options, Color color);
 
-        public abstract void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertex, int numVertices, int startIndex, int primitiveCount);
+        public abstract void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertex, int numVertices,
+                                                   int startIndex, int primitiveCount);
+
         public abstract void DrawPrimitives(PrimitiveType primitiveType, int startVertex, int primitiveCount);
-        public abstract void DrawUserIndexedPrimitives<T>(PrimitiveType primitiveType, T[] vertexData, int vertexOffset, int vertexCount, int[] indexData, int indexOffset, int primitiveCount) where T : IVertexType;
-        public abstract void DrawUserPrimitives<T>(PrimitiveType primitiveType, T[] vertexData, int vertexOffset, int primitiveCount) where T : struct, IVertexType;
+
+        public abstract void DrawUserIndexedPrimitives<T>(PrimitiveType primitiveType, T[] vertexData, int vertexOffset,
+                                                          int vertexCount, int[] indexData, int indexOffset,
+                                                          int primitiveCount) where T : IVertexType;
+
+        public abstract void DrawUserPrimitives<T>(PrimitiveType primitiveType, T[] vertexData, int vertexOffset,
+                                                   int primitiveCount) where T : struct, IVertexType;
 
         public abstract void SetVertexBuffer(IVertexBuffer vertexBuffer);
 
         public abstract void Present();
-        public abstract void Dispose();
 
         protected abstract bool MakeCurrentInternal();
     }

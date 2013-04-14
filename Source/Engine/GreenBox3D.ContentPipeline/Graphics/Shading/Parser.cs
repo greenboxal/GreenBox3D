@@ -1,9 +1,15 @@
-﻿using System;
+﻿// Parser.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using GreenBox3D.ContentPipeline.Graphics.Shading.Ast;
 using GreenBox3D.ContentPipeline.CompilerServices;
 using System.IO;
@@ -12,8 +18,8 @@ namespace GreenBox3D.ContentPipeline.Graphics.Shading
 {
     public class Parser
     {
-        private Scanner _scanner;
-        private ILoggerHelper _reporter;
+        private readonly ILoggerHelper _reporter;
+        private readonly Scanner _scanner;
         private Token _tk;
 
         public Parser(Scanner scanner, ILoggerHelper reporter)
@@ -98,7 +104,7 @@ namespace GreenBox3D.ContentPipeline.Graphics.Shading
 
                                 shader.Input.Add(variable);
                             }
-                                
+
                             Next();
                         }
                         break;
@@ -149,37 +155,37 @@ namespace GreenBox3D.ContentPipeline.Graphics.Shading
                         }
                         break;
                     case TokenType.Passes:
-                            {
-                                Next();
+                        {
+                            Next();
 
-                                if (!Match(TokenType.LeftBrackets))
+                            if (!Match(TokenType.LeftBrackets))
+                                return false;
+
+                            while (_tk.Type != TokenType.RightBrackets)
+                            {
+                                Pass pass;
+
+                                if (!MatchPass(out pass))
                                     return false;
 
-                                while (_tk.Type != TokenType.RightBrackets)
-                                {
-                                    Pass pass;
-
-                                    if (!MatchPass(out pass))
-                                        return false;
-
-                                    shader.Passes.Add(pass);
-                                }
-
-                                Next();
+                                shader.Passes.Add(pass);
                             }
-                            break;
+
+                            Next();
+                        }
+                        break;
                     case TokenType.Fallback:
-                            {
-                                Next();
+                        {
+                            Next();
 
-                                if (!Match(TokenType.String, out text))
-                                    return false;
+                            if (!Match(TokenType.String, out text))
+                                return false;
 
-                                shader.Fallback = text;
-                            }
-                            break;
+                            shader.Fallback = text;
+                        }
+                        break;
                     default:
-                            Report(MessageLevel.Error, _tk, _tk, "SH0001", "Unexpected token '{0}'", _tk.Type);
+                        Report(MessageLevel.Error, _tk, _tk, "SH0001", "Unexpected token '{0}'", _tk.Type);
                         break;
                 }
             }
@@ -383,9 +389,11 @@ namespace GreenBox3D.ContentPipeline.Graphics.Shading
             return false;
         }
 
-        private void Report(MessageLevel errorLevel, Token tk1, Token tk2, string errorCode, string message, params object[] args)
+        private void Report(MessageLevel errorLevel, Token tk1, Token tk2, string errorCode, string message,
+                            params object[] args)
         {
-            _reporter.Log(errorLevel, errorCode, tk1.File, tk1.Line, tk1.Column, tk2.EndLine, tk2.EndColumn, message, args);
+            _reporter.Log(errorLevel, errorCode, tk1.File, tk1.Line, tk1.Column, tk2.EndLine, tk2.EndColumn, message,
+                          args);
         }
 
         private void Next()

@@ -1,21 +1,20 @@
-﻿// GreenBox3D
+﻿// Texture2DLoader.cs
 // 
-// Copyright (c) 2013 The GreenBox Development Inc.
-// Copyright (c) 2013 Mono.Xna Team and Contributors
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
 // 
-// Licensed under MIT license terms.
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using GreenBox3D.Graphics;
 
 namespace GreenBox3D.Content.Loaders
 {
-  /*  [ContentTypeReader(Extension = ".tex")]
+    /*  [ContentTypeReader(Extension = ".tex")]
     public class Texture2DLoader : ContentTypeReader<Texture2D>
     {
         #region Constructors and Destructors

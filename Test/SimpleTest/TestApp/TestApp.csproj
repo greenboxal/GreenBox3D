@@ -52,6 +52,10 @@
     <Compile Include="TestGame.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Source\Engine\GreenBox3D\GreenBox3D.csproj">
+      <Project>{33b775dd-55e6-402d-ba64-49078edbc11a}</Project>
+      <Name>GreenBox3D</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TestAppContent\TestAppContent.csproj">
       <Project>{2f4ae659-cf75-4d7a-b862-378c42b1e943}</Project>
       <Name>TestAppContent</Name>

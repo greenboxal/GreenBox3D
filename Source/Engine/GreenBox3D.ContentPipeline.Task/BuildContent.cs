@@ -1,14 +1,19 @@
-﻿using System;
+﻿// BuildContent.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Xml;
-
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-
 using GreenBox3D.ContentPipeline.CompilerServices;
 
 namespace GreenBox3D.ContentPipeline.Task
@@ -35,14 +40,18 @@ namespace GreenBox3D.ContentPipeline.Task
         {
             // We use this isolation to permit developers to rebuild their pipeline libraries without getting locked by MSBuild AppDomain
             using (IsolationAppDomain isolation = new IsolationAppDomain())
-                return isolation.CreateProxy<IsolationProxy>().Execute(Log, SourceAssets, PipelineAssemblies, BuildConfiguration, IntermediateDirectory, OutputDirectory, RootDirectory);
+                return isolation.CreateProxy<IsolationProxy>()
+                                .Execute(Log, SourceAssets, PipelineAssemblies, BuildConfiguration,
+                                         IntermediateDirectory, OutputDirectory, RootDirectory);
         }
 
         private class IsolationProxy : MarshalByRefObject
         {
-            public bool Execute(TaskLoggingHelper log, ITaskItem[] sourceAssets, ITaskItem[] pipelineAssemblies, string buildConfiguration, string intermediateDirectory, string outputDirectory, string rootDirectory)
+            public bool Execute(TaskLoggingHelper log, ITaskItem[] sourceAssets, ITaskItem[] pipelineAssemblies,
+                                string buildConfiguration, string intermediateDirectory, string outputDirectory,
+                                string rootDirectory)
             {
-                BuildCoordinatorSettings settings = new BuildCoordinatorSettings()
+                BuildCoordinatorSettings settings = new BuildCoordinatorSettings
                 {
                     BuildConfiguration = buildConfiguration,
                     IntermediateDirectory = intermediateDirectory,

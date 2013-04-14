@@ -1,4 +1,11 @@
-﻿using System;
+﻿// BufferManager.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -9,14 +16,16 @@ namespace GreenBox3D.Graphics
 {
     public abstract class BufferManager
     {
-        public abstract IIndexBuffer CreateIndexBuffer(IndexElementSize indexElementSize, int indexCount, BufferUsage usage);
+        public abstract IIndexBuffer CreateIndexBuffer(IndexElementSize indexElementSize, int indexCount,
+                                                       BufferUsage usage);
 
         public virtual IIndexBuffer CreateIndexBuffer(Type elementType, int indexCount, BufferUsage usage)
         {
             return CreateIndexBuffer(GetElementSizeFromType(elementType), indexCount, usage);
         }
 
-        public abstract IVertexBuffer CreateVertexBuffer(VertexDeclaration vertexDeclaration, int vertexCount, BufferUsage usage);
+        public abstract IVertexBuffer CreateVertexBuffer(VertexDeclaration vertexDeclaration, int vertexCount,
+                                                         BufferUsage usage);
 
         public virtual IVertexBuffer CreateVertexBuffer(Type elementType, int vertexCount, BufferUsage usage)
         {

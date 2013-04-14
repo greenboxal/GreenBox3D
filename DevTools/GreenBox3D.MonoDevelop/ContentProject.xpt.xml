@@ -1,20 +1,20 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
 <Template
-	originator   = "The GreenBox Development LLC">
-	
-	<!-- Template Header -->
-	<TemplateConfiguration>
-		<_Name>Content Project</_Name>
-		<_Category>GreenBox3D</_Category>
-		<Icon>md-project-console|res:c-icon-32.png</Icon>
-		<_Description>Creates a GreenBox3D content project.</_Description>
-	</TemplateConfiguration>
-	
-	<!-- Template Content -->
-	<Combine name = "${ProjectName}" directory = ".">
-		<Project name = "${ProjectName}" directory = ".">
+  originator="The GreenBox Development LLC">
 
-		</Project>
-	</Combine>
+  <!-- Template Header -->
+  <TemplateConfiguration>
+    <_Name>Content Project</_Name>
+    <_Category>GreenBox3D</_Category>
+    <Icon>md-project-console|res:c-icon-32.png</Icon>
+    <_Description>Creates a GreenBox3D content project.</_Description>
+  </TemplateConfiguration>
+
+  <!-- Template Content -->
+  <Combine name="${ProjectName}" directory=".">
+    <Project name="${ProjectName}" directory=".">
+
+    </Project>
+  </Combine>
 </Template>
-

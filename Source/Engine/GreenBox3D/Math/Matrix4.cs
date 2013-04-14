@@ -1,26 +1,9 @@
-#region --- License ---
-/*
-Copyright (c) 2006 - 2008 The Open Toolkit library.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
- */
-#endregion
+// Matrix4.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Runtime.InteropServices;
@@ -28,7 +11,7 @@ using System.Runtime.InteropServices;
 namespace GreenBox3D
 {
     /// <summary>
-    /// Represents a 4x4 Matrix
+    ///     Represents a 4x4 Matrix
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
@@ -37,24 +20,27 @@ namespace GreenBox3D
         #region Fields
 
         /// <summary>
-        /// Top row of the matrix
+        ///     Top row of the matrix
         /// </summary>
         public Vector4 Row0;
+
         /// <summary>
-        /// 2nd row of the matrix
+        ///     2nd row of the matrix
         /// </summary>
         public Vector4 Row1;
+
         /// <summary>
-        /// 3rd row of the matrix
+        ///     3rd row of the matrix
         /// </summary>
         public Vector4 Row2;
+
         /// <summary>
-        /// Bottom row of the matrix
+        ///     Bottom row of the matrix
         /// </summary>
         public Vector4 Row3;
- 
+
         /// <summary>
-        /// The identity matrix
+        ///     The identity matrix
         /// </summary>
         public static Matrix4 Identity = new Matrix4(Vector4.UnitX, Vector4.UnitY, Vector4.UnitZ, Vector4.UnitW);
 
@@ -63,7 +49,7 @@ namespace GreenBox3D
         #region Constructors
 
         /// <summary>
-        /// Constructs a new instance.
+        ///     Constructs a new instance.
         /// </summary>
         /// <param name="row0">Top row of the matrix</param>
         /// <param name="row1">Second row of the matrix</param>
@@ -78,7 +64,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Constructs a new instance.
+        ///     Constructs a new instance.
         /// </summary>
         /// <param name="m00">First item of the first row of the matrix.</param>
         /// <param name="m01">Second item of the first row of the matrix.</param>
@@ -115,24 +101,30 @@ namespace GreenBox3D
         #region Properties
 
         /// <summary>
-        /// The determinant of this matrix
+        ///     The determinant of this matrix
         /// </summary>
         public float Determinant
         {
             get
             {
                 return
-                    Row0.X * Row1.Y * Row2.Z * Row3.W - Row0.X * Row1.Y * Row2.W * Row3.Z + Row0.X * Row1.Z * Row2.W * Row3.Y - Row0.X * Row1.Z * Row2.Y * Row3.W
-                  + Row0.X * Row1.W * Row2.Y * Row3.Z - Row0.X * Row1.W * Row2.Z * Row3.Y - Row0.Y * Row1.Z * Row2.W * Row3.X + Row0.Y * Row1.Z * Row2.X * Row3.W
-                  - Row0.Y * Row1.W * Row2.X * Row3.Z + Row0.Y * Row1.W * Row2.Z * Row3.X - Row0.Y * Row1.X * Row2.Z * Row3.W + Row0.Y * Row1.X * Row2.W * Row3.Z
-                  + Row0.Z * Row1.W * Row2.X * Row3.Y - Row0.Z * Row1.W * Row2.Y * Row3.X + Row0.Z * Row1.X * Row2.Y * Row3.W - Row0.Z * Row1.X * Row2.W * Row3.Y
-                  + Row0.Z * Row1.Y * Row2.W * Row3.X - Row0.Z * Row1.Y * Row2.X * Row3.W - Row0.W * Row1.X * Row2.Y * Row3.Z + Row0.W * Row1.X * Row2.Z * Row3.Y
-                  - Row0.W * Row1.Y * Row2.Z * Row3.X + Row0.W * Row1.Y * Row2.X * Row3.Z - Row0.W * Row1.Z * Row2.X * Row3.Y + Row0.W * Row1.Z * Row2.Y * Row3.X;
+                    Row0.X * Row1.Y * Row2.Z * Row3.W - Row0.X * Row1.Y * Row2.W * Row3.Z +
+                    Row0.X * Row1.Z * Row2.W * Row3.Y - Row0.X * Row1.Z * Row2.Y * Row3.W
+                    + Row0.X * Row1.W * Row2.Y * Row3.Z - Row0.X * Row1.W * Row2.Z * Row3.Y -
+                    Row0.Y * Row1.Z * Row2.W * Row3.X + Row0.Y * Row1.Z * Row2.X * Row3.W
+                    - Row0.Y * Row1.W * Row2.X * Row3.Z + Row0.Y * Row1.W * Row2.Z * Row3.X -
+                    Row0.Y * Row1.X * Row2.Z * Row3.W + Row0.Y * Row1.X * Row2.W * Row3.Z
+                    + Row0.Z * Row1.W * Row2.X * Row3.Y - Row0.Z * Row1.W * Row2.Y * Row3.X +
+                    Row0.Z * Row1.X * Row2.Y * Row3.W - Row0.Z * Row1.X * Row2.W * Row3.Y
+                    + Row0.Z * Row1.Y * Row2.W * Row3.X - Row0.Z * Row1.Y * Row2.X * Row3.W -
+                    Row0.W * Row1.X * Row2.Y * Row3.Z + Row0.W * Row1.X * Row2.Z * Row3.Y
+                    - Row0.W * Row1.Y * Row2.Z * Row3.X + Row0.W * Row1.Y * Row2.X * Row3.Z -
+                    Row0.W * Row1.Z * Row2.X * Row3.Y + Row0.W * Row1.Z * Row2.Y * Row3.X;
             }
         }
 
         /// <summary>
-        /// The first column of this matrix
+        ///     The first column of this matrix
         /// </summary>
         public Vector4 Column0
         {
@@ -140,7 +132,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The second column of this matrix
+        ///     The second column of this matrix
         /// </summary>
         public Vector4 Column1
         {
@@ -148,7 +140,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The third column of this matrix
+        ///     The third column of this matrix
         /// </summary>
         public Vector4 Column2
         {
@@ -156,7 +148,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The fourth column of this matrix
+        ///     The fourth column of this matrix
         /// </summary>
         public Vector4 Column3
         {
@@ -164,84 +156,148 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Gets or sets the value at row 1, column 1 of this instance.
+        ///     Gets or sets the value at row 1, column 1 of this instance.
         /// </summary>
-        public float M11 { get { return Row0.X; } set { Row0.X = value; } }
+        public float M11
+        {
+            get { return Row0.X; }
+            set { Row0.X = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 1, column 2 of this instance.
+        ///     Gets or sets the value at row 1, column 2 of this instance.
         /// </summary>
-        public float M12 { get { return Row0.Y; } set { Row0.Y = value; } }
+        public float M12
+        {
+            get { return Row0.Y; }
+            set { Row0.Y = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 1, column 3 of this instance.
+        ///     Gets or sets the value at row 1, column 3 of this instance.
         /// </summary>
-        public float M13 { get { return Row0.Z; } set { Row0.Z = value; } }
+        public float M13
+        {
+            get { return Row0.Z; }
+            set { Row0.Z = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 1, column 4 of this instance.
+        ///     Gets or sets the value at row 1, column 4 of this instance.
         /// </summary>
-        public float M14 { get { return Row0.W; } set { Row0.W = value; } }
+        public float M14
+        {
+            get { return Row0.W; }
+            set { Row0.W = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 2, column 1 of this instance.
+        ///     Gets or sets the value at row 2, column 1 of this instance.
         /// </summary>
-        public float M21 { get { return Row1.X; } set { Row1.X = value; } }
+        public float M21
+        {
+            get { return Row1.X; }
+            set { Row1.X = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 2, column 2 of this instance.
+        ///     Gets or sets the value at row 2, column 2 of this instance.
         /// </summary>
-        public float M22 { get { return Row1.Y; } set { Row1.Y = value; } }
+        public float M22
+        {
+            get { return Row1.Y; }
+            set { Row1.Y = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 2, column 3 of this instance.
+        ///     Gets or sets the value at row 2, column 3 of this instance.
         /// </summary>
-        public float M23 { get { return Row1.Z; } set { Row1.Z = value; } }
+        public float M23
+        {
+            get { return Row1.Z; }
+            set { Row1.Z = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 2, column 4 of this instance.
+        ///     Gets or sets the value at row 2, column 4 of this instance.
         /// </summary>
-        public float M24 { get { return Row1.W; } set { Row1.W = value; } }
+        public float M24
+        {
+            get { return Row1.W; }
+            set { Row1.W = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 3, column 1 of this instance.
+        ///     Gets or sets the value at row 3, column 1 of this instance.
         /// </summary>
-        public float M31 { get { return Row2.X; } set { Row2.X = value; } }
+        public float M31
+        {
+            get { return Row2.X; }
+            set { Row2.X = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 3, column 2 of this instance.
+        ///     Gets or sets the value at row 3, column 2 of this instance.
         /// </summary>
-        public float M32 { get { return Row2.Y; } set { Row2.Y = value; } }
+        public float M32
+        {
+            get { return Row2.Y; }
+            set { Row2.Y = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 3, column 3 of this instance.
+        ///     Gets or sets the value at row 3, column 3 of this instance.
         /// </summary>
-        public float M33 { get { return Row2.Z; } set { Row2.Z = value; } }
+        public float M33
+        {
+            get { return Row2.Z; }
+            set { Row2.Z = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 3, column 4 of this instance.
+        ///     Gets or sets the value at row 3, column 4 of this instance.
         /// </summary>
-        public float M34 { get { return Row2.W; } set { Row2.W = value; } }
+        public float M34
+        {
+            get { return Row2.W; }
+            set { Row2.W = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 4, column 1 of this instance.
+        ///     Gets or sets the value at row 4, column 1 of this instance.
         /// </summary>
-        public float M41 { get { return Row3.X; } set { Row3.X = value; } }
+        public float M41
+        {
+            get { return Row3.X; }
+            set { Row3.X = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 4, column 2 of this instance.
+        ///     Gets or sets the value at row 4, column 2 of this instance.
         /// </summary>
-        public float M42 { get { return Row3.Y; } set { Row3.Y = value; } }
+        public float M42
+        {
+            get { return Row3.Y; }
+            set { Row3.Y = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 4, column 3 of this instance.
+        ///     Gets or sets the value at row 4, column 3 of this instance.
         /// </summary>
-        public float M43 { get { return Row3.Z; } set { Row3.Z = value; } }
+        public float M43
+        {
+            get { return Row3.Z; }
+            set { Row3.Z = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 4, column 4 of this instance.
+        ///     Gets or sets the value at row 4, column 4 of this instance.
         /// </summary>
-        public float M44 { get { return Row3.W; } set { Row3.W = value; } }
+        public float M44
+        {
+            get { return Row3.W; }
+            set { Row3.W = value; }
+        }
 
         #endregion
 
@@ -250,11 +306,11 @@ namespace GreenBox3D
         #region public void Invert()
 
         /// <summary>
-        /// Converts this instance into its inverse.
+        ///     Converts this instance into its inverse.
         /// </summary>
         public void Invert()
         {
-            this = Matrix4.Invert(this);
+            this = Invert(this);
         }
 
         #endregion
@@ -262,11 +318,11 @@ namespace GreenBox3D
         #region public void Transpose()
 
         /// <summary>
-        /// Converts this instance into its transpose.
+        ///     Converts this instance into its transpose.
         /// </summary>
         public void Transpose()
         {
-            this = Matrix4.Transpose(this);
+            this = Transpose(this);
         }
 
         #endregion
@@ -274,31 +330,34 @@ namespace GreenBox3D
         #endregion
 
         #region Static
-        
+
         #region CreateFromAxisAngle
-        
+
         /// <summary>
-        /// Build a rotation matrix from the specified axis/angle rotation.
+        ///     Build a rotation matrix from the specified axis/angle rotation.
         /// </summary>
         /// <param name="axis">The axis to rotate about.</param>
         /// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
         /// <param name="result">A matrix instance.</param>
         public static void CreateFromAxisAngle(Vector3 axis, float angle, out Matrix4 result)
         {
-            float cos = (float)System.Math.Cos(-angle);
-            float sin = (float)System.Math.Sin(-angle);
+            float cos = (float)Math.Cos(-angle);
+            float sin = (float)Math.Sin(-angle);
             float t = 1.0f - cos;
 
             axis.Normalize();
 
-            result = new Matrix4(t * axis.X * axis.X + cos, t * axis.X * axis.Y - sin * axis.Z, t * axis.X * axis.Z + sin * axis.Y, 0.0f,
-                                 t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos, t * axis.Y * axis.Z - sin * axis.X, 0.0f,
-                                 t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X, t * axis.Z * axis.Z + cos, 0.0f,
+            result = new Matrix4(t * axis.X * axis.X + cos, t * axis.X * axis.Y - sin * axis.Z,
+                                 t * axis.X * axis.Z + sin * axis.Y, 0.0f,
+                                 t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos,
+                                 t * axis.Y * axis.Z - sin * axis.X, 0.0f,
+                                 t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X,
+                                 t * axis.Z * axis.Z + cos, 0.0f,
                                  0, 0, 0, 1);
         }
-        
+
         /// <summary>
-        /// Build a rotation matrix from the specified axis/angle rotation.
+        ///     Build a rotation matrix from the specified axis/angle rotation.
         /// </summary>
         /// <param name="axis">The axis to rotate about.</param>
         /// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
@@ -309,20 +368,20 @@ namespace GreenBox3D
             CreateFromAxisAngle(axis, angle, out result);
             return result;
         }
-        
+
         #endregion
 
         #region CreateRotation[XYZ]
 
         /// <summary>
-        /// Builds a rotation matrix for a rotation around the x-axis.
+        ///     Builds a rotation matrix for a rotation around the x-axis.
         /// </summary>
         /// <param name="angle">The counter-clockwise angle in radians.</param>
         /// <param name="result">The resulting Matrix4 instance.</param>
         public static void CreateRotationX(float angle, out Matrix4 result)
         {
-            float cos = (float)System.Math.Cos(angle);
-            float sin = (float)System.Math.Sin(angle);
+            float cos = (float)Math.Cos(angle);
+            float sin = (float)Math.Sin(angle);
 
             result.Row0 = Vector4.UnitX;
             result.Row1 = new Vector4(0.0f, cos, sin, 0.0f);
@@ -331,7 +390,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Builds a rotation matrix for a rotation around the x-axis.
+        ///     Builds a rotation matrix for a rotation around the x-axis.
         /// </summary>
         /// <param name="angle">The counter-clockwise angle in radians.</param>
         /// <returns>The resulting Matrix4 instance.</returns>
@@ -343,14 +402,14 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Builds a rotation matrix for a rotation around the y-axis.
+        ///     Builds a rotation matrix for a rotation around the y-axis.
         /// </summary>
         /// <param name="angle">The counter-clockwise angle in radians.</param>
         /// <param name="result">The resulting Matrix4 instance.</param>
         public static void CreateRotationY(float angle, out Matrix4 result)
         {
-            float cos = (float)System.Math.Cos(angle);
-            float sin = (float)System.Math.Sin(angle);
+            float cos = (float)Math.Cos(angle);
+            float sin = (float)Math.Sin(angle);
 
             result.Row0 = new Vector4(cos, 0.0f, -sin, 0.0f);
             result.Row1 = Vector4.UnitY;
@@ -359,7 +418,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Builds a rotation matrix for a rotation around the y-axis.
+        ///     Builds a rotation matrix for a rotation around the y-axis.
         /// </summary>
         /// <param name="angle">The counter-clockwise angle in radians.</param>
         /// <returns>The resulting Matrix4 instance.</returns>
@@ -371,14 +430,14 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Builds a rotation matrix for a rotation around the z-axis.
+        ///     Builds a rotation matrix for a rotation around the z-axis.
         /// </summary>
         /// <param name="angle">The counter-clockwise angle in radians.</param>
         /// <param name="result">The resulting Matrix4 instance.</param>
         public static void CreateRotationZ(float angle, out Matrix4 result)
         {
-            float cos = (float)System.Math.Cos(angle);
-            float sin = (float)System.Math.Sin(angle);
+            float cos = (float)Math.Cos(angle);
+            float sin = (float)Math.Sin(angle);
 
             result.Row0 = new Vector4(cos, sin, 0.0f, 0.0f);
             result.Row1 = new Vector4(-sin, cos, 0.0f, 0.0f);
@@ -387,7 +446,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Builds a rotation matrix for a rotation around the z-axis.
+        ///     Builds a rotation matrix for a rotation around the z-axis.
         /// </summary>
         /// <param name="angle">The counter-clockwise angle in radians.</param>
         /// <returns>The resulting Matrix4 instance.</returns>
@@ -403,7 +462,7 @@ namespace GreenBox3D
         #region CreateTranslation
 
         /// <summary>
-        /// Creates a translation matrix.
+        ///     Creates a translation matrix.
         /// </summary>
         /// <param name="x">X translation.</param>
         /// <param name="y">Y translation.</param>
@@ -416,7 +475,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Creates a translation matrix.
+        ///     Creates a translation matrix.
         /// </summary>
         /// <param name="vector">The translation vector.</param>
         /// <param name="result">The resulting Matrix4 instance.</param>
@@ -427,7 +486,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Creates a translation matrix.
+        ///     Creates a translation matrix.
         /// </summary>
         /// <param name="x">X translation.</param>
         /// <param name="y">Y translation.</param>
@@ -441,7 +500,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Creates a translation matrix.
+        ///     Creates a translation matrix.
         /// </summary>
         /// <param name="vector">The translation vector.</param>
         /// <returns>The resulting Matrix4 instance.</returns>
@@ -457,7 +516,7 @@ namespace GreenBox3D
         #region CreateOrthographic
 
         /// <summary>
-        /// Creates an orthographic projection matrix.
+        ///     Creates an orthographic projection matrix.
         /// </summary>
         /// <param name="width">The width of the projection volume.</param>
         /// <param name="height">The height of the projection volume.</param>
@@ -470,7 +529,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Creates an orthographic projection matrix.
+        ///     Creates an orthographic projection matrix.
         /// </summary>
         /// <param name="width">The width of the projection volume.</param>
         /// <param name="height">The height of the projection volume.</param>
@@ -489,7 +548,7 @@ namespace GreenBox3D
         #region CreateOrthographicOffCenter
 
         /// <summary>
-        /// Creates an orthographic projection matrix.
+        ///     Creates an orthographic projection matrix.
         /// </summary>
         /// <param name="left">The left edge of the projection volume.</param>
         /// <param name="right">The right edge of the projection volume.</param>
@@ -498,7 +557,8 @@ namespace GreenBox3D
         /// <param name="zNear">The near edge of the projection volume.</param>
         /// <param name="zFar">The far edge of the projection volume.</param>
         /// <param name="result">The resulting Matrix4 instance.</param>
-        public static void CreateOrthographicOffCenter(float left, float right, float bottom, float top, float zNear, float zFar, out Matrix4 result)
+        public static void CreateOrthographicOffCenter(float left, float right, float bottom, float top, float zNear,
+                                                       float zFar, out Matrix4 result)
         {
             result = new Matrix4();
 
@@ -517,7 +577,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Creates an orthographic projection matrix.
+        ///     Creates an orthographic projection matrix.
         /// </summary>
         /// <param name="left">The left edge of the projection volume.</param>
         /// <param name="right">The right edge of the projection volume.</param>
@@ -526,7 +586,8 @@ namespace GreenBox3D
         /// <param name="zNear">The near edge of the projection volume.</param>
         /// <param name="zFar">The far edge of the projection volume.</param>
         /// <returns>The resulting Matrix4 instance.</returns>
-        public static Matrix4 CreateOrthographicOffCenter(float left, float right, float bottom, float top, float zNear, float zFar)
+        public static Matrix4 CreateOrthographicOffCenter(float left, float right, float bottom, float top, float zNear,
+                                                          float zFar)
         {
             Matrix4 result;
             CreateOrthographicOffCenter(left, right, bottom, top, zNear, zFar, out result);
@@ -534,11 +595,11 @@ namespace GreenBox3D
         }
 
         #endregion
-        
+
         #region CreatePerspectiveFieldOfView
-        
+
         /// <summary>
-        /// Creates a perspective projection matrix.
+        ///     Creates a perspective projection matrix.
         /// </summary>
         /// <param name="fovy">Angle of the field of view in the y direction (in radians)</param>
         /// <param name="aspect">Aspect ratio of the view (width / height)</param>
@@ -546,16 +607,17 @@ namespace GreenBox3D
         /// <param name="zFar">Distance to the far clip plane</param>
         /// <param name="result">A projection matrix that transforms camera space to raster space</param>
         /// <exception cref="System.ArgumentOutOfRangeException">
-        /// Thrown under the following conditions:
-        /// <list type="bullet">
-        /// <item>fovy is zero, less than zero or larger than Math.PI</item>
-        /// <item>aspect is negative or zero</item>
-        /// <item>zNear is negative or zero</item>
-        /// <item>zFar is negative or zero</item>
-        /// <item>zNear is larger than zFar</item>
-        /// </list>
+        ///     Thrown under the following conditions:
+        ///     <list type="bullet">
+        ///         <item>fovy is zero, less than zero or larger than Math.PI</item>
+        ///         <item>aspect is negative or zero</item>
+        ///         <item>zNear is negative or zero</item>
+        ///         <item>zFar is negative or zero</item>
+        ///         <item>zNear is larger than zFar</item>
+        ///     </list>
         /// </exception>
-        public static void CreatePerspectiveFieldOfView(float fovy, float aspect, float zNear, float zFar, out Matrix4 result)
+        public static void CreatePerspectiveFieldOfView(float fovy, float aspect, float zNear, float zFar,
+                                                        out Matrix4 result)
         {
             if (fovy <= 0 || fovy > Math.PI)
                 throw new ArgumentOutOfRangeException("fovy");
@@ -565,17 +627,17 @@ namespace GreenBox3D
                 throw new ArgumentOutOfRangeException("zNear");
             if (zFar <= 0)
                 throw new ArgumentOutOfRangeException("zFar");
-            
-            float yMax = zNear * (float)System.Math.Tan(0.5f * fovy);
+
+            float yMax = zNear * (float)Math.Tan(0.5f * fovy);
             float yMin = -yMax;
             float xMin = yMin * aspect;
             float xMax = yMax * aspect;
 
             CreatePerspectiveOffCenter(xMin, xMax, yMin, yMax, zNear, zFar, out result);
         }
-        
+
         /// <summary>
-        /// Creates a perspective projection matrix.
+        ///     Creates a perspective projection matrix.
         /// </summary>
         /// <param name="fovy">Angle of the field of view in the y direction (in radians)</param>
         /// <param name="aspect">Aspect ratio of the view (width / height)</param>
@@ -583,14 +645,14 @@ namespace GreenBox3D
         /// <param name="zFar">Distance to the far clip plane</param>
         /// <returns>A projection matrix that transforms camera space to raster space</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">
-        /// Thrown under the following conditions:
-        /// <list type="bullet">
-        /// <item>fovy is zero, less than zero or larger than Math.PI</item>
-        /// <item>aspect is negative or zero</item>
-        /// <item>zNear is negative or zero</item>
-        /// <item>zFar is negative or zero</item>
-        /// <item>zNear is larger than zFar</item>
-        /// </list>
+        ///     Thrown under the following conditions:
+        ///     <list type="bullet">
+        ///         <item>fovy is zero, less than zero or larger than Math.PI</item>
+        ///         <item>aspect is negative or zero</item>
+        ///         <item>zNear is negative or zero</item>
+        ///         <item>zFar is negative or zero</item>
+        ///         <item>zNear is larger than zFar</item>
+        ///     </list>
         /// </exception>
         public static Matrix4 CreatePerspectiveFieldOfView(float fovy, float aspect, float zNear, float zFar)
         {
@@ -598,13 +660,13 @@ namespace GreenBox3D
             CreatePerspectiveFieldOfView(fovy, aspect, zNear, zFar, out result);
             return result;
         }
-        
+
         #endregion
-        
+
         #region CreatePerspectiveOffCenter
-        
+
         /// <summary>
-        /// Creates an perspective projection matrix.
+        ///     Creates an perspective projection matrix.
         /// </summary>
         /// <param name="left">Left edge of the view frustum</param>
         /// <param name="right">Right edge of the view frustum</param>
@@ -614,14 +676,15 @@ namespace GreenBox3D
         /// <param name="zFar">Distance to the far clip plane</param>
         /// <param name="result">A projection matrix that transforms camera space to raster space</param>
         /// <exception cref="System.ArgumentOutOfRangeException">
-        /// Thrown under the following conditions:
-        /// <list type="bullet">
-        /// <item>zNear is negative or zero</item>
-        /// <item>zFar is negative or zero</item>
-        /// <item>zNear is larger than zFar</item>
-        /// </list>
+        ///     Thrown under the following conditions:
+        ///     <list type="bullet">
+        ///         <item>zNear is negative or zero</item>
+        ///         <item>zFar is negative or zero</item>
+        ///         <item>zNear is larger than zFar</item>
+        ///     </list>
         /// </exception>
-        public static void CreatePerspectiveOffCenter(float left, float right, float bottom, float top, float zNear, float zFar, out Matrix4 result)
+        public static void CreatePerspectiveOffCenter(float left, float right, float bottom, float top, float zNear,
+                                                      float zFar, out Matrix4 result)
         {
             if (zNear <= 0)
                 throw new ArgumentOutOfRangeException("zNear");
@@ -629,22 +692,22 @@ namespace GreenBox3D
                 throw new ArgumentOutOfRangeException("zFar");
             if (zNear >= zFar)
                 throw new ArgumentOutOfRangeException("zNear");
-            
+
             float x = (2.0f * zNear) / (right - left);
             float y = (2.0f * zNear) / (top - bottom);
             float a = (right + left) / (right - left);
             float b = (top + bottom) / (top - bottom);
             float c = -(zFar + zNear) / (zFar - zNear);
             float d = -(2.0f * zFar * zNear) / (zFar - zNear);
-            
-            result = new Matrix4(x, 0, 0,  0,
-                                 0, y, 0,  0,
+
+            result = new Matrix4(x, 0, 0, 0,
+                                 0, y, 0, 0,
                                  a, b, c, -1,
-                                 0, 0, d,  0);
+                                 0, 0, d, 0);
         }
-        
+
         /// <summary>
-        /// Creates an perspective projection matrix.
+        ///     Creates an perspective projection matrix.
         /// </summary>
         /// <param name="left">Left edge of the view frustum</param>
         /// <param name="right">Right edge of the view frustum</param>
@@ -654,20 +717,21 @@ namespace GreenBox3D
         /// <param name="zFar">Distance to the far clip plane</param>
         /// <returns>A projection matrix that transforms camera space to raster space</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">
-        /// Thrown under the following conditions:
-        /// <list type="bullet">
-        /// <item>zNear is negative or zero</item>
-        /// <item>zFar is negative or zero</item>
-        /// <item>zNear is larger than zFar</item>
-        /// </list>
+        ///     Thrown under the following conditions:
+        ///     <list type="bullet">
+        ///         <item>zNear is negative or zero</item>
+        ///         <item>zFar is negative or zero</item>
+        ///         <item>zNear is larger than zFar</item>
+        ///     </list>
         /// </exception>
-        public static Matrix4 CreatePerspectiveOffCenter(float left, float right, float bottom, float top, float zNear, float zFar)
+        public static Matrix4 CreatePerspectiveOffCenter(float left, float right, float bottom, float top, float zNear,
+                                                         float zFar)
         {
             Matrix4 result;
             CreatePerspectiveOffCenter(left, right, bottom, top, zNear, zFar, out result);
             return result;
         }
-        
+
         #endregion
 
         #region Obsolete Functions
@@ -675,7 +739,7 @@ namespace GreenBox3D
         #region Translation Functions
 
         /// <summary>
-        /// Builds a translation matrix.
+        ///     Builds a translation matrix.
         /// </summary>
         /// <param name="trans">The translation vector.</param>
         /// <returns>A new Matrix4 instance.</returns>
@@ -686,7 +750,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Build a translation matrix with the given translation
+        ///     Build a translation matrix with the given translation
         /// </summary>
         /// <param name="x">X translation</param>
         /// <param name="y">Y translation</param>
@@ -707,7 +771,7 @@ namespace GreenBox3D
         #region Scale Functions
 
         /// <summary>
-        /// Build a scaling matrix
+        ///     Build a scaling matrix
         /// </summary>
         /// <param name="scale">Single scale factor for x,y and z axes</param>
         /// <returns>A scaling matrix</returns>
@@ -717,7 +781,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Build a scaling matrix
+        ///     Build a scaling matrix
         /// </summary>
         /// <param name="scale">Scale factors for x,y and z axes</param>
         /// <returns>A scaling matrix</returns>
@@ -727,7 +791,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Build a scaling matrix
+        ///     Build a scaling matrix
         /// </summary>
         /// <param name="x">Scale factor for x-axis</param>
         /// <param name="y">Scale factor for y-axis</param>
@@ -748,15 +812,15 @@ namespace GreenBox3D
         #region Rotation Functions
 
         /// <summary>
-        /// Build a rotation matrix that rotates about the x-axis
+        ///     Build a rotation matrix that rotates about the x-axis
         /// </summary>
         /// <param name="angle">angle in radians to rotate counter-clockwise around the x-axis</param>
         /// <returns>A rotation matrix</returns>
         [Obsolete("Use CreateRotationX instead.")]
         public static Matrix4 RotateX(float angle)
         {
-            float cos = (float)System.Math.Cos(angle);
-            float sin = (float)System.Math.Sin(angle);
+            float cos = (float)Math.Cos(angle);
+            float sin = (float)Math.Sin(angle);
 
             Matrix4 result;
             result.Row0 = Vector4.UnitX;
@@ -767,15 +831,15 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Build a rotation matrix that rotates about the y-axis
+        ///     Build a rotation matrix that rotates about the y-axis
         /// </summary>
         /// <param name="angle">angle in radians to rotate counter-clockwise around the y-axis</param>
         /// <returns>A rotation matrix</returns>
         [Obsolete("Use CreateRotationY instead.")]
         public static Matrix4 RotateY(float angle)
         {
-            float cos = (float)System.Math.Cos(angle);
-            float sin = (float)System.Math.Sin(angle);
+            float cos = (float)Math.Cos(angle);
+            float sin = (float)Math.Sin(angle);
 
             Matrix4 result;
             result.Row0 = new Vector4(cos, 0.0f, -sin, 0.0f);
@@ -786,15 +850,15 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Build a rotation matrix that rotates about the z-axis
+        ///     Build a rotation matrix that rotates about the z-axis
         /// </summary>
         /// <param name="angle">angle in radians to rotate counter-clockwise around the z-axis</param>
         /// <returns>A rotation matrix</returns>
         [Obsolete("Use CreateRotationZ instead.")]
         public static Matrix4 RotateZ(float angle)
         {
-            float cos = (float)System.Math.Cos(angle);
-            float sin = (float)System.Math.Sin(angle);
+            float cos = (float)Math.Cos(angle);
+            float sin = (float)Math.Sin(angle);
 
             Matrix4 result;
             result.Row0 = new Vector4(cos, sin, 0.0f, 0.0f);
@@ -805,7 +869,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Build a rotation matrix to rotate about the given axis
+        ///     Build a rotation matrix to rotate about the given axis
         /// </summary>
         /// <param name="axis">the axis to rotate about</param>
         /// <param name="angle">angle in radians to rotate counter-clockwise (looking in the direction of the given axis)</param>
@@ -813,22 +877,25 @@ namespace GreenBox3D
         [Obsolete("Use CreateFromAxisAngle instead.")]
         public static Matrix4 Rotate(Vector3 axis, float angle)
         {
-            float cos = (float)System.Math.Cos(-angle);
-            float sin = (float)System.Math.Sin(-angle);
+            float cos = (float)Math.Cos(-angle);
+            float sin = (float)Math.Sin(-angle);
             float t = 1.0f - cos;
 
             axis.Normalize();
 
             Matrix4 result;
-            result.Row0 = new Vector4(t * axis.X * axis.X + cos, t * axis.X * axis.Y - sin * axis.Z, t * axis.X * axis.Z + sin * axis.Y, 0.0f);
-            result.Row1 = new Vector4(t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos, t * axis.Y * axis.Z - sin * axis.X, 0.0f);
-            result.Row2 = new Vector4(t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X, t * axis.Z * axis.Z + cos, 0.0f);
+            result.Row0 = new Vector4(t * axis.X * axis.X + cos, t * axis.X * axis.Y - sin * axis.Z,
+                                      t * axis.X * axis.Z + sin * axis.Y, 0.0f);
+            result.Row1 = new Vector4(t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos,
+                                      t * axis.Y * axis.Z - sin * axis.X, 0.0f);
+            result.Row2 = new Vector4(t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X,
+                                      t * axis.Z * axis.Z + cos, 0.0f);
             result.Row3 = Vector4.UnitW;
             return result;
         }
 
         /// <summary>
-        /// Build a rotation matrix from a quaternion
+        ///     Build a rotation matrix from a quaternion
         /// </summary>
         /// <param name="q">the quaternion</param>
         /// <returns>A rotation matrix</returns>
@@ -845,7 +912,7 @@ namespace GreenBox3D
         #region Camera Helper Functions
 
         /// <summary>
-        /// Build a world space to camera space matrix
+        ///     Build a world space to camera space matrix
         /// </summary>
         /// <param name="eye">Eye (camera) position in world space</param>
         /// <param name="target">Target position in world space</param>
@@ -858,17 +925,17 @@ namespace GreenBox3D
             Vector3 y = Vector3.Normalize(Vector3.Cross(z, x));
 
             Matrix4 rot = new Matrix4(new Vector4(x.X, y.X, z.X, 0.0f),
-                                        new Vector4(x.Y, y.Y, z.Y, 0.0f),
-                                        new Vector4(x.Z, y.Z, z.Z, 0.0f),
-                                        Vector4.UnitW);
+                                      new Vector4(x.Y, y.Y, z.Y, 0.0f),
+                                      new Vector4(x.Z, y.Z, z.Z, 0.0f),
+                                      Vector4.UnitW);
 
-            Matrix4 trans = Matrix4.CreateTranslation(-eye);
+            Matrix4 trans = CreateTranslation(-eye);
 
             return trans * rot;
         }
 
         /// <summary>
-        /// Build a world space to camera space matrix
+        ///     Build a world space to camera space matrix
         /// </summary>
         /// <param name="eyeX">Eye (camera) position in world space</param>
         /// <param name="eyeY">Eye (camera) position in world space</param>
@@ -880,13 +947,15 @@ namespace GreenBox3D
         /// <param name="upY">Up vector in world space (should not be parallel to the camera direction, that is target - eye)</param>
         /// <param name="upZ">Up vector in world space (should not be parallel to the camera direction, that is target - eye)</param>
         /// <returns>A Matrix4 that transforms world space to camera space</returns>
-        public static Matrix4 LookAt(float eyeX, float eyeY, float eyeZ, float targetX, float targetY, float targetZ, float upX, float upY, float upZ)
+        public static Matrix4 LookAt(float eyeX, float eyeY, float eyeZ, float targetX, float targetY, float targetZ,
+                                     float upX, float upY, float upZ)
         {
-            return LookAt(new Vector3(eyeX, eyeY, eyeZ), new Vector3(targetX, targetY, targetZ), new Vector3(upX, upY, upZ));
+            return LookAt(new Vector3(eyeX, eyeY, eyeZ), new Vector3(targetX, targetY, targetZ),
+                          new Vector3(upX, upY, upZ));
         }
 
         /// <summary>
-        /// Build a projection matrix
+        ///     Build a projection matrix
         /// </summary>
         /// <param name="left">Left edge of the view frustum</param>
         /// <param name="right">Right edge of the view frustum</param>
@@ -908,7 +977,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Build a projection matrix
+        ///     Build a projection matrix
         /// </summary>
         /// <param name="fovy">Angle of the field of view in the y direction (in radians)</param>
         /// <param name="aspect">Aspect ratio of the view (width / height)</param>
@@ -918,7 +987,7 @@ namespace GreenBox3D
         [Obsolete("Use CreatePerspectiveFieldOfView instead.")]
         public static Matrix4 Perspective(float fovy, float aspect, float near, float far)
         {
-            float yMax = near * (float)System.Math.Tan(0.5f * fovy);
+            float yMax = near * (float)Math.Tan(0.5f * fovy);
             float yMin = -yMax;
             float xMin = yMin * aspect;
             float xMax = yMax * aspect;
@@ -931,7 +1000,7 @@ namespace GreenBox3D
         #region Multiply Functions
 
         /// <summary>
-        /// Multiplies two instances.
+        ///     Multiplies two instances.
         /// </summary>
         /// <param name="left">The left operand of the multiplication.</param>
         /// <param name="right">The right operand of the multiplication.</param>
@@ -944,21 +1013,45 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Multiplies two instances.
+        ///     Multiplies two instances.
         /// </summary>
         /// <param name="left">The left operand of the multiplication.</param>
         /// <param name="right">The right operand of the multiplication.</param>
         /// <param name="result">A new instance that is the result of the multiplication</param>
         public static void Mult(ref Matrix4 left, ref Matrix4 right, out Matrix4 result)
         {
-            float lM11 = left.Row0.X, lM12 = left.Row0.Y, lM13 = left.Row0.Z, lM14 = left.Row0.W,
-                lM21 = left.Row1.X, lM22 = left.Row1.Y, lM23 = left.Row1.Z, lM24 = left.Row1.W,
-                lM31 = left.Row2.X, lM32 = left.Row2.Y, lM33 = left.Row2.Z, lM34 = left.Row2.W,
-                lM41 = left.Row3.X, lM42 = left.Row3.Y, lM43 = left.Row3.Z, lM44 = left.Row3.W,
-                rM11 = right.Row0.X, rM12 = right.Row0.Y, rM13 = right.Row0.Z, rM14 = right.Row0.W,
-                rM21 = right.Row1.X, rM22 = right.Row1.Y, rM23 = right.Row1.Z, rM24 = right.Row1.W,
-                rM31 = right.Row2.X, rM32 = right.Row2.Y, rM33 = right.Row2.Z, rM34 = right.Row2.W,
-                rM41 = right.Row3.X, rM42 = right.Row3.Y, rM43 = right.Row3.Z, rM44 = right.Row3.W;
+            float lM11 = left.Row0.X,
+                  lM12 = left.Row0.Y,
+                  lM13 = left.Row0.Z,
+                  lM14 = left.Row0.W,
+                  lM21 = left.Row1.X,
+                  lM22 = left.Row1.Y,
+                  lM23 = left.Row1.Z,
+                  lM24 = left.Row1.W,
+                  lM31 = left.Row2.X,
+                  lM32 = left.Row2.Y,
+                  lM33 = left.Row2.Z,
+                  lM34 = left.Row2.W,
+                  lM41 = left.Row3.X,
+                  lM42 = left.Row3.Y,
+                  lM43 = left.Row3.Z,
+                  lM44 = left.Row3.W,
+                  rM11 = right.Row0.X,
+                  rM12 = right.Row0.Y,
+                  rM13 = right.Row0.Z,
+                  rM14 = right.Row0.W,
+                  rM21 = right.Row1.X,
+                  rM22 = right.Row1.Y,
+                  rM23 = right.Row1.Z,
+                  rM24 = right.Row1.W,
+                  rM31 = right.Row2.X,
+                  rM32 = right.Row2.Y,
+                  rM33 = right.Row2.Z,
+                  rM34 = right.Row2.W,
+                  rM41 = right.Row3.X,
+                  rM42 = right.Row3.Y,
+                  rM43 = right.Row3.Z,
+                  rM44 = right.Row3.W;
 
             result.Row0.X = (((lM11 * rM11) + (lM12 * rM21)) + (lM13 * rM31)) + (lM14 * rM41);
             result.Row0.Y = (((lM11 * rM12) + (lM12 * rM22)) + (lM13 * rM32)) + (lM14 * rM42);
@@ -983,7 +1076,7 @@ namespace GreenBox3D
         #region Invert Functions
 
         /// <summary>
-        /// Calculate the inverse of the given matrix
+        ///     Calculate the inverse of the given matrix
         /// </summary>
         /// <param name="mat">The matrix to invert</param>
         /// <returns>The inverse of the given matrix if it has one, or the input if it is singular</returns>
@@ -995,10 +1088,13 @@ namespace GreenBox3D
             int[] pivotIdx = { -1, -1, -1, -1 };
 
             // convert the matrix to an array for easy looping
-            float[,] inverse = {{mat.Row0.X, mat.Row0.Y, mat.Row0.Z, mat.Row0.W}, 
-                                {mat.Row1.X, mat.Row1.Y, mat.Row1.Z, mat.Row1.W}, 
-                                {mat.Row2.X, mat.Row2.Y, mat.Row2.Z, mat.Row2.W}, 
-                                {mat.Row3.X, mat.Row3.Y, mat.Row3.Z, mat.Row3.W} };
+            float[,] inverse =
+            {
+                { mat.Row0.X, mat.Row0.Y, mat.Row0.Z, mat.Row0.W },
+                { mat.Row1.X, mat.Row1.Y, mat.Row1.Z, mat.Row1.W },
+                { mat.Row2.X, mat.Row2.Y, mat.Row2.Z, mat.Row2.W },
+                { mat.Row3.X, mat.Row3.Y, mat.Row3.Z, mat.Row3.W }
+            };
             int icol = 0;
             int irow = 0;
             for (int i = 0; i < 4; i++)
@@ -1013,7 +1109,7 @@ namespace GreenBox3D
                         {
                             if (pivotIdx[k] == -1)
                             {
-                                float absVal = System.Math.Abs(inverse[j, k]);
+                                float absVal = Math.Abs(inverse[j, k]);
                                 if (absVal > maxPivot)
                                 {
                                     maxPivot = absVal;
@@ -1097,7 +1193,7 @@ namespace GreenBox3D
         #region Transpose
 
         /// <summary>
-        /// Calculate the transpose of the given matrix
+        ///     Calculate the transpose of the given matrix
         /// </summary>
         /// <param name="mat">The matrix to transpose</param>
         /// <returns>The transpose of the given matrix</returns>
@@ -1106,9 +1202,8 @@ namespace GreenBox3D
             return new Matrix4(mat.Column0, mat.Column1, mat.Column2, mat.Column3);
         }
 
-
         /// <summary>
-        /// Calculate the transpose of the given matrix
+        ///     Calculate the transpose of the given matrix
         /// </summary>
         /// <param name="mat">The matrix to transpose</param>
         /// <param name="result">The result of the calculation</param>
@@ -1127,18 +1222,18 @@ namespace GreenBox3D
         #region Operators
 
         /// <summary>
-        /// Matrix multiplication
+        ///     Matrix multiplication
         /// </summary>
         /// <param name="left">left-hand operand</param>
         /// <param name="right">right-hand operand</param>
         /// <returns>A new Matrix44 which holds the result of the multiplication</returns>
         public static Matrix4 operator *(Matrix4 left, Matrix4 right)
         {
-            return Matrix4.Mult(left, right);
+            return Mult(left, right);
         }
 
         /// <summary>
-        /// Compares two instances for equality.
+        ///     Compares two instances for equality.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -1149,7 +1244,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Compares two instances for inequality.
+        ///     Compares two instances for inequality.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -1166,7 +1261,7 @@ namespace GreenBox3D
         #region public override string ToString()
 
         /// <summary>
-        /// Returns a System.String that represents the current Matrix44.
+        ///     Returns a System.String that represents the current Matrix44.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -1179,7 +1274,7 @@ namespace GreenBox3D
         #region public override int GetHashCode()
 
         /// <summary>
-        /// Returns the hashcode for this instance.
+        ///     Returns the hashcode for this instance.
         /// </summary>
         /// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
         public override int GetHashCode()
@@ -1192,7 +1287,7 @@ namespace GreenBox3D
         #region public override bool Equals(object obj)
 
         /// <summary>
-        /// Indicates whether this instance and a specified object are equal.
+        ///     Indicates whether this instance and a specified object are equal.
         /// </summary>
         /// <param name="obj">The object to compare tresult.</param>
         /// <returns>True if the instances are equal; false otherwise.</returns>
@@ -1201,7 +1296,7 @@ namespace GreenBox3D
             if (!(obj is Matrix4))
                 return false;
 
-            return this.Equals((Matrix4)obj);
+            return Equals((Matrix4)obj);
         }
 
         #endregion

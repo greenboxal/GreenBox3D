@@ -1,4 +1,11 @@
-﻿using System;
+﻿// CVar.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -29,26 +36,29 @@ namespace GreenBox3D
 
     public class CVarChangedEventArgs<T> : EventArgs
     {
-        public CVar<T> Variable { get; private set; }
-
         public CVarChangedEventArgs(CVar<T> cvar)
         {
             Variable = cvar;
         }
+
+        public CVar<T> Variable { get; private set; }
     }
 
     public class CVar<T> : IConsoleCommand
     {
-        private T _value;
-        public T Value { get { return _value; } }
-
         public EventHandler<CVarChangedEventArgs<T>> Changed;
+        private T _value;
 
         public CVar(T defaultValue)
         {
             _value = defaultValue;
         }
-        
+
+        public T Value
+        {
+            get { return _value; }
+        }
+
         void IConsoleCommand.Execute(string arguments)
         {
             _value = ConvertFromString(arguments);
@@ -72,7 +82,8 @@ namespace GreenBox3D
 
     public class IntegerCVar : CVar<int>
     {
-        private int _minValue, _maxValue;
+        private readonly int _maxValue;
+        private readonly int _minValue;
 
         public IntegerCVar(int defaultValue)
             : this(defaultValue, int.MinValue, int.MaxValue)
@@ -112,7 +123,8 @@ namespace GreenBox3D
 
     public class SingleCVar : CVar<float>
     {
-        private float _minValue, _maxValue;
+        private readonly float _maxValue;
+        private readonly float _minValue;
 
         public SingleCVar(float defaultValue)
             : this(defaultValue, float.MinValue, float.MaxValue)
@@ -145,7 +157,8 @@ namespace GreenBox3D
 
     public class DoubleCVar : CVar<double>
     {
-        private double _minValue, _maxValue;
+        private readonly double _maxValue;
+        private readonly double _minValue;
 
         public DoubleCVar(double defaultValue)
             : this(defaultValue, double.MinValue, double.MaxValue)

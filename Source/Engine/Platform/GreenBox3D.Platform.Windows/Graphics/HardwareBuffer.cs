@@ -1,9 +1,9 @@
-﻿// GreenBox3D
+﻿// HardwareBuffer.cs
 // 
-// Copyright (c) 2013 The GreenBox Development Inc.
-// Copyright (c) 2013 Mono.Xna Team and Contributors
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
 // 
-// Licensed under MIT license terms.
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-
 using OpenTK.Graphics.OpenGL;
 using GreenBox3D.Graphics.Detail;
 using GreenBox3D.Graphics;
@@ -31,7 +30,8 @@ namespace GreenBox3D.Platform.Windows.Graphics
 
         #region Constructors and Destructors
 
-        internal HardwareBuffer(GraphicsDevice graphicsDevice, BufferTarget bufferTarget, int elementSize, int elementCount, BufferUsage usage)
+        internal HardwareBuffer(GraphicsDevice graphicsDevice, BufferTarget bufferTarget, int elementSize,
+                                int elementCount, BufferUsage usage)
             : base(graphicsDevice)
         {
             BufferID = -1;

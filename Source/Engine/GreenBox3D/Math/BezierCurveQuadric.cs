@@ -1,12 +1,9 @@
-#region --- License ---
-/* Licensed under the MIT/X11 license.
- * Copyright (c) 2006-2008 the OpenTK Team.
- * This notice may not be removed from any source distribution.
- * See license.txt for licensing detailed licensing details.
- * 
- * Contributions by Georg W�chter.
- */
-#endregion
+﻿// BezierCurveQuadric.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +12,7 @@ using System.Text;
 namespace GreenBox3D
 {
     /// <summary>
-    /// Represents a quadric bezier curve with two anchor and one control point.
+    ///     Represents a quadric bezier curve with two anchor and one control point.
     /// </summary>
     [Serializable]
     public struct BezierCurveQuadric
@@ -23,49 +20,51 @@ namespace GreenBox3D
         #region Fields
 
         /// <summary>
-        /// Start anchor point.
-        /// </summary>
-        public Vector2 StartAnchor;
-
-        /// <summary>
-        /// End anchor point.
-        /// </summary>
-        public Vector2 EndAnchor;
-
-        /// <summary>
-        /// Control point, controls the direction of both endings of the curve.
+        ///     Control point, controls the direction of both endings of the curve.
         /// </summary>
         public Vector2 ControlPoint;
 
         /// <summary>
-        /// The parallel value.
+        ///     End anchor point.
         /// </summary>
-        /// <remarks>This value defines whether the curve should be calculated as a
-        /// parallel curve to the original bezier curve. A value of 0.0f represents
-        /// the original curve, 5.0f i.e. stands for a curve that has always a distance
-        /// of 5.f to the orignal curve at any point.</remarks>
+        public Vector2 EndAnchor;
+
+        /// <summary>
+        ///     The parallel value.
+        /// </summary>
+        /// <remarks>
+        ///     This value defines whether the curve should be calculated as a
+        ///     parallel curve to the original bezier curve. A value of 0.0f represents
+        ///     the original curve, 5.0f i.e. stands for a curve that has always a distance
+        ///     of 5.f to the orignal curve at any point.
+        /// </remarks>
         public float Parallel;
+
+        /// <summary>
+        ///     Start anchor point.
+        /// </summary>
+        public Vector2 StartAnchor;
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Constructs a new <see cref="BezierCurveQuadric"/>.
+        ///     Constructs a new <see cref="BezierCurveQuadric" />.
         /// </summary>
         /// <param name="startAnchor">The start anchor.</param>
         /// <param name="endAnchor">The end anchor.</param>
         /// <param name="controlPoint">The control point.</param>
         public BezierCurveQuadric(Vector2 startAnchor, Vector2 endAnchor, Vector2 controlPoint)
         {
-            this.StartAnchor = startAnchor;
-            this.EndAnchor = endAnchor;
-            this.ControlPoint = controlPoint;
-            this.Parallel = 0.0f;
+            StartAnchor = startAnchor;
+            EndAnchor = endAnchor;
+            ControlPoint = controlPoint;
+            Parallel = 0.0f;
         }
 
         /// <summary>
-        /// Constructs a new <see cref="BezierCurveQuadric"/>.
+        ///     Constructs a new <see cref="BezierCurveQuadric" />.
         /// </summary>
         /// <param name="parallel">The parallel value.</param>
         /// <param name="startAnchor">The start anchor.</param>
@@ -73,10 +72,10 @@ namespace GreenBox3D
         /// <param name="controlPoint">The control point.</param>
         public BezierCurveQuadric(float parallel, Vector2 startAnchor, Vector2 endAnchor, Vector2 controlPoint)
         {
-            this.Parallel = parallel;
-            this.StartAnchor = startAnchor;
-            this.EndAnchor = endAnchor;
-            this.ControlPoint = controlPoint;
+            Parallel = parallel;
+            StartAnchor = startAnchor;
+            EndAnchor = endAnchor;
+            ControlPoint = controlPoint;
         }
 
         #endregion
@@ -84,7 +83,7 @@ namespace GreenBox3D
         #region Functions
 
         /// <summary>
-        /// Calculates the point with the specified t.
+        ///     Calculates the point with the specified t.
         /// </summary>
         /// <param name="t">The t value, between 0.0f and 1.0f.</param>
         /// <returns>Resulting point.</returns>
@@ -110,7 +109,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Calculates the point with the specified t of the derivative of this function.
+        ///     Calculates the point with the specified t of the derivative of this function.
         /// </summary>
         /// <param name="t">The t, value between 0.0f and 1.0f.</param>
         /// <returns>Resulting point.</returns>
@@ -125,12 +124,14 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Calculates the length of this bezier curve.
+        ///     Calculates the length of this bezier curve.
         /// </summary>
         /// <param name="precision">The precision.</param>
         /// <returns>Length of curve.</returns>
-        /// <remarks>The precision gets better when the <paramref name="precision"/>
-        /// value gets smaller.</remarks>
+        /// <remarks>
+        ///     The precision gets better when the <paramref name="precision" />
+        ///     value gets smaller.
+        /// </remarks>
         public float CalculateLength(float precision)
         {
             float length = 0.0f;

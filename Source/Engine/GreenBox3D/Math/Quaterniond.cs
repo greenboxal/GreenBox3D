@@ -1,26 +1,9 @@
-#region --- License ---
-/*
-Copyright (c) 2006 - 2008 The Open Toolkit library.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-#endregion
+// Quaterniond.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Runtime.InteropServices;
@@ -30,7 +13,7 @@ using System.Xml.Serialization;
 namespace GreenBox3D
 {
     /// <summary>
-    /// Represents a double-precision Quaternion.
+    ///     Represents a double-precision Quaternion.
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
@@ -38,26 +21,26 @@ namespace GreenBox3D
     {
         #region Fields
 
-        Vector3d xyz;
-        double w;
+        private Vector3d xyz;
+        private double w;
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Construct a new Quaterniond from vector and w components
+        ///     Construct a new Quaterniond from vector and w components
         /// </summary>
         /// <param name="v">The vector part</param>
         /// <param name="w">The w part</param>
         public Quaterniond(Vector3d v, double w)
         {
-            this.xyz = v;
+            xyz = v;
             this.w = w;
         }
 
         /// <summary>
-        /// Construct a new Quaterniond
+        ///     Construct a new Quaterniond
         /// </summary>
         /// <param name="x">The x component</param>
         /// <param name="y">The y component</param>
@@ -65,7 +48,8 @@ namespace GreenBox3D
         /// <param name="w">The w component</param>
         public Quaterniond(double x, double y, double z, double w)
             : this(new Vector3d(x, y, z), w)
-        { }
+        {
+        }
 
         #endregion
 
@@ -74,33 +58,53 @@ namespace GreenBox3D
         #region Properties
 
         /// <summary>
-        /// Gets or sets an OpenTK.Vector3d with the X, Y and Z components of this instance.
+        ///     Gets or sets an OpenTK.Vector3d with the X, Y and Z components of this instance.
         /// </summary>
-        public Vector3d Xyz { get { return xyz; } set { xyz = value; } }
+        public Vector3d Xyz
+        {
+            get { return xyz; }
+            set { xyz = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the X component of this instance.
+        ///     Gets or sets the X component of this instance.
         /// </summary>
         [XmlIgnore]
-        public double X { get { return xyz.X; } set { xyz.X = value; } }
+        public double X
+        {
+            get { return xyz.X; }
+            set { xyz.X = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the Y component of this instance.
+        ///     Gets or sets the Y component of this instance.
         /// </summary>
         [XmlIgnore]
-        public double Y { get { return xyz.Y; } set { xyz.Y = value; } }
+        public double Y
+        {
+            get { return xyz.Y; }
+            set { xyz.Y = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the Z component of this instance.
+        ///     Gets or sets the Z component of this instance.
         /// </summary>
         [XmlIgnore]
-        public double Z { get { return xyz.Z; } set { xyz.Z = value; } }
+        public double Z
+        {
+            get { return xyz.Z; }
+            set { xyz.Z = value; }
+        }
 
         /// <summary>
-        /// Gets or sets the W component of this instance.
+        ///     Gets or sets the W component of this instance.
         /// </summary>
-        public double W { get { return w; } set { w = value; } }
-        
+        public double W
+        {
+            get { return w; }
+            set { w = value; }
+        }
+
         #endregion
 
         #region Instance
@@ -108,7 +112,7 @@ namespace GreenBox3D
         #region ToAxisAngle
 
         /// <summary>
-        /// Convert the current quaternion to axis angle representation
+        ///     Convert the current quaternion to axis angle representation
         /// </summary>
         /// <param name="axis">The resultant axis</param>
         /// <param name="angle">The resultant angle</param>
@@ -120,7 +124,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Convert this instance to an axis-angle representation.
+        ///     Convert this instance to an axis-angle representation.
         /// </summary>
         /// <returns>A Vector4 that is the axis-angle representation of this quaternion.</returns>
         public Vector4d ToAxisAngle()
@@ -131,8 +135,8 @@ namespace GreenBox3D
 
             Vector4d result = new Vector4d();
 
-            result.W = 2.0f * (float)System.Math.Acos(q.W); // angle
-            float den = (float)System.Math.Sqrt(1.0 - q.W * q.W);
+            result.W = 2.0f * (float)Math.Acos(q.W); // angle
+            float den = (float)Math.Sqrt(1.0 - q.W * q.W);
             if (den > 0.0001f)
             {
                 result.Xyz = q.Xyz / den;
@@ -152,15 +156,12 @@ namespace GreenBox3D
         #region public double Length
 
         /// <summary>
-        /// Gets the length (magnitude) of the Quaterniond.
+        ///     Gets the length (magnitude) of the Quaterniond.
         /// </summary>
-        /// <seealso cref="LengthSquared"/>
+        /// <seealso cref="LengthSquared" />
         public double Length
         {
-            get
-            {
-                return (double)System.Math.Sqrt(W * W + Xyz.LengthSquared);
-            }
+            get { return Math.Sqrt(W * W + Xyz.LengthSquared); }
         }
 
         #endregion
@@ -168,14 +169,11 @@ namespace GreenBox3D
         #region public double LengthSquared
 
         /// <summary>
-        /// Gets the square of the Quaterniond length (magnitude).
+        ///     Gets the square of the Quaterniond length (magnitude).
         /// </summary>
         public double LengthSquared
         {
-            get
-            {
-                return W * W + Xyz.LengthSquared;
-            }
+            get { return W * W + Xyz.LengthSquared; }
         }
 
         #endregion
@@ -183,11 +181,11 @@ namespace GreenBox3D
         #region public void Normalize()
 
         /// <summary>
-        /// Scales the Quaterniond to unit length.
+        ///     Scales the Quaterniond to unit length.
         /// </summary>
         public void Normalize()
         {
-            double scale = 1.0f / this.Length;
+            double scale = 1.0f / Length;
             Xyz *= scale;
             W *= scale;
         }
@@ -197,7 +195,7 @@ namespace GreenBox3D
         #region public void Conjugate()
 
         /// <summary>
-        /// Convert this Quaterniond to its conjugate
+        ///     Convert this Quaterniond to its conjugate
         /// </summary>
         public void Conjugate()
         {
@@ -213,16 +211,16 @@ namespace GreenBox3D
         #region Fields
 
         /// <summary>
-        /// Defines the identity quaternion.
+        ///     Defines the identity quaternion.
         /// </summary>
-        public readonly static Quaterniond Identity = new Quaterniond(0, 0, 0, 1);
+        public static readonly Quaterniond Identity = new Quaterniond(0, 0, 0, 1);
 
         #endregion
 
         #region Add
 
         /// <summary>
-        /// Add two quaternions
+        ///     Add two quaternions
         /// </summary>
         /// <param name="left">The first operand</param>
         /// <param name="right">The second operand</param>
@@ -235,7 +233,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Add two quaternions
+        ///     Add two quaternions
         /// </summary>
         /// <param name="left">The first operand</param>
         /// <param name="right">The second operand</param>
@@ -252,7 +250,7 @@ namespace GreenBox3D
         #region Sub
 
         /// <summary>
-        /// Subtracts two instances.
+        ///     Subtracts two instances.
         /// </summary>
         /// <param name="left">The left instance.</param>
         /// <param name="right">The right instance.</param>
@@ -265,7 +263,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Subtracts two instances.
+        ///     Subtracts two instances.
         /// </summary>
         /// <param name="left">The left instance.</param>
         /// <param name="right">The right instance.</param>
@@ -282,7 +280,7 @@ namespace GreenBox3D
         #region Mult
 
         /// <summary>
-        /// Multiplies two instances.
+        ///     Multiplies two instances.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -296,7 +294,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Multiplies two instances.
+        ///     Multiplies two instances.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -310,7 +308,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Multiplies two instances.
+        ///     Multiplies two instances.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -323,7 +321,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Multiplies two instances.
+        ///     Multiplies two instances.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -336,25 +334,27 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Multiplies an instance by a scalar.
+        ///     Multiplies an instance by a scalar.
         /// </summary>
         /// <param name="quaternion">The instance.</param>
         /// <param name="scale">The scalar.</param>
         /// <param name="result">A new instance containing the result of the calculation.</param>
         public static void Multiply(ref Quaterniond quaternion, double scale, out Quaterniond result)
         {
-            result = new Quaterniond(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);
+            result = new Quaterniond(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale,
+                                     quaternion.W * scale);
         }
 
         /// <summary>
-        /// Multiplies an instance by a scalar.
+        ///     Multiplies an instance by a scalar.
         /// </summary>
         /// <param name="quaternion">The instance.</param>
         /// <param name="scale">The scalar.</param>
         /// <returns>A new instance containing the result of the calculation.</returns>
         public static Quaterniond Multiply(Quaterniond quaternion, double scale)
         {
-            return new Quaterniond(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);
+            return new Quaterniond(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale,
+                                   quaternion.W * scale);
         }
 
         #endregion
@@ -362,7 +362,7 @@ namespace GreenBox3D
         #region Conjugate
 
         /// <summary>
-        /// Get the conjugate of the given Quaterniond
+        ///     Get the conjugate of the given Quaterniond
         /// </summary>
         /// <param name="q">The Quaterniond</param>
         /// <returns>The conjugate of the given Quaterniond</returns>
@@ -372,7 +372,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Get the conjugate of the given Quaterniond
+        ///     Get the conjugate of the given Quaterniond
         /// </summary>
         /// <param name="q">The Quaterniond</param>
         /// <param name="result">The conjugate of the given Quaterniond</param>
@@ -386,7 +386,7 @@ namespace GreenBox3D
         #region Invert
 
         /// <summary>
-        /// Get the inverse of the given Quaterniond
+        ///     Get the inverse of the given Quaterniond
         /// </summary>
         /// <param name="q">The Quaterniond to invert</param>
         /// <returns>The inverse of the given Quaterniond</returns>
@@ -398,7 +398,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Get the inverse of the given Quaterniond
+        ///     Get the inverse of the given Quaterniond
         /// </summary>
         /// <param name="q">The Quaterniond to invert</param>
         /// <param name="result">The inverse of the given Quaterniond</param>
@@ -421,7 +421,7 @@ namespace GreenBox3D
         #region Normalize
 
         /// <summary>
-        /// Scale the given Quaterniond to unit length
+        ///     Scale the given Quaterniond to unit length
         /// </summary>
         /// <param name="q">The Quaterniond to normalize</param>
         /// <returns>The normalized Quaterniond</returns>
@@ -433,7 +433,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Scale the given Quaterniond to unit length
+        ///     Scale the given Quaterniond to unit length
         /// </summary>
         /// <param name="q">The Quaterniond to normalize</param>
         /// <param name="result">The normalized Quaterniond</param>
@@ -448,7 +448,7 @@ namespace GreenBox3D
         #region FromAxisAngle
 
         /// <summary>
-        /// Build a Quaterniond from the given axis and angle
+        ///     Build a Quaterniond from the given axis and angle
         /// </summary>
         /// <param name="axis">The axis to rotate about</param>
         /// <param name="angle">The rotation angle in radians</param>
@@ -462,8 +462,8 @@ namespace GreenBox3D
 
             angle *= 0.5f;
             axis.Normalize();
-            result.Xyz = axis * (double)System.Math.Sin(angle);
-            result.W = (double)System.Math.Cos(angle);
+            result.Xyz = axis * Math.Sin(angle);
+            result.W = Math.Cos(angle);
 
             return Normalize(result);
         }
@@ -473,7 +473,7 @@ namespace GreenBox3D
         #region Slerp
 
         /// <summary>
-        /// Do Spherical linear interpolation between two quaternions 
+        ///     Do Spherical linear interpolation between two quaternions
         /// </summary>
         /// <param name="q1">The first Quaterniond</param>
         /// <param name="q2">The second Quaterniond</param>
@@ -495,7 +495,6 @@ namespace GreenBox3D
                 return q1;
             }
 
-
             double cosHalfAngle = q1.W * q2.W + Vector3d.Dot(q1.Xyz, q2.Xyz);
 
             if (cosHalfAngle >= 1.0f || cosHalfAngle <= -1.0f)
@@ -515,11 +514,11 @@ namespace GreenBox3D
             if (cosHalfAngle < 0.99f)
             {
                 // do proper slerp for big angles
-                double halfAngle = (double)System.Math.Acos(cosHalfAngle);
-                double sinHalfAngle = (double)System.Math.Sin(halfAngle);
+                double halfAngle = Math.Acos(cosHalfAngle);
+                double sinHalfAngle = Math.Sin(halfAngle);
                 double oneOverSinHalfAngle = 1.0f / sinHalfAngle;
-                blendA = (double)System.Math.Sin(halfAngle * (1.0f - blend)) * oneOverSinHalfAngle;
-                blendB = (double)System.Math.Sin(halfAngle * blend) * oneOverSinHalfAngle;
+                blendA = Math.Sin(halfAngle * (1.0f - blend)) * oneOverSinHalfAngle;
+                blendB = Math.Sin(halfAngle * blend) * oneOverSinHalfAngle;
             }
             else
             {
@@ -538,11 +537,11 @@ namespace GreenBox3D
         #endregion
 
         #endregion
-                
+
         #region Operators
 
         /// <summary>
-        /// Adds two instances.
+        ///     Adds two instances.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -555,7 +554,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Subtracts two instances.
+        ///     Subtracts two instances.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -568,7 +567,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Multiplies two instances.
+        ///     Multiplies two instances.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -580,7 +579,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Multiplies an instance by a scalar.
+        ///     Multiplies an instance by a scalar.
         /// </summary>
         /// <param name="quaternion">The instance.</param>
         /// <param name="scale">The scalar.</param>
@@ -592,18 +591,19 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Multiplies an instance by a scalar.
+        ///     Multiplies an instance by a scalar.
         /// </summary>
         /// <param name="quaternion">The instance.</param>
         /// <param name="scale">The scalar.</param>
         /// <returns>A new instance containing the result of the calculation.</returns>
         public static Quaterniond operator *(double scale, Quaterniond quaternion)
         {
-            return new Quaterniond(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);
+            return new Quaterniond(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale,
+                                   quaternion.W * scale);
         }
 
         /// <summary>
-        /// Compares two instances for equality.
+        ///     Compares two instances for equality.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -614,7 +614,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Compares two instances for inequality.
+        ///     Compares two instances for inequality.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -631,7 +631,7 @@ namespace GreenBox3D
         #region public override string ToString()
 
         /// <summary>
-        /// Returns a System.String that represents the current Quaterniond.
+        ///     Returns a System.String that represents the current Quaterniond.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -644,13 +644,14 @@ namespace GreenBox3D
         #region public override bool Equals (object o)
 
         /// <summary>
-        /// Compares this object instance to another object for equality. 
+        ///     Compares this object instance to another object for equality.
         /// </summary>
         /// <param name="other">The other object to be used in the comparison.</param>
         /// <returns>True if both objects are Quaternions of equal value. Otherwise it returns false.</returns>
         public override bool Equals(object other)
         {
-            if (other is Quaterniond == false) return false;
+            if (other is Quaterniond == false)
+                return false;
             return this == (Quaterniond)other;
         }
 
@@ -659,7 +660,7 @@ namespace GreenBox3D
         #region public override int GetHashCode ()
 
         /// <summary>
-        /// Provides the hash code for this object. 
+        ///     Provides the hash code for this object.
         /// </summary>
         /// <returns>A hash code formed from the bitwise XOR of this objects members.</returns>
         public override int GetHashCode()
@@ -676,7 +677,7 @@ namespace GreenBox3D
         #region IEquatable<Quaterniond> Members
 
         /// <summary>
-        /// Compares this Quaterniond instance to another Quaterniond for equality. 
+        ///     Compares this Quaterniond instance to another Quaterniond for equality.
         /// </summary>
         /// <param name="other">The other Quaterniond to be used in the comparison.</param>
         /// <returns>True if both instances are equal; false otherwise.</returns>

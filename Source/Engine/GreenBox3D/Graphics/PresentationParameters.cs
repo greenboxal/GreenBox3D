@@ -1,9 +1,9 @@
-﻿// GreenBox3D
+﻿// PresentationParameters.cs
 // 
-// Copyright (c) 2013 The GreenBox Development Inc.
-// Copyright (c) 2013 Mono.Xna Team and Contributors
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
 // 
-// Licensed under MIT license terms.
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Collections.Generic;
@@ -48,16 +48,47 @@ namespace GreenBox3D.Graphics
 
         #region Public Properties
 
-        public SurfaceFormat BackBufferFormat { get { return _backBufferFormat; } set { _backBufferFormat = value; } }
-        public int BackBufferHeight { get { return _backBufferHeight; } set { _backBufferHeight = value; } }
-        public int BackBufferWidth { get { return _backBufferWidth; } set { _backBufferWidth = value; } }
-        public DepthFormat DepthStencilFormat { get { return _depthStencilFormat; } set { _depthStencilFormat = value; } }
+        public SurfaceFormat BackBufferFormat
+        {
+            get { return _backBufferFormat; }
+            set { _backBufferFormat = value; }
+        }
+
+        public int BackBufferHeight
+        {
+            get { return _backBufferHeight; }
+            set { _backBufferHeight = value; }
+        }
+
+        public int BackBufferWidth
+        {
+            get { return _backBufferWidth; }
+            set { _backBufferWidth = value; }
+        }
+
+        public DepthFormat DepthStencilFormat
+        {
+            get { return _depthStencilFormat; }
+            set { _depthStencilFormat = value; }
+        }
+
         public bool IsFullScreen { get; set; }
-        public int MultiSampleCount { get { return _multiSampleCount; } set { _multiSampleCount = value; } }
+
+        public int MultiSampleCount
+        {
+            get { return _multiSampleCount; }
+            set { _multiSampleCount = value; }
+        }
 
         #endregion
 
         #region Public Methods and Operators
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         public void Clear()
         {
@@ -79,12 +110,6 @@ namespace GreenBox3D.Graphics
             clone._depthStencilFormat = _depthStencilFormat;
             clone._multiSampleCount = _multiSampleCount;
             return clone;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         #endregion

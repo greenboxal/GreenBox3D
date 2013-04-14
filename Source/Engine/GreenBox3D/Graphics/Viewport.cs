@@ -1,9 +1,9 @@
-﻿// GreenBox3D
+﻿// Viewport.cs
 // 
-// Copyright (c) 2013 The GreenBox Development Inc.
-// Copyright (c) 2013 Mono.Xna Team and Contributors
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
 // 
-// Licensed under MIT license terms.
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Collections.Generic;
@@ -79,13 +79,46 @@ namespace GreenBox3D.Graphics
             }
         }
 
-        public int Height { get { return _height; } set { _height = value; } }
-        public float MaxDepth { get { return _maxDepth; } set { _maxDepth = value; } }
-        public float MinDepth { get { return _minDepth; } set { _minDepth = value; } }
-        public Rectangle TitleSafeArea { get { return new Rectangle(_x, _y, _width, _height); } }
-        public int Width { get { return _width; } set { _width = value; } }
-        public int X { get { return _x; } set { _x = value; } }
-        public int Y { get { return _y; } set { _y = value; } }
+        public int Height
+        {
+            get { return _height; }
+            set { _height = value; }
+        }
+
+        public float MaxDepth
+        {
+            get { return _maxDepth; }
+            set { _maxDepth = value; }
+        }
+
+        public float MinDepth
+        {
+            get { return _minDepth; }
+            set { _minDepth = value; }
+        }
+
+        public Rectangle TitleSafeArea
+        {
+            get { return new Rectangle(_x, _y, _width, _height); }
+        }
+
+        public int Width
+        {
+            get { return _width; }
+            set { _width = value; }
+        }
+
+        public int X
+        {
+            get { return _x; }
+            set { _x = value; }
+        }
+
+        public int Y
+        {
+            get { return _y; }
+            set { _y = value; }
+        }
 
         #endregion
 

@@ -1,4 +1,12 @@
-﻿using System;
+﻿// BuildCache.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,11 +17,22 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 {
     public class BuildCache : IEnumerable<BuildCacheEntry>
     {
-        private Dictionary<string, BuildCacheEntry> _entries;
+        private readonly Dictionary<string, BuildCacheEntry> _entries;
 
         public BuildCache()
         {
             _entries = new Dictionary<string, BuildCacheEntry>(StringComparer.InvariantCultureIgnoreCase);
+        }
+
+        public IEnumerator<BuildCacheEntry> GetEnumerator()
+        {
+            foreach (BuildCacheEntry entry in _entries.Values)
+                yield return entry;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         public void Add(BuildCacheEntry entry)
@@ -67,7 +86,7 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
                     for (int i = 0; i < count; i++)
                     {
                         BuildCacheEntry entry = new BuildCacheEntry(br.ReadString());
-                        
+
                         entry.LastBuilt = br.ReadBoolean();
                         entry.Timestamp = DateTime.FromBinary(br.ReadInt64());
 
@@ -116,17 +135,6 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
                         bw.Write(outfile);
                 }
             }
-        }
-
-        public IEnumerator<BuildCacheEntry> GetEnumerator()
-        {
-            foreach (BuildCacheEntry entry in _entries.Values)
-                yield return entry;
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }

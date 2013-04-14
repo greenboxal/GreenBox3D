@@ -1,12 +1,9 @@
-﻿#region --- License ---
-/* Licensed under the MIT/X11 license.
- * Copyright (c) 2006-2008 the OpenTK Team.
- * This notice may not be removed from any source distribution.
- * See license.txt for licensing detailed licensing details.
- * 
- * Contributions by Andy Gill, James Talton and Georg Wächter.
- */
-#endregion
+﻿// Functions.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +12,7 @@ using System.Text;
 namespace GreenBox3D
 {
     /// <summary>
-    /// Contains mathematical functions for the OpenTK.Math toolkit.
+    ///     Contains mathematical functions for the OpenTK.Math toolkit.
     /// </summary>
     [Obsolete("Use OpenTK.MathHelper instead.")]
     public static class Functions
@@ -23,54 +20,59 @@ namespace GreenBox3D
         #region NextPowerOfTwo
 
         /// <summary>
-        /// Returns the next power of two that is larger than the specified number.
+        ///     Returns the next power of two that is larger than the specified number.
         /// </summary>
         /// <param name="n">The specified number.</param>
         /// <returns>The next power of two.</returns>
         public static long NextPowerOfTwo(long n)
         {
-            if (n < 0) throw new ArgumentOutOfRangeException("n", "Must be positive.");
-            return (long)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log((double)n, 2)));
+            if (n < 0)
+                throw new ArgumentOutOfRangeException("n", "Must be positive.");
+            return (long)Math.Pow(2, Math.Ceiling(Math.Log(n, 2)));
         }
 
         /// <summary>
-        /// Returns the next power of two that is larger than the specified number.
+        ///     Returns the next power of two that is larger than the specified number.
         /// </summary>
         /// <param name="n">The specified number.</param>
         /// <returns>The next power of two.</returns>
         public static int NextPowerOfTwo(int n)
         {
-            if (n < 0) throw new ArgumentOutOfRangeException("n", "Must be positive.");
-            return (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log((double)n, 2)));
+            if (n < 0)
+                throw new ArgumentOutOfRangeException("n", "Must be positive.");
+            return (int)Math.Pow(2, Math.Ceiling(Math.Log(n, 2)));
         }
 
         /// <summary>
-        /// Returns the next power of two that is larger than the specified number.
+        ///     Returns the next power of two that is larger than the specified number.
         /// </summary>
         /// <param name="n">The specified number.</param>
         /// <returns>The next power of two.</returns>
         public static float NextPowerOfTwo(float n)
         {
-            if (n < 0) throw new ArgumentOutOfRangeException("n", "Must be positive.");
-            return (float)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log((double)n, 2)));
+            if (n < 0)
+                throw new ArgumentOutOfRangeException("n", "Must be positive.");
+            return (float)Math.Pow(2, Math.Ceiling(Math.Log(n, 2)));
         }
 
         /// <summary>
-        /// Returns the next power of two that is larger than the specified number.
+        ///     Returns the next power of two that is larger than the specified number.
         /// </summary>
         /// <param name="n">The specified number.</param>
         /// <returns>The next power of two.</returns>
         public static double NextPowerOfTwo(double n)
         {
-            if (n < 0) throw new ArgumentOutOfRangeException("n", "Must be positive.");
-            return System.Math.Pow(2, System.Math.Ceiling(System.Math.Log((double)n, 2)));
+            if (n < 0)
+                throw new ArgumentOutOfRangeException("n", "Must be positive.");
+            return Math.Pow(2, Math.Ceiling(Math.Log(n, 2)));
         }
 
         #endregion
 
         #region Factorial
 
-        /// <summary>Calculates the factorial of a given natural number.
+        /// <summary>
+        ///     Calculates the factorial of a given natural number.
         /// </summary>
         /// <param name="n">The number.</param>
         /// <returns>n!</returns>
@@ -89,7 +91,7 @@ namespace GreenBox3D
         #region BinomialCoefficient
 
         /// <summary>
-        /// Calculates the binomial coefficient <paramref name="n"/> above <paramref name="k"/>.
+        ///     Calculates the binomial coefficient <paramref name="n" /> above <paramref name="k" />.
         /// </summary>
         /// <param name="n">The n.</param>
         /// <param name="k">The k.</param>
@@ -104,39 +106,39 @@ namespace GreenBox3D
         #region InverseSqrtFast
 
         /// <summary>
-        /// Returns an approximation of the inverse square root of left number.
+        ///     Returns an approximation of the inverse square root of left number.
         /// </summary>
         /// <param name="x">A number.</param>
         /// <returns>An approximation of the inverse square root of the specified number, with an upper error bound of 0.001</returns>
         /// <remarks>
-        /// This is an improved implementation of the the method known as Carmack's inverse square root
-        /// which is found in the Quake III source code. This implementation comes from
-        /// http://www.codemaestro.com/reviews/review00000105.html. For the history of this method, see
-        /// http://www.beyond3d.com/content/articles/8/
+        ///     This is an improved implementation of the the method known as Carmack's inverse square root
+        ///     which is found in the Quake III source code. This implementation comes from
+        ///     http://www.codemaestro.com/reviews/review00000105.html. For the history of this method, see
+        ///     http://www.beyond3d.com/content/articles/8/
         /// </remarks>
         public static float InverseSqrtFast(float x)
         {
             unsafe
             {
                 float xhalf = 0.5f * x;
-                int i = *(int*)&x;              // Read bits as integer.
-                i = 0x5f375a86 - (i >> 1);      // Make an initial guess for Newton-Raphson approximation
-                x = *(float*)&i;                // Convert bits back to float
+                int i = *(int*)&x; // Read bits as integer.
+                i = 0x5f375a86 - (i >> 1); // Make an initial guess for Newton-Raphson approximation
+                x = *(float*)&i; // Convert bits back to float
                 x = x * (1.5f - xhalf * x * x); // Perform left single Newton-Raphson step.
                 return x;
             }
         }
 
         /// <summary>
-        /// Returns an approximation of the inverse square root of left number.
+        ///     Returns an approximation of the inverse square root of left number.
         /// </summary>
         /// <param name="x">A number.</param>
         /// <returns>An approximation of the inverse square root of the specified number, with an upper error bound of 0.001</returns>
         /// <remarks>
-        /// This is an improved implementation of the the method known as Carmack's inverse square root
-        /// which is found in the Quake III source code. This implementation comes from
-        /// http://www.codemaestro.com/reviews/review00000105.html. For the history of this method, see
-        /// http://www.beyond3d.com/content/articles/8/
+        ///     This is an improved implementation of the the method known as Carmack's inverse square root
+        ///     which is found in the Quake III source code. This implementation comes from
+        ///     http://www.codemaestro.com/reviews/review00000105.html. For the history of this method, see
+        ///     http://www.beyond3d.com/content/articles/8/
         /// </remarks>
         public static double InverseSqrtFast(double x)
         {
@@ -160,24 +162,24 @@ namespace GreenBox3D
         #region DegreesToRadians
 
         /// <summary>
-        /// Convert degrees to radians
+        ///     Convert degrees to radians
         /// </summary>
         /// <param name="degrees">An angle in degrees</param>
         /// <returns>The angle expressed in radians</returns>
         public static float DegreesToRadians(float degrees)
         {
-            const float degToRad = (float)System.Math.PI / 180.0f;
+            const float degToRad = (float)Math.PI / 180.0f;
             return degrees * degToRad;
         }
 
         /// <summary>
-        /// Convert radians to degrees
+        ///     Convert radians to degrees
         /// </summary>
         /// <param name="radians">An angle in radians</param>
         /// <returns>The angle expressed in degrees</returns>
         public static float RadiansToDegrees(float radians)
         {
-            const float radToDeg = 180.0f / (float)System.Math.PI;
+            const float radToDeg = 180.0f / (float)Math.PI;
             return radians * radToDeg;
         }
 
@@ -186,32 +188,34 @@ namespace GreenBox3D
         #region Mathematical constants
 
         /// <summary>
-        /// Obsolete. Do not use.
+        ///     Obsolete. Do not use.
         /// </summary>
-        public static readonly float PIF = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930382f;
+        public static readonly float PIF =
+            3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930382f;
 
         /// <summary>
-        /// Obsolete. Do not use.
+        ///     Obsolete. Do not use.
         /// </summary>
         public static readonly float RTODF = 180.0f / PIF;
 
         /// <summary>
-        /// Obsolete. Do not use.
+        ///     Obsolete. Do not use.
         /// </summary>
         public static readonly float DTORF = PIF / 180.0f;
 
         /// <summary>
-        /// Obsolete. Do not use.
+        ///     Obsolete. Do not use.
         /// </summary>
-        public static readonly double PI = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930382d;
+        public static readonly double PI =
+            3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930382d;
 
         /// <summary>
-        /// Obsolete. Do not use.
+        ///     Obsolete. Do not use.
         /// </summary>
         public static readonly double RTOD = 180.0d / PIF;
 
         /// <summary>
-        /// Obsolete. Do not use.
+        ///     Obsolete. Do not use.
         /// </summary>
         public static readonly double DTOR = PIF / 180.0d;
 
@@ -220,7 +224,7 @@ namespace GreenBox3D
         #region Swap
 
         /// <summary>
-        /// Swaps two float values.
+        ///     Swaps two float values.
         /// </summary>
         /// <param name="a">The first value.</param>
         /// <param name="b">The second value.</param>
@@ -232,7 +236,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Swaps two float values.
+        ///     Swaps two float values.
         /// </summary>
         /// <param name="a">The first value.</param>
         /// <param name="b">The second value.</param>

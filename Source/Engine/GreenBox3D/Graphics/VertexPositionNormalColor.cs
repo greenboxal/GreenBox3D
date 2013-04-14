@@ -1,9 +1,9 @@
-﻿// GreenBox3D
+﻿// VertexPositionNormalColor.cs
 // 
-// Copyright (c) 2013 The GreenBox Development Inc.
-// Copyright (c) 2013 Mono.Xna Team and Contributors
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
 // 
-// Licensed under MIT license terms.
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,12 @@ namespace GreenBox3D.Graphics
     public struct VertexPositionNormalColor : IVertexType
     {
         public static readonly VertexDeclaration Declaration =
-            new VertexDeclaration(new[] { new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position), new VertexElement(12, VertexElementFormat.Vector3, VertexElementUsage.Normal), new VertexElement(24, VertexElementFormat.Color, VertexElementUsage.Color), });
+            new VertexDeclaration(new[]
+            {
+                new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position),
+                new VertexElement(12, VertexElementFormat.Vector3, VertexElementUsage.Normal),
+                new VertexElement(24, VertexElementFormat.Color, VertexElementUsage.Color),
+            });
 
         public Vector3 Position;
         public Vector3 Normal;
@@ -31,6 +36,9 @@ namespace GreenBox3D.Graphics
             Color = color;
         }
 
-        public VertexDeclaration VertexDeclaration { get { return Declaration; } }
+        public VertexDeclaration VertexDeclaration
+        {
+            get { return Declaration; }
+        }
     }
 }

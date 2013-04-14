@@ -1,26 +1,9 @@
-#region --- License ---
-/*
-Copyright (c) 2006 - 2008 The Open Toolkit library.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
- */
-#endregion
+// Vector3h.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.IO;
@@ -31,7 +14,7 @@ using System.Xml.Serialization;
 namespace GreenBox3D
 {
     /// <summary>
-    /// 3-component Vector of the Half type. Occupies 6 Byte total.
+    ///     3-component Vector of the Half type. Occupies 6 Byte total.
     /// </summary>
     [Serializable, StructLayout(LayoutKind.Sequential)]
     public struct Vector3h : ISerializable, IEquatable<Vector3h>
@@ -52,7 +35,7 @@ namespace GreenBox3D
         #region Constructors
 
         /// <summary>
-        /// Constructs a new instance.
+        ///     Constructs a new instance.
         /// </summary>
         /// <param name="value">The value that will initialize this instance.</param>
         public Vector3h(Half value)
@@ -63,7 +46,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Constructs a new instance.
+        ///     Constructs a new instance.
         /// </summary>
         /// <param name="value">The value that will initialize this instance.</param>
         public Vector3h(Single value)
@@ -74,20 +57,20 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half3 instance will avoid conversion and copy directly from the Half parameters.
+        ///     The new Half3 instance will avoid conversion and copy directly from the Half parameters.
         /// </summary>
         /// <param name="x">An Half instance of a 16-bit half-precision floating-point number.</param>
         /// <param name="y">An Half instance of a 16-bit half-precision floating-point number.</param>
         /// <param name="z">An Half instance of a 16-bit half-precision floating-point number.</param>
         public Vector3h(Half x, Half y, Half z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
         /// <summary>
-        /// The new Half3 instance will convert the 3 parameters into 16-bit half-precision floating-point.
+        ///     The new Half3 instance will convert the 3 parameters into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="x">32-bit single-precision floating-point number.</param>
         /// <param name="y">32-bit single-precision floating-point number.</param>
@@ -100,7 +83,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half3 instance will convert the 3 parameters into 16-bit half-precision floating-point.
+        ///     The new Half3 instance will convert the 3 parameters into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="x">32-bit single-precision floating-point number.</param>
         /// <param name="y">32-bit single-precision floating-point number.</param>
@@ -114,7 +97,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half3 instance will convert the Vector3 into 16-bit half-precision floating-point.
+        ///     The new Half3 instance will convert the Vector3 into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="v">OpenTK.Vector3</param>
         public Vector3h(Vector3 v)
@@ -125,7 +108,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half3 instance will convert the Vector3 into 16-bit half-precision floating-point.
+        ///     The new Half3 instance will convert the Vector3 into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="v">OpenTK.Vector3</param>
         /// <param name="throwOnError">Enable checks that will throw if the conversion result is not meaningful.</param>
@@ -137,8 +120,8 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half3 instance will convert the Vector3 into 16-bit half-precision floating-point.
-        /// This is the fastest constructor.
+        ///     The new Half3 instance will convert the Vector3 into 16-bit half-precision floating-point.
+        ///     This is the fastest constructor.
         /// </summary>
         /// <param name="v">OpenTK.Vector3</param>
         public Vector3h(ref Vector3 v)
@@ -149,7 +132,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half3 instance will convert the Vector3 into 16-bit half-precision floating-point.
+        ///     The new Half3 instance will convert the Vector3 into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="v">OpenTK.Vector3</param>
         /// <param name="throwOnError">Enable checks that will throw if the conversion result is not meaningful.</param>
@@ -161,7 +144,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half3 instance will convert the Vector3d into 16-bit half-precision floating-point.
+        ///     The new Half3 instance will convert the Vector3d into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="v">OpenTK.Vector3d</param>
         public Vector3h(Vector3d v)
@@ -172,7 +155,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half3 instance will convert the Vector3d into 16-bit half-precision floating-point.
+        ///     The new Half3 instance will convert the Vector3d into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="v">OpenTK.Vector3d</param>
         /// <param name="throwOnError">Enable checks that will throw if the conversion result is not meaningful.</param>
@@ -184,8 +167,8 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half3 instance will convert the Vector3d into 16-bit half-precision floating-point.
-        /// This is the faster constructor.
+        ///     The new Half3 instance will convert the Vector3d into 16-bit half-precision floating-point.
+        ///     This is the faster constructor.
         /// </summary>
         /// <param name="v">OpenTK.Vector3d</param>
         public Vector3h(ref Vector3d v)
@@ -196,7 +179,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half3 instance will convert the Vector3d into 16-bit half-precision floating-point.
+        ///     The new Half3 instance will convert the Vector3d into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="v">OpenTK.Vector3d</param>
         /// <param name="throwOnError">Enable checks that will throw if the conversion result is not meaningful.</param>
@@ -212,17 +195,25 @@ namespace GreenBox3D
         #region Swizzle
 
         /// <summary>
-        /// Gets or sets an OpenTK.Vector2h with the X and Y components of this instance.
+        ///     Gets or sets an OpenTK.Vector2h with the X and Y components of this instance.
         /// </summary>
         [XmlIgnore]
-        public Vector2h Xy { get { return new Vector2h(X, Y); } set { X = value.X; Y = value.Y; } }
+        public Vector2h Xy
+        {
+            get { return new Vector2h(X, Y); }
+            set
+            {
+                X = value.X;
+                Y = value.Y;
+            }
+        }
 
         #endregion
 
         #region Half -> Single
 
         /// <summary>
-        /// Returns this Half3 instance's contents as Vector3.
+        ///     Returns this Half3 instance's contents as Vector3.
         /// </summary>
         /// <returns>OpenTK.Vector3</returns>
         public Vector3 ToVector3()
@@ -231,7 +222,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Returns this Half3 instance's contents as Vector3d.
+        ///     Returns this Half3 instance's contents as Vector3d.
         /// </summary>
         public Vector3d ToVector3d()
         {
@@ -298,9 +289,9 @@ namespace GreenBox3D
         /// <param name="context"></param>
         public Vector3h(SerializationInfo info, StreamingContext context)
         {
-            this.X = (Half)info.GetValue("X", typeof(Half));
-            this.Y = (Half)info.GetValue("Y", typeof(Half));
-            this.Z = (Half)info.GetValue("Z", typeof(Half));
+            X = (Half)info.GetValue("X", typeof(Half));
+            Y = (Half)info.GetValue("Y", typeof(Half));
+            Z = (Half)info.GetValue("Z", typeof(Half));
         }
 
         /// <summary>Used by ISerialize to serialize the object.</summary>
@@ -308,9 +299,9 @@ namespace GreenBox3D
         /// <param name="context"></param>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("X", this.X);
-            info.AddValue("Y", this.Y);
-            info.AddValue("Z", this.Z);
+            info.AddValue("X", X);
+            info.AddValue("Y", Y);
+            info.AddValue("Z", Z);
         }
 
         #endregion ISerializable
@@ -344,7 +335,7 @@ namespace GreenBox3D
         /// <returns>True, if other is equal to this instance; false otherwise.</returns>
         public bool Equals(Vector3h other)
         {
-            return (this.X.Equals(other.X) && this.Y.Equals(other.Y) && this.Z.Equals(other.Z));
+            return (X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z));
         }
 
         #endregion

@@ -1,22 +1,22 @@
-﻿// GreenBox3D
+﻿// ShaderLoader.cs
 // 
-// Copyright (c) 2013 The GreenBox Development Inc.
-// Copyright (c) 2013 Mono.Xna Team and Contributors
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
 // 
-// Licensed under MIT license terms.
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using GreenBox3D.Graphics;
+
 //using GreenBox3D.Graphics.Shading;
 
 namespace GreenBox3D.Content.Loaders
 {
-  /*  [ContentTypeReader(Extension = ".fx")]
+    /*  [ContentTypeReader(Extension = ".fx")]
     public class ShaderLoader : ContentTypeReader<ShaderCollection>
     {
         #region Constructors and Destructors

@@ -1,109 +1,70 @@
-#region --- License ---
-/*
-Copyright (c) 2006 - 2008 The Open Toolkit library.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
- */
-/*
-The conversion functions are derived from OpenEXR's implementation and are
-governed by the following license:
-
-Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
-Digital Ltd. LLC
-
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
-*       Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-*       Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-*       Neither the name of Industrial Light & Magic nor the names of
-its contributors may be used to endorse or promote products derived
-from this software without specific prior written permission. 
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-#endregion --- License ---
+// Half.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 
 namespace GreenBox3D
 {
-
     /// <summary>
-    /// The name Half is derived from half-precision floating-point number.
-    /// It occupies only 16 bits, which are split into 1 Sign bit, 5 Exponent bits and 10 Mantissa bits.
+    ///     The name Half is derived from half-precision floating-point number.
+    ///     It occupies only 16 bits, which are split into 1 Sign bit, 5 Exponent bits and 10 Mantissa bits.
     /// </summary>
     /// <remarks>
-    /// Quote from ARB_half_float_pixel specification:
-    /// Any representable 16-bit floating-point value is legal as input to a GL command that accepts 16-bit floating-point data.  The
-    /// result of providing a value that is not a floating-point number (such as infinity or NaN) to such a command is unspecified,
-    /// but must not lead to GL interruption or termination. Providing a denormalized number or negative zero to GL must yield
-    /// predictable results.
+    ///     Quote from ARB_half_float_pixel specification:
+    ///     Any representable 16-bit floating-point value is legal as input to a GL command that accepts 16-bit floating-point data.  The
+    ///     result of providing a value that is not a floating-point number (such as infinity or NaN) to such a command is unspecified,
+    ///     but must not lead to GL interruption or termination. Providing a denormalized number or negative zero to GL must yield
+    ///     predictable results.
     /// </remarks>
     [Serializable, StructLayout(LayoutKind.Sequential)]
     public struct Half : ISerializable, IComparable<Half>, IFormattable, IEquatable<Half>
     {
         #region Internal Field
 
-        UInt16 bits;
+        private UInt16 bits;
 
         #endregion Internal Field
 
         #region Properties
 
         /// <summary>Returns true if the Half is zero.</summary>
-        public bool IsZero { get { return (bits == 0) || (bits == 0x8000); } }
+        public bool IsZero
+        {
+            get { return (bits == 0) || (bits == 0x8000); }
+        }
 
         /// <summary>Returns true if the Half represents Not A Number (NaN)</summary>
-        public bool IsNaN { get { return (((bits & 0x7C00) == 0x7C00) && (bits & 0x03FF) != 0x0000); } }
+        public bool IsNaN
+        {
+            get { return (((bits & 0x7C00) == 0x7C00) && (bits & 0x03FF) != 0x0000); }
+        }
 
         /// <summary>Returns true if the Half represents positive infinity.</summary>
-        public bool IsPositiveInfinity { get { return (bits == 31744); } }
+        public bool IsPositiveInfinity
+        {
+            get { return (bits == 31744); }
+        }
 
         /// <summary>Returns true if the Half represents negative infinity.</summary>
-        public bool IsNegativeInfinity { get { return (bits == 64512); } }
+        public bool IsNegativeInfinity
+        {
+            get { return (bits == 64512); }
+        }
 
         #endregion Properties
 
         #region Constructors
 
         /// <summary>
-        /// The new Half instance will convert the parameter into 16-bit half-precision floating-point.
+        ///     The new Half instance will convert the parameter into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="f">32-bit single-precision floating-point number.</param>
         public Half(Single f)
@@ -116,7 +77,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// The new Half instance will convert the parameter into 16-bit half-precision floating-point.
+        ///     The new Half instance will convert the parameter into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="f">32-bit single-precision floating-point number.</param>
         /// <param name="throwOnError">Enable checks that will throw if the conversion result is not meaningful.</param>
@@ -126,28 +87,39 @@ namespace GreenBox3D
             if (throwOnError)
             {
                 // handle cases that cause overflow rather than silently ignoring it
-                if (f > Half.MaxValue) throw new ArithmeticException("Half: Positive maximum value exceeded.");
-                if (f < -Half.MaxValue) throw new ArithmeticException("Half: Negative minimum value exceeded.");
+                if (f > MaxValue)
+                    throw new ArithmeticException("Half: Positive maximum value exceeded.");
+                if (f < -MaxValue)
+                    throw new ArithmeticException("Half: Negative minimum value exceeded.");
 
                 // handle cases that make no sense
-                if (Single.IsNaN(f)) throw new ArithmeticException("Half: Input is not a number (NaN).");
-                if (Single.IsPositiveInfinity(f)) throw new ArithmeticException("Half: Input is positive infinity.");
-                if (Single.IsNegativeInfinity(f)) throw new ArithmeticException("Half: Input is negative infinity.");
+                if (Single.IsNaN(f))
+                    throw new ArithmeticException("Half: Input is not a number (NaN).");
+                if (Single.IsPositiveInfinity(f))
+                    throw new ArithmeticException("Half: Input is positive infinity.");
+                if (Single.IsNegativeInfinity(f))
+                    throw new ArithmeticException("Half: Input is negative infinity.");
             }
         }
 
         /// <summary>
-        /// The new Half instance will convert the parameter into 16-bit half-precision floating-point.
+        ///     The new Half instance will convert the parameter into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="d">64-bit double-precision floating-point number.</param>
-        public Half(Double d) : this((Single)d) { }
+        public Half(Double d)
+            : this((Single)d)
+        {
+        }
 
         /// <summary>
-        /// The new Half instance will convert the parameter into 16-bit half-precision floating-point.
+        ///     The new Half instance will convert the parameter into 16-bit half-precision floating-point.
         /// </summary>
         /// <param name="d">64-bit double-precision floating-point number.</param>
         /// <param name="throwOnError">Enable checks that will throw if the conversion result is not meaningful.</param>
-        public Half(Double d, bool throwOnError) : this((Single)d, throwOnError) { }
+        public Half(Double d, bool throwOnError)
+            : this((Single)d, throwOnError)
+        {
+        }
 
         #endregion Constructors
 
@@ -230,12 +202,13 @@ namespace GreenBox3D
 
                 if ((mantissa & 0x00800000) == 1)
                 {
-                    mantissa = 0;        // overflow in significand,
-                    exponent += 1;        // adjust exponent
+                    mantissa = 0; // overflow in significand,
+                    exponent += 1; // adjust exponent
                 }
 
                 // exponent overflow
-                if (exponent > 30) throw new ArithmeticException("Half: Hardware floating-point overflow.");
+                if (exponent > 30)
+                    throw new ArithmeticException("Half: Hardware floating-point overflow.");
 
                 // Assemble the half from S, E and M.
 
@@ -262,7 +235,6 @@ namespace GreenBox3D
         /// <summary>Ported from OpenEXR's IlmBase 1.0.1</summary>
         private Int32 HalfToFloat(UInt16 ui16)
         {
-
             Int32 sign = (ui16 >> 15) & 0x00000001;
             Int32 exponent = (ui16 >> 10) & 0x0000001f;
             Int32 mantissa = ui16 & 0x000003ff;
@@ -320,13 +292,15 @@ namespace GreenBox3D
         #region Conversions
 
         /// <summary>
-        /// Converts a System.Single to a OpenTK.Half.
+        ///     Converts a System.Single to a OpenTK.Half.
         /// </summary>
-        /// <param name="f">The value to convert.
-        /// A <see cref="System.Single"/>
+        /// <param name="f">
+        ///     The value to convert.
+        ///     A <see cref="System.Single" />
         /// </param>
-        /// <returns>The result of the conversion.
-        /// A <see cref="Half"/>
+        /// <returns>
+        ///     The result of the conversion.
+        ///     A <see cref="Half" />
         /// </returns>
         public static explicit operator Half(float f)
         {
@@ -334,13 +308,15 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Converts a System.Double to a OpenTK.Half.
+        ///     Converts a System.Double to a OpenTK.Half.
         /// </summary>
-        /// <param name="d">The value to convert.
-        /// A <see cref="System.Double"/>
+        /// <param name="d">
+        ///     The value to convert.
+        ///     A <see cref="System.Double" />
         /// </param>
-        /// <returns>The result of the conversion.
-        /// A <see cref="Half"/>
+        /// <returns>
+        ///     The result of the conversion.
+        ///     A <see cref="Half" />
         /// </returns>
         public static explicit operator Half(double d)
         {
@@ -348,13 +324,15 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Converts a OpenTK.Half to a System.Single.
+        ///     Converts a OpenTK.Half to a System.Single.
         /// </summary>
-        /// <param name="h">The value to convert.
-        /// A <see cref="Half"/>
+        /// <param name="h">
+        ///     The value to convert.
+        ///     A <see cref="Half" />
         /// </param>
-        /// <returns>The result of the conversion.
-        /// A <see cref="System.Single"/>
+        /// <returns>
+        ///     The result of the conversion.
+        ///     A <see cref="System.Single" />
         /// </returns>
         public static implicit operator float(Half h)
         {
@@ -362,17 +340,19 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Converts a OpenTK.Half to a System.Double.
+        ///     Converts a OpenTK.Half to a System.Double.
         /// </summary>
-        /// <param name="h">The value to convert.
-        /// A <see cref="Half"/>
+        /// <param name="h">
+        ///     The value to convert.
+        ///     A <see cref="Half" />
         /// </param>
-        /// <returns>The result of the conversion.
-        /// A <see cref="System.Double"/>
+        /// <returns>
+        ///     The result of the conversion.
+        ///     A <see cref="System.Double" />
         /// </returns>
         public static implicit operator double(Half h)
         {
-            return (double)h.ToSingle();
+            return h.ToSingle();
         }
 
         #endregion Conversions
@@ -403,7 +383,7 @@ namespace GreenBox3D
         /// <param name="context"></param>
         public Half(SerializationInfo info, StreamingContext context)
         {
-            this.bits = (ushort)info.GetValue("bits", typeof(ushort));
+            bits = (ushort)info.GetValue("bits", typeof(ushort));
         }
 
         /// <summary>Used by ISerialize to serialize the object.</summary>
@@ -411,7 +391,7 @@ namespace GreenBox3D
         /// <param name="context"></param>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("bits", this.bits);
+            info.AddValue("bits", bits);
         }
 
         #endregion ISerializable
@@ -422,33 +402,38 @@ namespace GreenBox3D
         /// <param name="bin">A BinaryReader instance associated with an open Stream.</param>
         public void FromBinaryStream(BinaryReader bin)
         {
-            this.bits = bin.ReadUInt16();
-
+            bits = bin.ReadUInt16();
         }
 
         /// <summary>Writes the Half into a Stream.</summary>
         /// <param name="bin">A BinaryWriter instance associated with an open Stream.</param>
         public void ToBinaryStream(BinaryWriter bin)
         {
-            bin.Write(this.bits);
+            bin.Write(bits);
         }
 
         #endregion Binary dump
 
         #region IEquatable<Half> Members
 
-        const int maxUlps = 1;
+        private const int maxUlps = 1;
 
         /// <summary>
-        /// Returns a value indicating whether this instance is equal to a specified OpenTK.Half value.
+        ///     Returns a value indicating whether this instance is equal to a specified OpenTK.Half value.
         /// </summary>
         /// <param name="other">OpenTK.Half object to compare to this instance..</param>
         /// <returns>True, if other is equal to this instance; false otherwise.</returns>
         public bool Equals(Half other)
         {
             short aInt, bInt;
-            unchecked { aInt = (short)other.bits; }
-            unchecked { bInt = (short)this.bits; }
+            unchecked
+            {
+                aInt = (short)other.bits;
+            }
+            unchecked
+            {
+                bInt = (short)bits;
+            }
 
             // Make aInt lexicographically ordered as a twos-complement int
             if (aInt < 0)
@@ -458,7 +443,7 @@ namespace GreenBox3D
             if (bInt < 0)
                 bInt = (short)(0x8000 - bInt);
 
-            short intDiff = System.Math.Abs((short)(aInt - bInt));
+            short intDiff = Math.Abs((short)(aInt - bInt));
 
             if (intDiff <= maxUlps)
                 return true;
@@ -471,25 +456,31 @@ namespace GreenBox3D
         #region IComparable<Half> Members
 
         /// <summary>
-        /// Compares this instance to a specified half-precision floating-point number
-        /// and returns an integer that indicates whether the value of this instance
-        /// is less than, equal to, or greater than the value of the specified half-precision
-        /// floating-point number. 
+        ///     Compares this instance to a specified half-precision floating-point number
+        ///     and returns an integer that indicates whether the value of this instance
+        ///     is less than, equal to, or greater than the value of the specified half-precision
+        ///     floating-point number.
         /// </summary>
         /// <param name="other">A half-precision floating-point number to compare.</param>
         /// <returns>
-        /// A signed number indicating the relative values of this instance and value. If the number is:
-        /// <para>Less than zero, then this instance is less than other, or this instance is not a number
-        /// (OpenTK.Half.NaN) and other is a number.</para>
-        /// <para>Zero: this instance is equal to value, or both this instance and other
-        /// are not a number (OpenTK.Half.NaN), OpenTK.Half.PositiveInfinity, or
-        /// OpenTK.Half.NegativeInfinity.</para>
-        /// <para>Greater than zero: this instance is greater than othrs, or this instance is a number
-        /// and other is not a number (OpenTK.Half.NaN).</para>
+        ///     A signed number indicating the relative values of this instance and value. If the number is:
+        ///     <para>
+        ///         Less than zero, then this instance is less than other, or this instance is not a number
+        ///         (OpenTK.Half.NaN) and other is a number.
+        ///     </para>
+        ///     <para>
+        ///         Zero: this instance is equal to value, or both this instance and other
+        ///         are not a number (OpenTK.Half.NaN), OpenTK.Half.PositiveInfinity, or
+        ///         OpenTK.Half.NegativeInfinity.
+        ///     </para>
+        ///     <para>
+        ///         Greater than zero: this instance is greater than othrs, or this instance is a number
+        ///         and other is not a number (OpenTK.Half.NaN).
+        ///     </para>
         /// </returns>
         public int CompareTo(Half other)
         {
-            return ((float)this).CompareTo((float)other);
+            return ((float)this).CompareTo(other);
         }
 
         #endregion IComparable<Half> Members
@@ -500,7 +491,7 @@ namespace GreenBox3D
         /// <returns>The string representation of this instance.</returns>
         public override string ToString()
         {
-            return this.ToSingle().ToString();
+            return ToSingle().ToString();
         }
 
         /// <summary>Converts this Half into a human-legible string representation.</summary>
@@ -509,7 +500,7 @@ namespace GreenBox3D
         /// <returns>The string representation of this instance.</returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            return this.ToSingle().ToString(format, formatProvider);
+            return ToSingle().ToString(format, formatProvider);
         }
 
         #endregion IFormattable Members
@@ -529,7 +520,7 @@ namespace GreenBox3D
         /// <param name="style">Specifies the format of s.</param>
         /// <param name="provider">Culture-specific formatting information.</param>
         /// <returns>A new Half instance.</returns>
-        public static Half Parse(string s, System.Globalization.NumberStyles style, IFormatProvider provider)
+        public static Half Parse(string s, NumberStyles style, IFormatProvider provider)
         {
             return (Half)Single.Parse(s, style, provider);
         }
@@ -552,7 +543,7 @@ namespace GreenBox3D
         /// <param name="provider">Culture-specific formatting information.</param>
         /// <param name="result">The Half instance to write to.</param>
         /// <returns>Success.</returns>
-        public static bool TryParse(string s, System.Globalization.NumberStyles style, IFormatProvider provider, out Half result)
+        public static bool TryParse(string s, NumberStyles style, IFormatProvider provider, out Half result)
         {
             float f;
             bool b = Single.TryParse(s, style, provider, out f);

@@ -1,9 +1,15 @@
-﻿using System;
+﻿// GLShaderPass.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using GreenBox3D.Graphics;
 using GreenBox3D.Graphics.Detail;
 using OpenTK.Graphics.OpenGL;
@@ -12,10 +18,18 @@ namespace GreenBox3D.Platform.Windows.Graphics.Shading
 {
     public class GLShaderPass : GraphicsResource, IShaderPass
     {
-        private string _vertexCode;
-        private string _pixelCode;
+        private readonly string _pixelCode;
+        private readonly string _vertexCode;
         private bool _isValid;
         private GLShader _owner;
+
+        public GLShaderPass(GraphicsDevice graphicsDevice, string vertexCode, string pixelCode)
+            : base(graphicsDevice)
+        {
+            _vertexCode = vertexCode;
+            _pixelCode = pixelCode;
+            _isValid = false;
+        }
 
         public string VertexCode
         {
@@ -35,14 +49,6 @@ namespace GreenBox3D.Platform.Windows.Graphics.Shading
         public int ProgramID { get; set; }
         public int VertexShader { get; set; }
         public int PixelShader { get; set; }
-
-        public GLShaderPass(GraphicsDevice graphicsDevice, string vertexCode, string pixelCode)
-            : base(graphicsDevice)
-        {
-            _vertexCode = vertexCode;
-            _pixelCode = pixelCode;
-            _isValid = false;
-        }
 
         public void Create(GLShader owner)
         {

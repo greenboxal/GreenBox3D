@@ -1,9 +1,15 @@
-﻿using System;
+﻿// GLEffect.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using GreenBox3D.Graphics;
 using GreenBox3D.Graphics.Detail;
 using GreenBox3D.Platform.Windows.Graphics.Shading;
@@ -14,20 +20,8 @@ namespace GreenBox3D.Platform.Windows.Graphics
     {
         internal readonly GLShader Shader;
 
-        private EffectParameterCollection _parameters;
-        private EffectPassCollection _passes;
-
-        public EffectParameterCollection Parameters
-        {
-            get { return _parameters; }
-        }
-
-        public EffectPassCollection Passes
-        {
-            get { return _passes; }
-        }
-
-        internal byte[] ParameterData { get; set; }
+        private readonly EffectParameterCollection _parameters;
+        private readonly EffectPassCollection _passes;
 
         internal GLEffect(GLShader shader)
         {
@@ -59,6 +53,18 @@ namespace GreenBox3D.Platform.Windows.Graphics
                 }
             }
         }
+
+        public EffectParameterCollection Parameters
+        {
+            get { return _parameters; }
+        }
+
+        public EffectPassCollection Passes
+        {
+            get { return _passes; }
+        }
+
+        internal byte[] ParameterData { get; set; }
 
         public void Dispose()
         {

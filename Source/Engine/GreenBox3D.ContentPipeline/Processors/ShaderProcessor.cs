@@ -1,15 +1,20 @@
-﻿using System;
+﻿// ShaderProcessor.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using GreenBox3D.Graphics.Detail;
 using GreenBox3D.ContentPipeline.Graphics;
 using GreenBox3D.ContentPipeline.Graphics.Shading;
 using GreenBox3D.ContentPipeline.CompilerServices;
-
 using Ast = GreenBox3D.ContentPipeline.Graphics.Shading.Ast;
 
 namespace GreenBox3D.ContentPipeline.Processors
@@ -27,7 +32,7 @@ namespace GreenBox3D.ContentPipeline.Processors
 
                 foreach (Ast.InputVariable aiv in ash.Input)
                     shader.Input.Add(CompiledShaderUtils.InputVariableFromAst(aiv));
-                
+
                 foreach (Ast.Variable av in ash.Globals)
                     shader.Globals.Add(CompiledShaderUtils.VariableFromAst(av));
 
@@ -50,7 +55,8 @@ namespace GreenBox3D.ContentPipeline.Processors
             return shaders;
         }
 
-        public CompiledPass CompilePass(CompiledShader shader, Ast.Shader ash, Ast.Pass ap, ContentProcessorContext context)
+        public CompiledPass CompilePass(CompiledShader shader, Ast.Shader ash, Ast.Pass ap,
+                                        ContentProcessorContext context)
         {
             string glslVertex, glslPixel;
 
@@ -84,7 +90,8 @@ namespace GreenBox3D.ContentPipeline.Processors
                 line = line.TrimStart(' ', '\t');
 
                 if (line.StartsWith("#include"))
-                    context.Logger.Log(MessageLevel.Warning, "FX0002", filename, includedLine, 0, 0, 0, "Includes are not yet supported");
+                    context.Logger.Log(MessageLevel.Warning, "FX0002", filename, includedLine, 0, 0, 0,
+                                       "Includes are not yet supported");
                 else
                     builder.AppendLine(line);
             }

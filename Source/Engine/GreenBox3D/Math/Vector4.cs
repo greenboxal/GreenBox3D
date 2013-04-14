@@ -1,35 +1,19 @@
-#region --- License ---
-/*
-Copyright (c) 2006 - 2008 The Open Toolkit library.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
- */
-#endregion
+// Vector4.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
 
 using System;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
+
 namespace GreenBox3D
 {
     /// <summary>Represents a 4D vector using four single-precision floating-point numbers.</summary>
     /// <remarks>
-    /// The Vector4 structure is suitable for interoperation with unmanaged code requiring four consecutive floats.
+    ///     The Vector4 structure is suitable for interoperation with unmanaged code requiring four consecutive floats.
     /// </remarks>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
@@ -38,57 +22,57 @@ namespace GreenBox3D
         #region Fields
 
         /// <summary>
-        /// The X component of the Vector4.
+        ///     The X component of the Vector4.
         /// </summary>
         public float X;
 
         /// <summary>
-        /// The Y component of the Vector4.
+        ///     The Y component of the Vector4.
         /// </summary>
         public float Y;
 
         /// <summary>
-        /// The Z component of the Vector4.
+        ///     The Z component of the Vector4.
         /// </summary>
         public float Z;
 
         /// <summary>
-        /// The W component of the Vector4.
+        ///     The W component of the Vector4.
         /// </summary>
         public float W;
 
         /// <summary>
-        /// Defines a unit-length Vector4 that points towards the X-axis.
+        ///     Defines a unit-length Vector4 that points towards the X-axis.
         /// </summary>
         public static Vector4 UnitX = new Vector4(1, 0, 0, 0);
 
         /// <summary>
-        /// Defines a unit-length Vector4 that points towards the Y-axis.
+        ///     Defines a unit-length Vector4 that points towards the Y-axis.
         /// </summary>
         public static Vector4 UnitY = new Vector4(0, 1, 0, 0);
 
         /// <summary>
-        /// Defines a unit-length Vector4 that points towards the Z-axis.
+        ///     Defines a unit-length Vector4 that points towards the Z-axis.
         /// </summary>
         public static Vector4 UnitZ = new Vector4(0, 0, 1, 0);
 
         /// <summary>
-        /// Defines a unit-length Vector4 that points towards the W-axis.
+        ///     Defines a unit-length Vector4 that points towards the W-axis.
         /// </summary>
         public static Vector4 UnitW = new Vector4(0, 0, 0, 1);
 
         /// <summary>
-        /// Defines a zero-length Vector4.
+        ///     Defines a zero-length Vector4.
         /// </summary>
         public static Vector4 Zero = new Vector4(0, 0, 0, 0);
 
         /// <summary>
-        /// Defines an instance with all components set to 1.
+        ///     Defines an instance with all components set to 1.
         /// </summary>
         public static readonly Vector4 One = new Vector4(1, 1, 1, 1);
 
         /// <summary>
-        /// Defines the size of the Vector4 struct in bytes.
+        ///     Defines the size of the Vector4 struct in bytes.
         /// </summary>
         public static readonly int SizeInBytes = Marshal.SizeOf(new Vector4());
 
@@ -97,7 +81,7 @@ namespace GreenBox3D
         #region Constructors
 
         /// <summary>
-        /// Constructs a new instance.
+        ///     Constructs a new instance.
         /// </summary>
         /// <param name="value">The value that will initialize this instance.</param>
         public Vector4(float value)
@@ -109,7 +93,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Constructs a new Vector4.
+        ///     Constructs a new Vector4.
         /// </summary>
         /// <param name="x">The x component of the Vector4.</param>
         /// <param name="y">The y component of the Vector4.</param>
@@ -124,7 +108,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Constructs a new Vector4 from the given Vector2.
+        ///     Constructs a new Vector4 from the given Vector2.
         /// </summary>
         /// <param name="v">The Vector2 to copy components from.</param>
         public Vector4(Vector2 v)
@@ -136,11 +120,13 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Constructs a new Vector4 from the given Vector3.
-        /// The w component is initialized to 0.
+        ///     Constructs a new Vector4 from the given Vector3.
+        ///     The w component is initialized to 0.
         /// </summary>
         /// <param name="v">The Vector3 to copy components from.</param>
-        /// <remarks><seealso cref="Vector4(Vector3, float)"/></remarks>
+        /// <remarks>
+        ///     <seealso cref="Vector4(Vector3, float)" />
+        /// </remarks>
         public Vector4(Vector3 v)
         {
             X = v.X;
@@ -150,7 +136,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Constructs a new Vector4 from the specified Vector3 and w component.
+        ///     Constructs a new Vector4 from the specified Vector3 and w component.
         /// </summary>
         /// <param name="v">The Vector3 to copy components from.</param>
         /// <param name="w">The w component of the new Vector4.</param>
@@ -163,7 +149,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Constructs a new Vector4 from the given Vector4.
+        ///     Constructs a new Vector4 from the given Vector4.
         /// </summary>
         /// <param name="v">The Vector4 to copy components from.</param>
         public Vector4(Vector4 v)
@@ -187,10 +173,10 @@ namespace GreenBox3D
         [Obsolete("Use static Add() method instead.")]
         public void Add(Vector4 right)
         {
-            this.X += right.X;
-            this.Y += right.Y;
-            this.Z += right.Z;
-            this.W += right.W;
+            X += right.X;
+            Y += right.Y;
+            Z += right.Z;
+            W += right.W;
         }
 
         /// <summary>Add the Vector passed as parameter to this instance.</summary>
@@ -198,10 +184,10 @@ namespace GreenBox3D
         [Obsolete("Use static Add() method instead.")]
         public void Add(ref Vector4 right)
         {
-            this.X += right.X;
-            this.Y += right.Y;
-            this.Z += right.Z;
-            this.W += right.W;
+            X += right.X;
+            Y += right.Y;
+            Z += right.Z;
+            W += right.W;
         }
 
         #endregion public void Add()
@@ -213,10 +199,10 @@ namespace GreenBox3D
         [Obsolete("Use static Subtract() method instead.")]
         public void Sub(Vector4 right)
         {
-            this.X -= right.X;
-            this.Y -= right.Y;
-            this.Z -= right.Z;
-            this.W -= right.W;
+            X -= right.X;
+            Y -= right.Y;
+            Z -= right.Z;
+            W -= right.W;
         }
 
         /// <summary>Subtract the Vector passed as parameter from this instance.</summary>
@@ -224,10 +210,10 @@ namespace GreenBox3D
         [Obsolete("Use static Subtract() method instead.")]
         public void Sub(ref Vector4 right)
         {
-            this.X -= right.X;
-            this.Y -= right.Y;
-            this.Z -= right.Z;
-            this.W -= right.W;
+            X -= right.X;
+            Y -= right.Y;
+            Z -= right.Z;
+            W -= right.W;
         }
 
         #endregion public void Sub()
@@ -239,10 +225,10 @@ namespace GreenBox3D
         [Obsolete("Use static Multiply() method instead.")]
         public void Mult(float f)
         {
-            this.X *= f;
-            this.Y *= f;
-            this.Z *= f;
-            this.W *= f;
+            X *= f;
+            Y *= f;
+            Z *= f;
+            W *= f;
         }
 
         #endregion public void Mult()
@@ -255,10 +241,10 @@ namespace GreenBox3D
         public void Div(float f)
         {
             float mult = 1.0f / f;
-            this.X *= mult;
-            this.Y *= mult;
-            this.Z *= mult;
-            this.W *= mult;
+            X *= mult;
+            Y *= mult;
+            Z *= mult;
+            W *= mult;
         }
 
         #endregion public void Div()
@@ -266,16 +252,13 @@ namespace GreenBox3D
         #region public float Length
 
         /// <summary>
-        /// Gets the length (magnitude) of the vector.
+        ///     Gets the length (magnitude) of the vector.
         /// </summary>
-        /// <see cref="LengthFast"/>
-        /// <seealso cref="LengthSquared"/>
+        /// <see cref="LengthFast" />
+        /// <seealso cref="LengthSquared" />
         public float Length
         {
-            get
-            {
-                return (float)System.Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
-            }
+            get { return (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W); }
         }
 
         #endregion
@@ -283,20 +266,17 @@ namespace GreenBox3D
         #region public float LengthFast
 
         /// <summary>
-        /// Gets an approximation of the vector length (magnitude).
+        ///     Gets an approximation of the vector length (magnitude).
         /// </summary>
         /// <remarks>
-        /// This property uses an approximation of the square root function to calculate vector magnitude, with
-        /// an upper error bound of 0.001.
+        ///     This property uses an approximation of the square root function to calculate vector magnitude, with
+        ///     an upper error bound of 0.001.
         /// </remarks>
-        /// <see cref="Length"/>
-        /// <seealso cref="LengthSquared"/>
+        /// <see cref="Length" />
+        /// <seealso cref="LengthSquared" />
         public float LengthFast
         {
-            get
-            {
-                return 1.0f / MathHelper.InverseSqrtFast(X * X + Y * Y + Z * Z + W * W);
-            }
+            get { return 1.0f / MathHelper.InverseSqrtFast(X * X + Y * Y + Z * Z + W * W); }
         }
 
         #endregion
@@ -304,20 +284,17 @@ namespace GreenBox3D
         #region public float LengthSquared
 
         /// <summary>
-        /// Gets the square of the vector length (magnitude).
+        ///     Gets the square of the vector length (magnitude).
         /// </summary>
         /// <remarks>
-        /// This property avoids the costly square root operation required by the Length property. This makes it more suitable
-        /// for comparisons.
+        ///     This property avoids the costly square root operation required by the Length property. This makes it more suitable
+        ///     for comparisons.
         /// </remarks>
-        /// <see cref="Length"/>
-        /// <seealso cref="LengthFast"/>
+        /// <see cref="Length" />
+        /// <seealso cref="LengthFast" />
         public float LengthSquared
         {
-            get
-            {
-                return X * X + Y * Y + Z * Z + W * W;
-            }
+            get { return X * X + Y * Y + Z * Z + W * W; }
         }
 
         #endregion
@@ -325,11 +302,11 @@ namespace GreenBox3D
         #region public void Normalize()
 
         /// <summary>
-        /// Scales the Vector4 to unit length.
+        ///     Scales the Vector4 to unit length.
         /// </summary>
         public void Normalize()
         {
-            float scale = 1.0f / this.Length;
+            float scale = 1.0f / Length;
             X *= scale;
             Y *= scale;
             Z *= scale;
@@ -341,7 +318,7 @@ namespace GreenBox3D
         #region public void NormalizeFast()
 
         /// <summary>
-        /// Scales the Vector4 to approximately unit length.
+        ///     Scales the Vector4 to approximately unit length.
         /// </summary>
         public void NormalizeFast()
         {
@@ -357,7 +334,7 @@ namespace GreenBox3D
         #region public void Scale()
 
         /// <summary>
-        /// Scales the current Vector4 by the given amounts.
+        ///     Scales the current Vector4 by the given amounts.
         /// </summary>
         /// <param name="sx">The scale of the X component.</param>
         /// <param name="sy">The scale of the Y component.</param>
@@ -366,10 +343,10 @@ namespace GreenBox3D
         [Obsolete("Use static Multiply() method instead.")]
         public void Scale(float sx, float sy, float sz, float sw)
         {
-            this.X = X * sx;
-            this.Y = Y * sy;
-            this.Z = Z * sz;
-            this.W = W * sw;
+            X = X * sx;
+            Y = Y * sy;
+            Z = Z * sz;
+            W = W * sw;
         }
 
         /// <summary>Scales this instance by the given parameter.</summary>
@@ -377,10 +354,10 @@ namespace GreenBox3D
         [Obsolete("Use static Multiply() method instead.")]
         public void Scale(Vector4 scale)
         {
-            this.X *= scale.X;
-            this.Y *= scale.Y;
-            this.Z *= scale.Z;
-            this.W *= scale.W;
+            X *= scale.X;
+            Y *= scale.Y;
+            Z *= scale.Z;
+            W *= scale.W;
         }
 
         /// <summary>Scales this instance by the given parameter.</summary>
@@ -388,10 +365,10 @@ namespace GreenBox3D
         [Obsolete("Use static Multiply() method instead.")]
         public void Scale(ref Vector4 scale)
         {
-            this.X *= scale.X;
-            this.Y *= scale.Y;
-            this.Z *= scale.Z;
-            this.W *= scale.W;
+            X *= scale.X;
+            Y *= scale.Y;
+            Z *= scale.Z;
+            W *= scale.W;
         }
 
         #endregion public void Scale()
@@ -405,7 +382,7 @@ namespace GreenBox3D
         #region Sub
 
         /// <summary>
-        /// Subtract one Vector from another
+        ///     Subtract one Vector from another
         /// </summary>
         /// <param name="a">First operand</param>
         /// <param name="b">Second operand</param>
@@ -420,7 +397,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Subtract one Vector from another
+        ///     Subtract one Vector from another
         /// </summary>
         /// <param name="a">First operand</param>
         /// <param name="b">Second operand</param>
@@ -438,7 +415,7 @@ namespace GreenBox3D
         #region Mult
 
         /// <summary>
-        /// Multiply a vector and a scalar
+        ///     Multiply a vector and a scalar
         /// </summary>
         /// <param name="a">Vector operand</param>
         /// <param name="f">Scalar operand</param>
@@ -453,7 +430,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Multiply a vector and a scalar
+        ///     Multiply a vector and a scalar
         /// </summary>
         /// <param name="a">Vector operand</param>
         /// <param name="f">Scalar operand</param>
@@ -471,7 +448,7 @@ namespace GreenBox3D
         #region Div
 
         /// <summary>
-        /// Divide a vector by a scalar
+        ///     Divide a vector by a scalar
         /// </summary>
         /// <param name="a">Vector operand</param>
         /// <param name="f">Scalar operand</param>
@@ -487,7 +464,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Divide a vector by a scalar
+        ///     Divide a vector by a scalar
         /// </summary>
         /// <param name="a">Vector operand</param>
         /// <param name="f">Scalar operand</param>
@@ -508,7 +485,7 @@ namespace GreenBox3D
         #region Add
 
         /// <summary>
-        /// Adds two vectors.
+        ///     Adds two vectors.
         /// </summary>
         /// <param name="a">Left operand.</param>
         /// <param name="b">Right operand.</param>
@@ -520,7 +497,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Adds two vectors.
+        ///     Adds two vectors.
         /// </summary>
         /// <param name="a">Left operand.</param>
         /// <param name="b">Right operand.</param>
@@ -535,7 +512,7 @@ namespace GreenBox3D
         #region Subtract
 
         /// <summary>
-        /// Subtract one Vector from another
+        ///     Subtract one Vector from another
         /// </summary>
         /// <param name="a">First operand</param>
         /// <param name="b">Second operand</param>
@@ -547,7 +524,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Subtract one Vector from another
+        ///     Subtract one Vector from another
         /// </summary>
         /// <param name="a">First operand</param>
         /// <param name="b">Second operand</param>
@@ -562,7 +539,7 @@ namespace GreenBox3D
         #region Multiply
 
         /// <summary>
-        /// Multiplies a vector by a scalar.
+        ///     Multiplies a vector by a scalar.
         /// </summary>
         /// <param name="vector">Left operand.</param>
         /// <param name="scale">Right operand.</param>
@@ -574,7 +551,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Multiplies a vector by a scalar.
+        ///     Multiplies a vector by a scalar.
         /// </summary>
         /// <param name="vector">Left operand.</param>
         /// <param name="scale">Right operand.</param>
@@ -585,7 +562,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Multiplies a vector by the components a vector (scale).
+        ///     Multiplies a vector by the components a vector (scale).
         /// </summary>
         /// <param name="vector">Left operand.</param>
         /// <param name="scale">Right operand.</param>
@@ -597,7 +574,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Multiplies a vector by the components of a vector (scale).
+        ///     Multiplies a vector by the components of a vector (scale).
         /// </summary>
         /// <param name="vector">Left operand.</param>
         /// <param name="scale">Right operand.</param>
@@ -612,7 +589,7 @@ namespace GreenBox3D
         #region Divide
 
         /// <summary>
-        /// Divides a vector by a scalar.
+        ///     Divides a vector by a scalar.
         /// </summary>
         /// <param name="vector">Left operand.</param>
         /// <param name="scale">Right operand.</param>
@@ -624,7 +601,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Divides a vector by a scalar.
+        ///     Divides a vector by a scalar.
         /// </summary>
         /// <param name="vector">Left operand.</param>
         /// <param name="scale">Right operand.</param>
@@ -635,7 +612,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Divides a vector by the components of a vector (scale).
+        ///     Divides a vector by the components of a vector (scale).
         /// </summary>
         /// <param name="vector">Left operand.</param>
         /// <param name="scale">Right operand.</param>
@@ -647,7 +624,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Divide a vector by the components of a vector (scale).
+        ///     Divide a vector by the components of a vector (scale).
         /// </summary>
         /// <param name="vector">Left operand.</param>
         /// <param name="scale">Right operand.</param>
@@ -662,7 +639,7 @@ namespace GreenBox3D
         #region Min
 
         /// <summary>
-        /// Calculate the component-wise minimum of two vectors
+        ///     Calculate the component-wise minimum of two vectors
         /// </summary>
         /// <param name="a">First operand</param>
         /// <param name="b">Second operand</param>
@@ -677,7 +654,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Calculate the component-wise minimum of two vectors
+        ///     Calculate the component-wise minimum of two vectors
         /// </summary>
         /// <param name="a">First operand</param>
         /// <param name="b">Second operand</param>
@@ -695,7 +672,7 @@ namespace GreenBox3D
         #region Max
 
         /// <summary>
-        /// Calculate the component-wise maximum of two vectors
+        ///     Calculate the component-wise maximum of two vectors
         /// </summary>
         /// <param name="a">First operand</param>
         /// <param name="b">Second operand</param>
@@ -710,7 +687,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Calculate the component-wise maximum of two vectors
+        ///     Calculate the component-wise maximum of two vectors
         /// </summary>
         /// <param name="a">First operand</param>
         /// <param name="b">Second operand</param>
@@ -728,7 +705,7 @@ namespace GreenBox3D
         #region Clamp
 
         /// <summary>
-        /// Clamp a vector to the given minimum and maximum vectors
+        ///     Clamp a vector to the given minimum and maximum vectors
         /// </summary>
         /// <param name="vec">Input vector</param>
         /// <param name="min">Minimum vector</param>
@@ -744,7 +721,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Clamp a vector to the given minimum and maximum vectors
+        ///     Clamp a vector to the given minimum and maximum vectors
         /// </summary>
         /// <param name="vec">Input vector</param>
         /// <param name="min">Minimum vector</param>
@@ -763,7 +740,7 @@ namespace GreenBox3D
         #region Normalize
 
         /// <summary>
-        /// Scale a vector to unit length
+        ///     Scale a vector to unit length
         /// </summary>
         /// <param name="vec">The input vector</param>
         /// <returns>The normalized vector</returns>
@@ -778,7 +755,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Scale a vector to unit length
+        ///     Scale a vector to unit length
         /// </summary>
         /// <param name="vec">The input vector</param>
         /// <param name="result">The normalized vector</param>
@@ -796,7 +773,7 @@ namespace GreenBox3D
         #region NormalizeFast
 
         /// <summary>
-        /// Scale a vector to approximately unit length
+        ///     Scale a vector to approximately unit length
         /// </summary>
         /// <param name="vec">The input vector</param>
         /// <returns>The normalized vector</returns>
@@ -811,7 +788,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Scale a vector to approximately unit length
+        ///     Scale a vector to approximately unit length
         /// </summary>
         /// <param name="vec">The input vector</param>
         /// <param name="result">The normalized vector</param>
@@ -829,7 +806,7 @@ namespace GreenBox3D
         #region Dot
 
         /// <summary>
-        /// Calculate the dot product of two vectors
+        ///     Calculate the dot product of two vectors
         /// </summary>
         /// <param name="left">First operand</param>
         /// <param name="right">Second operand</param>
@@ -840,7 +817,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Calculate the dot product of two vectors
+        ///     Calculate the dot product of two vectors
         /// </summary>
         /// <param name="left">First operand</param>
         /// <param name="right">Second operand</param>
@@ -855,7 +832,7 @@ namespace GreenBox3D
         #region Lerp
 
         /// <summary>
-        /// Returns a new Vector that is the linear blend of the 2 given Vectors
+        ///     Returns a new Vector that is the linear blend of the 2 given Vectors
         /// </summary>
         /// <param name="a">First input vector</param>
         /// <param name="b">Second input vector</param>
@@ -871,7 +848,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Returns a new Vector that is the linear blend of the 2 given Vectors
+        ///     Returns a new Vector that is the linear blend of the 2 given Vectors
         /// </summary>
         /// <param name="a">First input vector</param>
         /// <param name="b">Second input vector</param>
@@ -890,7 +867,7 @@ namespace GreenBox3D
         #region Barycentric
 
         /// <summary>
-        /// Interpolate 3 Vectors using Barycentric coordinates
+        ///     Interpolate 3 Vectors using Barycentric coordinates
         /// </summary>
         /// <param name="a">First input Vector</param>
         /// <param name="b">Second input Vector</param>
@@ -954,7 +931,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Transforms a vector by a quaternion rotation.
+        ///     Transforms a vector by a quaternion rotation.
         /// </summary>
         /// <param name="vec">The vector to transform.</param>
         /// <param name="quat">The quaternion to rotate the vector by.</param>
@@ -967,7 +944,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Transforms a vector by a quaternion rotation.
+        ///     Transforms a vector by a quaternion rotation.
         /// </summary>
         /// <param name="vec">The vector to transform.</param>
         /// <param name="quat">The quaternion to rotate the vector by.</param>
@@ -989,23 +966,40 @@ namespace GreenBox3D
         #region Swizzle
 
         /// <summary>
-        /// Gets or sets an OpenTK.Vector2 with the X and Y components of this instance.
+        ///     Gets or sets an OpenTK.Vector2 with the X and Y components of this instance.
         /// </summary>
         [XmlIgnore]
-        public Vector2 Xy { get { return new Vector2(X, Y); } set { X = value.X; Y = value.Y; } }
+        public Vector2 Xy
+        {
+            get { return new Vector2(X, Y); }
+            set
+            {
+                X = value.X;
+                Y = value.Y;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets an OpenTK.Vector3 with the X, Y and Z components of this instance.
+        ///     Gets or sets an OpenTK.Vector3 with the X, Y and Z components of this instance.
         /// </summary>
         [XmlIgnore]
-        public Vector3 Xyz { get { return new Vector3(X, Y, Z); } set { X = value.X; Y = value.Y; Z = value.Z; } }
+        public Vector3 Xyz
+        {
+            get { return new Vector3(X, Y, Z); }
+            set
+            {
+                X = value.X;
+                Y = value.Y;
+                Z = value.Z;
+            }
+        }
 
         #endregion
 
         #region Operators
 
         /// <summary>
-        /// Adds two instances.
+        ///     Adds two instances.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -1020,7 +1014,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Subtracts two instances.
+        ///     Subtracts two instances.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -1035,7 +1029,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Negates an instance.
+        ///     Negates an instance.
         /// </summary>
         /// <param name="vec">The instance.</param>
         /// <returns>The result of the calculation.</returns>
@@ -1049,7 +1043,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Multiplies an instance by a scalar.
+        ///     Multiplies an instance by a scalar.
         /// </summary>
         /// <param name="vec">The instance.</param>
         /// <param name="scale">The scalar.</param>
@@ -1064,7 +1058,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Multiplies an instance by a scalar.
+        ///     Multiplies an instance by a scalar.
         /// </summary>
         /// <param name="scale">The scalar.</param>
         /// <param name="vec">The instance.</param>
@@ -1079,7 +1073,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Divides an instance by a scalar.
+        ///     Divides an instance by a scalar.
         /// </summary>
         /// <param name="vec">The instance.</param>
         /// <param name="scale">The scalar.</param>
@@ -1095,7 +1089,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Compares two instances for equality.
+        ///     Compares two instances for equality.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -1106,7 +1100,7 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Compares two instances for inequality.
+        ///     Compares two instances for inequality.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
@@ -1117,17 +1111,17 @@ namespace GreenBox3D
         }
 
         /// <summary>
-        /// Returns a pointer to the first element of the specified instance.
+        ///     Returns a pointer to the first element of the specified instance.
         /// </summary>
         /// <param name="v">The instance.</param>
         /// <returns>A pointer to the first element of v.</returns>
-        unsafe public static explicit operator float*(Vector4 v)
+        public static unsafe explicit operator float*(Vector4 v)
         {
             return &v.X;
         }
 
         /// <summary>
-        /// Returns a pointer to the first element of the specified instance.
+        ///     Returns a pointer to the first element of the specified instance.
         /// </summary>
         /// <param name="v">The instance.</param>
         /// <returns>A pointer to the first element of v.</returns>
@@ -1146,7 +1140,7 @@ namespace GreenBox3D
         #region public override string ToString()
 
         /// <summary>
-        /// Returns a System.String that represents the current Vector4.
+        ///     Returns a System.String that represents the current Vector4.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -1159,7 +1153,7 @@ namespace GreenBox3D
         #region public override int GetHashCode()
 
         /// <summary>
-        /// Returns the hashcode for this instance.
+        ///     Returns the hashcode for this instance.
         /// </summary>
         /// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
         public override int GetHashCode()
@@ -1172,7 +1166,7 @@ namespace GreenBox3D
         #region public override bool Equals(object obj)
 
         /// <summary>
-        /// Indicates whether this instance and a specified object are equal.
+        ///     Indicates whether this instance and a specified object are equal.
         /// </summary>
         /// <param name="obj">The object to compare to.</param>
         /// <returns>True if the instances are equal; false otherwise.</returns>
@@ -1181,7 +1175,7 @@ namespace GreenBox3D
             if (!(obj is Vector4))
                 return false;
 
-            return this.Equals((Vector4)obj);
+            return Equals((Vector4)obj);
         }
 
         #endregion

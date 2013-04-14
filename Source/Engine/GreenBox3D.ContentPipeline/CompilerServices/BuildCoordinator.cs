@@ -1,4 +1,11 @@
-﻿using System;
+﻿// BuildCoordinator.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,40 +18,16 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
     // FIXME: Deleted files will stay stuck in the file until a Rebuild is performed
     public class BuildCoordinator
     {
-        private class ImporterDescriptor
-        {
-            public Type Type;
-            public IContentImporter CachedInstance;
-            public string DefaultProcessor;
-        }
+        private readonly BuildCache _cache;
 
-        private class ProcessorDescriptor
-        {
-            public Type Type;
-            public IContentProcessor CachedInstance;
-            public string Writer;
-        }
+        private readonly Dictionary<string, string> _extension2importer;
+        private readonly Dictionary<string, ImporterDescriptor> _importers;
+        private readonly ILoggerHelper _logger;
+        private readonly BuildCache _newCache;
+        private readonly Dictionary<string, ProcessorDescriptor> _processors;
 
-        private class WriterDescriptor
-        {
-            public Type Type;
-            public IContentTypeWriter CachedInstance;
-            public string Extension;
-        }
-
-        private BuildCache _cache;
-        private BuildCache _newCache;
-
-        private Dictionary<string, string> _extension2importer;
-        private Dictionary<string, ImporterDescriptor> _importers;
-        private Dictionary<string, ProcessorDescriptor> _processors;
-        private Dictionary<string, WriterDescriptor> _writers;
-
-        private BuildCoordinatorSettings _settings;
-        public BuildCoordinatorSettings Settings { get { return _settings; } }
-        
-        private ILoggerHelper _logger;
-        public ILoggerHelper Logger { get { return _logger; } }
+        private readonly BuildCoordinatorSettings _settings;
+        private readonly Dictionary<string, WriterDescriptor> _writers;
 
         public BuildCoordinator(BuildCoordinatorSettings settings, ILoggerHelper logger)
         {
@@ -59,6 +42,16 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
             _writers = new Dictionary<string, WriterDescriptor>(StringComparer.InvariantCultureIgnoreCase);
         }
 
+        public BuildCoordinatorSettings Settings
+        {
+            get { return _settings; }
+        }
+
+        public ILoggerHelper Logger
+        {
+            get { return _logger; }
+        }
+
         public void LoadReference(Assembly assembly)
         {
             foreach (Type type in assembly.GetTypes())
@@ -67,7 +60,7 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
                 {
                     ContentImporterAttribute attribute = type.GetCustomAttribute<ContentImporterAttribute>();
 
-                    _importers.Add(type.Name, new ImporterDescriptor()
+                    _importers.Add(type.Name, new ImporterDescriptor
                     {
                         Type = type,
                         DefaultProcessor = attribute.DefaultProcessor
@@ -82,8 +75,8 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
                 else if (Attribute.IsDefined(type, typeof(ContentProcessorAttribute)))
                 {
                     ContentProcessorAttribute attribute = type.GetCustomAttribute<ContentProcessorAttribute>();
-                    
-                    _processors.Add(type.Name, new ProcessorDescriptor()
+
+                    _processors.Add(type.Name, new ProcessorDescriptor
                     {
                         Type = type,
                         Writer = attribute.Writer
@@ -93,7 +86,7 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
                 {
                     ContentTypeWriterAttribute attribute = type.GetCustomAttribute<ContentTypeWriterAttribute>();
 
-                    _writers.Add(type.Name, new WriterDescriptor()
+                    _writers.Add(type.Name, new WriterDescriptor
                     {
                         Type = type,
                         Extension = attribute.Extension
@@ -141,7 +134,8 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
                 if (importerName == null)
                 {
-                    _logger.Log(MessageLevel.Error, "GB0001", fullPath, 0, 0, 0, 0, "No default Content Importer defined for {0} files.", extension);
+                    _logger.Log(MessageLevel.Error, "GB0001", fullPath, 0, 0, 0, 0,
+                                "No default Content Importer defined for {0} files.", extension);
                     return false;
                 }
 
@@ -149,7 +143,8 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
                 if (importer == null)
                 {
-                    _logger.Log(MessageLevel.Error, "GB0002", fullPath, 0, 0, 0, 0, "No such Content Importer: {0}", importerName);
+                    _logger.Log(MessageLevel.Error, "GB0002", fullPath, 0, 0, 0, 0, "No such Content Importer: {0}",
+                                importerName);
                     return false;
                 }
 
@@ -158,7 +153,8 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
                 if (processorName == null)
                 {
-                    _logger.Log(MessageLevel.Error, "GB0003", fullPath, 0, 0, 0, 0, "No default processor defined for Content Importer {0}.", importer);
+                    _logger.Log(MessageLevel.Error, "GB0003", fullPath, 0, 0, 0, 0,
+                                "No default processor defined for Content Importer {0}.", importer);
                     return false;
                 }
 
@@ -166,7 +162,8 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
                 if (processor == null)
                 {
-                    _logger.Log(MessageLevel.Error, "GB0004", fullPath, 0, 0, 0, 0, "No such Content Processor: {0}", processorName);
+                    _logger.Log(MessageLevel.Error, "GB0004", fullPath, 0, 0, 0, 0, "No such Content Processor: {0}",
+                                processorName);
                     return false;
                 }
 
@@ -174,17 +171,26 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
                 if (processor == null)
                 {
-                    _logger.Log(MessageLevel.Error, "GB0005", fullPath, 0, 0, 0, 0, "No such Content Type Writer: {0}", processorName);
+                    _logger.Log(MessageLevel.Error, "GB0005", fullPath, 0, 0, 0, 0, "No such Content Type Writer: {0}",
+                                processorName);
                     return false;
                 }
 
-                string outputFilename = Path.Combine(_settings.OutputDirectory, Path.GetDirectoryName(partialName), Path.GetFileNameWithoutExtension(partialName)) + writer.Extension;
+                string outputFilename =
+                    Path.Combine(_settings.OutputDirectory, Path.GetDirectoryName(partialName),
+                                 Path.GetFileNameWithoutExtension(partialName)) + writer.Extension;
                 object temporary = importer.CachedInstance.Import(fullPath, new ContentImporterContext(this, entry));
 
                 if (temporary == null)
                     return false;
 
-                temporary = processor.CachedInstance.Process(temporary, new ContentProcessorContext(this, entry, parameters.GetValue<BuildParameters>("ProcessorParameters") ?? new BuildParameters(), outputFilename));
+                temporary = processor.CachedInstance.Process(temporary,
+                                                             new ContentProcessorContext(this, entry,
+                                                                                         parameters
+                                                                                             .GetValue<BuildParameters>(
+                                                                                                 "ProcessorParameters") ??
+                                                                                         new BuildParameters(),
+                                                                                         outputFilename));
 
                 if (temporary == null)
                     return false;
@@ -198,7 +204,8 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
                 }
                 catch (IOException ex)
                 {
-                    _logger.Log(MessageLevel.Error, "GB0006", fullPath, 0, 0, 0, 0, "Failed to open output file: {0}", ex.Message);
+                    _logger.Log(MessageLevel.Error, "GB0006", fullPath, 0, 0, 0, 0, "Failed to open output file: {0}",
+                                ex.Message);
                     return false;
                 }
 
@@ -310,7 +317,8 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
         public void CleanAll()
         {
-            if (_cache != null || _cache.LoadFrom(Path.Combine(_settings.IntermediateDirectory, "PipelineBuildCache.cache")))
+            if (_cache != null ||
+                _cache.LoadFrom(Path.Combine(_settings.IntermediateDirectory, "PipelineBuildCache.cache")))
             {
                 foreach (BuildCacheEntry entry in _cache)
                 {
@@ -331,13 +339,35 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
         {
             List<string> files = new List<string>();
 
-            if (_cache != null || _cache.LoadFrom(Path.Combine(_settings.IntermediateDirectory, "PipelineBuildCache.cache")))
+            if (_cache != null ||
+                _cache.LoadFrom(Path.Combine(_settings.IntermediateDirectory, "PipelineBuildCache.cache")))
                 foreach (BuildCacheEntry entry in _cache)
                     if (entry.LastBuilt)
                         foreach (string file in entry.OutputFiles)
                             files.Add(file);
 
             return files.ToArray();
+        }
+
+        private class ImporterDescriptor
+        {
+            public IContentImporter CachedInstance;
+            public string DefaultProcessor;
+            public Type Type;
+        }
+
+        private class ProcessorDescriptor
+        {
+            public IContentProcessor CachedInstance;
+            public Type Type;
+            public string Writer;
+        }
+
+        private class WriterDescriptor
+        {
+            public IContentTypeWriter CachedInstance;
+            public string Extension;
+            public Type Type;
         }
     }
 }

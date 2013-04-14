@@ -1,9 +1,15 @@
-﻿using System;
+﻿// CompiledShaderUtils.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using GreenBox3D.Graphics;
 using GreenBox3D.Graphics.Detail;
 using GreenBox3D.ContentPipeline.Graphics.Shading.Ast;
@@ -12,7 +18,7 @@ namespace GreenBox3D.ContentPipeline.Graphics
 {
     public static class CompiledShaderUtils
     {
-        private static Dictionary<string, VertexElementUsage> _string2vertexElementUsage;
+        private static readonly Dictionary<string, VertexElementUsage> _string2vertexElementUsage;
 
         static CompiledShaderUtils()
         {
@@ -55,10 +61,13 @@ namespace GreenBox3D.ContentPipeline.Graphics
             if (!_string2vertexElementUsage.TryGetValue(var.Usage, out usage))
                 throw new NotSupportedException();
 
-            return new CompiledInputVariable(var.Name, parameterClass, parameterType, var.Count, rowCount, columnCount, usage, var.UsageIndex);
+            return new CompiledInputVariable(var.Name, parameterClass, parameterType, var.Count, rowCount, columnCount,
+                                             usage, var.UsageIndex);
         }
 
-        public static void ExtractDefinitionsFromGlsl(string type, out EffectParameterClass parameterClass, out EffectParameterType parameterType, out int rowCount, out int columnCount)
+        public static void ExtractDefinitionsFromGlsl(string type, out EffectParameterClass parameterClass,
+                                                      out EffectParameterType parameterType, out int rowCount,
+                                                      out int columnCount)
         {
             if (type.StartsWith("mat") || type.Substring(1, 3) == "mat")
                 parameterClass = EffectParameterClass.Matrix;

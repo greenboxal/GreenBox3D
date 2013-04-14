@@ -1,9 +1,15 @@
-﻿using System;
+﻿// GLEffectParameter.cs
+// 
+// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
+// 
+// This file is a proprietary part of GreenBox3D, disclosing the content
+// of this file without the owner consent may lead to legal actions
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using GreenBox3D.Graphics;
 using GreenBox3D.Graphics.Detail;
 using GreenBox3D.Platform.Windows.Graphics.Shading;
@@ -12,14 +18,13 @@ namespace GreenBox3D.Platform.Windows.Graphics
 {
     public class GLEffectParameter : EffectParameter
     {
-         #region Fields
-
-        internal bool Dirty;
-        internal GLShaderParameter Parameter;
-        internal ITexture[] Textures;
+        #region Fields
 
         private readonly string _name;
         private readonly GLEffect _owner;
+        internal bool Dirty;
+        internal GLShaderParameter Parameter;
+        internal ITexture[] Textures;
 
         #endregion
 
@@ -39,11 +44,30 @@ namespace GreenBox3D.Platform.Windows.Graphics
 
         #region Public Properties
 
-        public override EffectParameterClass Class { get { return Parameter.Class; } }
-        public override int ColumnCount { get { return Parameter.ColumnCount; } }
-        public override string Name { get { return _name; } }
-        public override int RowCount { get { return Parameter.RowCount; } }
-        public override EffectParameterType Type { get { return Parameter.Type; } }
+        public override EffectParameterClass Class
+        {
+            get { return Parameter.Class; }
+        }
+
+        public override int ColumnCount
+        {
+            get { return Parameter.ColumnCount; }
+        }
+
+        public override string Name
+        {
+            get { return _name; }
+        }
+
+        public override int RowCount
+        {
+            get { return Parameter.RowCount; }
+        }
+
+        public override EffectParameterType Type
+        {
+            get { return Parameter.Type; }
+        }
 
         #endregion
 
