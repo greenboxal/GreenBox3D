@@ -1,4 +1,4 @@
-﻿// ShaderType.cs
+﻿// ShaderParameterClass.cs
 // 
 // Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
 // 
@@ -11,11 +11,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GreenBox3D.Graphics.Detail
+namespace GreenBox3D.Graphics
 {
-    public enum ShaderType
+    public enum ShaderParameterClass
     {
-        Vertex,
-        Pixel
+        Scalar,
+        Vector,
+        Matrix,
+        Sampler,
+        Object
     }
 }

@@ -7,40 +7,28 @@
 // Basic shader test file
 //
 // TODO:
-// * Implement state changing capabilities
-// * HLSL
+// * Implement Fallback
+// * Handle HLSL
 //
 
-Shader "Simple/Simple"
+Shader "Simple"
 { 
 	Version 400
+
 	Input
 	{
-		vec3 iPosition : POSITION[0];
-		vec2 iNormal : NORMAL[0];
-		vec2 iTexCoord : TEXCOORD[0];
+		iPosition : POSITION[0];
+		iNormal : NORMAL[0];
+		iTexCoord : TEXCOORD[0];
 	}
-	Parameters
-	{
-		mat4 pWorldViewProjection;
-		sampler2d pTexture;
-	}
-	Globals
-	{
-		vec2 gTexCoord;
-	}
-	Passes
-	{
-		Pass
-		{
-			// GLSL shaders
-			VertexGlsl "Simple/Simple.vert"
-			PixelGlsl "Simple/Simple.frag"
+
+	// GLSL shaders
+	VertexGlsl "Simple/Simple.vert"
+	PixelGlsl "Simple/Simple.frag"
 			
-			// HLSL shaders
-			VertexHlsl "Simple/Simple.hlv"
-			PixelHlsl "Simple/Simple.hlp"
-		}
-	}
-	Fallback "Simple/None"
+	// HLSL shaders
+	VertexHlsl "Simple/Simple.hlv"
+	PixelHlsl "Simple/Simple.hlp"
+
+	Fallback "None"
 }

@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ComponentDesigner"
+  dslVersion="1.0.0.0"
+  Id="921fdb0d-427e-42d3-ad65-1b72cff4ce30"
+  name="GreenBox3D.Modeling" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <profileInstances>
+    <packageHasProfileInstances
+      Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b">
+      <profileInstance
+        Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791"
+        name="StandardProfileL2" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances
+      Id="29349502-908c-4fda-9054-c48619c59ed0">
+      <profileInstance
+        Id="532ea607-fb19-44b8-8502-3351b05452be"
+        name="StandardProfileL3" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <packageHasNamedElement>
+      <component
+        Id="19379bd4-f993-4203-95a2-64a4cb529e6e"
+        name="Shader"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <ownedAttributesInternal>
+          <part
+            Id="3d2c4939-521b-49c0-a101-bf35f3f104e3"
+            name="Input"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="Composite"
+            isComposite="true">
+            <type_NamedElement>
+              <componentMoniker
+                Id="55fb5c9c-1240-4616-bb5b-9a28d1d8275a"
+                LastKnownName="Component1"
+                LastKnownLocation="GreenBox3D.Modeling.uml" />
+            </type_NamedElement>
+          </part>
+          <part
+            Id="a6c99c75-1765-4fdf-a35c-0ca77394e304"
+            name="Globals"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="Composite"
+            isComposite="true">
+            <type_NamedElement>
+              <componentMoniker
+                Id="63b21fc9-314c-4117-94ae-33f8bcd7fa9e"
+                LastKnownName="Component2"
+                LastKnownLocation="GreenBox3D.Modeling.uml" />
+            </type_NamedElement>
+          </part>
+          <part
+            Id="951688d1-18f3-41ec-a2d7-546b142b99fa"
+            name="Parameters"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="Composite"
+            isComposite="true">
+            <type_NamedElement>
+              <componentMoniker
+                Id="8b8ad218-a7ca-4279-ab38-8b127c7aecfb"
+                LastKnownName="Component3"
+                LastKnownLocation="GreenBox3D.Modeling.uml" />
+            </type_NamedElement>
+          </part>
+          <part
+            Id="3c9ce361-5ca7-4fbe-a714-65c165c6925c"
+            name="Passes"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="Composite"
+            isComposite="true">
+            <type_NamedElement>
+              <componentMoniker
+                Id="1617ade4-b82d-4f49-a453-47427fc3e2c0"
+                LastKnownName="Component4"
+                LastKnownLocation="GreenBox3D.Modeling.uml" />
+            </type_NamedElement>
+          </part>
+        </ownedAttributesInternal>
+      </component>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="55fb5c9c-1240-4616-bb5b-9a28d1d8275a"
+        name="Component1"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="63b21fc9-314c-4117-94ae-33f8bcd7fa9e"
+        name="Component2"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="8b8ad218-a7ca-4279-ab38-8b127c7aecfb"
+        name="Component3"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="1617ade4-b82d-4f49-a453-47427fc3e2c0"
+        name="Component4"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="f6804814-bd50-42b8-bc7e-212ae345fab1"
+        name="Component5"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="f29ba608-5086-4365-a69b-27b20aa8a7ae"
+        name="Effect"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="6ea87bf0-27bc-4822-8cba-aff657ac94d1">
+            <componentMoniker
+              Id="19379bd4-f993-4203-95a2-64a4cb529e6e"
+              LastKnownName="Shader"
+              LastKnownLocation="GreenBox3D.Modeling.uml" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="51b573d8-3b23-439d-999b-20819911f55a"
+        name="Parameters Values"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="7e933979-f95b-4168-903d-bf1f8e67d04c"
+        name="Shader Manager"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="7408ab7e-e365-4e38-9708-12e16af11f96">
+            <componentMoniker
+              Id="d4af5a63-dcf5-4939-970a-24296ed79778"
+              LastKnownName="GraphicsDevice"
+              LastKnownLocation="GreenBox3D.Modeling.uml" />
+          </dependency>
+          <dependency
+            Id="8bfe7826-e476-4c38-be20-6d67ad73108c">
+            <componentMoniker
+              Id="19379bd4-f993-4203-95a2-64a4cb529e6e"
+              LastKnownName="Shader"
+              LastKnownLocation="GreenBox3D.Modeling.uml" />
+          </dependency>
+          <dependency
+            Id="ba03a6e9-87b3-48b7-b275-52ac54e7e962">
+            <componentMoniker
+              Id="f29ba608-5086-4365-a69b-27b20aa8a7ae"
+              LastKnownName="Effect"
+              LastKnownLocation="GreenBox3D.Modeling.uml" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="6fba1f8a-fd7b-468a-b361-e8553f0b864d"
+        name="Effect Manager"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="8b5a0775-008d-4fc4-98f8-7d2646c30264">
+            <componentMoniker
+              Id="7e933979-f95b-4168-903d-bf1f8e67d04c"
+              LastKnownName="Shader Manager"
+              LastKnownLocation="GreenBox3D.Modeling.uml" />
+          </dependency>
+          <dependency
+            Id="94aa7fc8-9e9a-4e3d-8a15-35bfde813d61">
+            <componentMoniker
+              Id="d4af5a63-dcf5-4939-970a-24296ed79778"
+              LastKnownName="GraphicsDevice"
+              LastKnownLocation="GreenBox3D.Modeling.uml" />
+          </dependency>
+          <dependency
+            Id="c4b3c45c-4c67-4659-a298-80d4088e990b">
+            <componentMoniker
+              Id="f29ba608-5086-4365-a69b-27b20aa8a7ae"
+              LastKnownName="Effect"
+              LastKnownLocation="GreenBox3D.Modeling.uml" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="d4af5a63-dcf5-4939-970a-24296ed79778"
+        name="GraphicsDevice"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="c3dfd4c1-0b68-473c-9d25-d35c92b8199f"
+        name="Interface1"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+  </packagedElements>
+  <primitiveType
+    Id="220a3521-e091-4221-bae9-3ef9018e845c"
+    name="Integer"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="8943dc84-709e-4f62-b15a-a3273aa6f165"
+    name="Boolean"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="59259974-6d55-42c6-b7bd-763d77ac8ef9"
+    name="String"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="3ab42e7d-4969-445a-b209-471f5cb8209c"
+    name="UnlimitedNatural"
+    isAbstract="false"
+    isLeaf="false" />
+</modelStoreModel>

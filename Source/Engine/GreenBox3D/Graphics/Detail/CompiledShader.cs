@@ -15,24 +15,28 @@ namespace GreenBox3D.Graphics.Detail
 {
     public class CompiledShader
     {
-        public CompiledShader(string name, int version, string fallback)
+        public CompiledShader(string name, int version, string fallback, string glslVertexCode, string glslPixelCode, string hlslVertexCode, string hlslPixelCode)
         {
             Name = name;
             Version = version;
             Fallback = fallback;
 
+            GlslVertexCode = glslVertexCode;
+            GlslPixelCode = glslPixelCode;
+            HlslVertexCode = hlslVertexCode;
+            HlslPixelCode = hlslPixelCode;
+
             Input = new CompiledInputVariableCollection();
-            Globals = new CompiledVariableCollection();
-            Parameters = new CompiledVariableCollection();
-            Passes = new CompiledPassCollection();
         }
 
         public string Name { get; private set; }
         public int Version { get; private set; }
         public string Fallback { get; private set; }
         public CompiledInputVariableCollection Input { get; private set; }
-        public CompiledVariableCollection Globals { get; private set; }
-        public CompiledVariableCollection Parameters { get; private set; }
-        public CompiledPassCollection Passes { get; private set; }
+
+        public string GlslVertexCode { get; private set; }
+        public string GlslPixelCode { get; private set; }
+        public string HlslVertexCode { get; private set; }
+        public string HlslPixelCode { get; private set; }
     }
 }

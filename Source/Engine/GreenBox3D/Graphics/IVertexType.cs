@@ -17,7 +17,7 @@ namespace GreenBox3D.Graphics
     {
         #region Public Properties
 
-        VertexDeclaration VertexDeclaration { get; }
+        VertexElement[] VertexDeclaration { get; }
 
         #endregion
     }

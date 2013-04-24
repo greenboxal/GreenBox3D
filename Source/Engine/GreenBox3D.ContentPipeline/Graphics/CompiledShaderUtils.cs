@@ -38,49 +38,32 @@ namespace GreenBox3D.ContentPipeline.Graphics
             _string2vertexElementUsage["TESSELATEFACTOR"] = VertexElementUsage.TessellateFactor;
         }
 
-        public static CompiledVariable VariableFromAst(Variable var)
-        {
-            EffectParameterClass parameterClass;
-            EffectParameterType parameterType;
-            int rowCount, columnCount;
-
-            ExtractDefinitionsFromGlsl(var.Type, out parameterClass, out parameterType, out rowCount, out columnCount);
-
-            return new CompiledVariable(var.Name, parameterClass, parameterType, var.Count, rowCount, columnCount);
-        }
-
         public static CompiledInputVariable InputVariableFromAst(InputVariable var)
         {
-            EffectParameterClass parameterClass;
-            EffectParameterType parameterType;
-            int rowCount, columnCount;
             VertexElementUsage usage;
-
-            ExtractDefinitionsFromGlsl(var.Type, out parameterClass, out parameterType, out rowCount, out columnCount);
 
             if (!_string2vertexElementUsage.TryGetValue(var.Usage, out usage))
                 throw new NotSupportedException();
 
-            return new CompiledInputVariable(var.Name, parameterClass, parameterType, var.Count, rowCount, columnCount,
-                                             usage, var.UsageIndex);
+            return new CompiledInputVariable(var.Name, usage, var.UsageIndex);
         }
 
-        public static void ExtractDefinitionsFromGlsl(string type, out EffectParameterClass parameterClass,
-                                                      out EffectParameterType parameterType, out int rowCount,
+        public static void ExtractDefinitionsFromGlsl(string type, out ShaderParameterClass parameterClass,
+                                                      out ShaderParameterType parameterType, out int rowCount,
                                                       out int columnCount)
         {
             if (type.StartsWith("mat") || type.Substring(1, 3) == "mat")
-                parameterClass = EffectParameterClass.Matrix;
+                parameterClass = ShaderParameterClass.Matrix;
             else if (type.StartsWith("vec") || type.Substring(1, 3) == "vec")
-                parameterClass = EffectParameterClass.Vector;
+                parameterClass = ShaderParameterClass.Vector;
             else if (type.StartsWith("sampler"))
-                parameterClass = EffectParameterClass.Sampler;
+                parameterClass = ShaderParameterClass.Sampler;
             else
-                parameterClass = EffectParameterClass.Scalar;
+                parameterClass = ShaderParameterClass.Scalar;
 
             switch (parameterClass)
             {
-                case EffectParameterClass.Matrix:
+                case ShaderParameterClass.Matrix:
                     {
                         char m = type[type.Length - 1];
                         char n = m;
@@ -91,10 +74,10 @@ namespace GreenBox3D.ContentPipeline.Graphics
                         switch (type[0])
                         {
                             case 'd':
-                                parameterType = EffectParameterType.Double;
+                                parameterType = ShaderParameterType.Double;
                                 break;
                             default:
-                                parameterType = EffectParameterType.Single;
+                                parameterType = ShaderParameterType.Single;
                                 break;
                         }
 
@@ -102,41 +85,41 @@ namespace GreenBox3D.ContentPipeline.Graphics
                         columnCount = (m - '0');
                     }
                     break;
-                case EffectParameterClass.Vector:
+                case ShaderParameterClass.Vector:
                     switch (type[0])
                     {
                         case 'd':
-                            parameterType = EffectParameterType.Double;
+                            parameterType = ShaderParameterType.Double;
                             break;
                         case 'i':
-                            parameterType = EffectParameterType.Int32;
+                            parameterType = ShaderParameterType.Int32;
                             break;
                         case 'b':
-                            parameterType = EffectParameterType.Bool;
+                            parameterType = ShaderParameterType.Bool;
                             break;
                         default:
-                            parameterType = EffectParameterType.Single;
+                            parameterType = ShaderParameterType.Single;
                             break;
                     }
 
                     rowCount = 1;
                     columnCount = type[type.Length - 1] - '0';
                     break;
-                case EffectParameterClass.Sampler:
+                case ShaderParameterClass.Sampler:
                     switch (type[type.Length - 2])
                     {
                         case '1':
-                            parameterType = EffectParameterType.Texture1D;
+                            parameterType = ShaderParameterType.Texture1D;
                             break;
                         case '2':
-                            parameterType = EffectParameterType.Texture2D;
+                            parameterType = ShaderParameterType.Texture2D;
                             break;
                         case '3':
-                            parameterType = EffectParameterType.Texture3D;
+                            parameterType = ShaderParameterType.Texture3D;
                             break;
                         default:
                             if (type == "sampleCube")
-                                parameterType = EffectParameterType.TextureCube;
+                                parameterType = ShaderParameterType.TextureCube;
                             else
                                 throw new NotSupportedException();
                             break;
@@ -149,16 +132,16 @@ namespace GreenBox3D.ContentPipeline.Graphics
                     {
                         case "int":
                         case "uint":
-                            parameterType = EffectParameterType.Int32;
+                            parameterType = ShaderParameterType.Int32;
                             break;
                         case "bool":
-                            parameterType = EffectParameterType.Bool;
+                            parameterType = ShaderParameterType.Bool;
                             break;
                         case "float":
-                            parameterType = EffectParameterType.Single;
+                            parameterType = ShaderParameterType.Single;
                             break;
                         case "double":
-                            parameterType = EffectParameterType.Double;
+                            parameterType = ShaderParameterType.Double;
                             break;
                         default:
                             throw new NotSupportedException();

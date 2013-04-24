@@ -28,49 +28,23 @@ namespace GreenBox3D.ContentPipeline.Processors
 
             foreach (Ast.Shader ash in input)
             {
-                CompiledShader shader = new CompiledShader(ash.Name, ash.Version, ash.Fallback);
+                string glslVertex, glslPixel;
+
+                context.AddDependency(ash.GlslVertexCode);
+                context.AddDependency(ash.GlslPixelCode);
+
+                glslVertex = CompileGlslStub(ash, CompileGlsl(ash.GlslVertexCode, context, 0));
+                glslPixel = CompileGlslStub(ash, CompileGlsl(ash.GlslPixelCode, context, 0));
+
+                CompiledShader shader = new CompiledShader(ash.Name, ash.Version, ash.Fallback, glslVertex, glslPixel, null, null);
 
                 foreach (Ast.InputVariable aiv in ash.Input)
                     shader.Input.Add(CompiledShaderUtils.InputVariableFromAst(aiv));
-
-                foreach (Ast.Variable av in ash.Globals)
-                    shader.Globals.Add(CompiledShaderUtils.VariableFromAst(av));
-
-                foreach (Ast.Variable av in ash.Parameters)
-                    shader.Parameters.Add(CompiledShaderUtils.VariableFromAst(av));
-
-                foreach (Ast.Pass ap in ash.Passes)
-                {
-                    CompiledPass pass = CompilePass(shader, ash, ap, context);
-
-                    if (pass == null)
-                        return null;
-
-                    shader.Passes.Add(pass);
-                }
 
                 shaders.Add(shader);
             }
 
             return shaders;
-        }
-
-        public CompiledPass CompilePass(CompiledShader shader, Ast.Shader ash, Ast.Pass ap,
-                                        ContentProcessorContext context)
-        {
-            string glslVertex, glslPixel;
-
-            context.AddDependency(ap.VertexGlsl);
-            context.AddDependency(ap.PixelGlsl);
-
-            glslVertex = CompileGlslStub(ash, CompileGlsl(ap.VertexGlsl, context, 0), ShaderType.Vertex);
-            glslPixel = CompileGlslStub(ash, CompileGlsl(ap.PixelGlsl, context, 0), ShaderType.Pixel);
-
-            if (glslVertex == null || glslPixel == null)
-                return null;
-
-            // TODO: Implement HLSL
-            return new CompiledPass(glslVertex, glslPixel, "", "");
         }
 
         public string CompileGlsl(string filename, ContentProcessorContext context, int includedLine)
@@ -99,53 +73,17 @@ namespace GreenBox3D.ContentPipeline.Processors
             return builder.ToString();
         }
 
-        private string CompileGlslStub(Ast.Shader shader, string code, ShaderType type)
+        private string CompileGlslStub(Ast.Shader shader, string code)
         {
             if (code == null)
                 return null;
 
             StringBuilder c = new StringBuilder();
-            string attribute;
-            string varying;
-
-            if (shader.Version >= 130)
-            {
-                attribute = "in";
-                varying = type == ShaderType.Vertex ? "out" : "in";
-            }
-            else
-            {
-                attribute = "attribute";
-                varying = "varying";
-            }
 
             c.AppendFormat("#version {0}\n", shader.Version);
-
-            if (type == ShaderType.Vertex)
-            {
-                for (int i = 0; i < shader.Input.Count; i++)
-                    c.AppendFormat("layout(location = {0}) {1} {2};\n", i, attribute, BuildVariable(shader.Input[i]));
-            }
-
-            foreach (Ast.Variable parameter in shader.Parameters)
-                c.AppendFormat("uniform {0};\n", BuildVariable(parameter));
-
-            foreach (Ast.Variable global in shader.Globals)
-                c.AppendFormat("{0} {1};\n", varying, BuildVariable(global));
-
             c.AppendLine(code);
 
             return c.ToString();
-        }
-
-        public string BuildVariable(Ast.Variable var)
-        {
-            string code = var.Type + " " + var.Name;
-
-            if (var.Count > 0)
-                code += "[" + var.Count + "]";
-
-            return code;
         }
     }
 }

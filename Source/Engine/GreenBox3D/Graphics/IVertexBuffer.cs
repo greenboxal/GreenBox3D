@@ -15,6 +15,6 @@ namespace GreenBox3D.Graphics
 {
     public interface IVertexBuffer : IHardwareBuffer
     {
-        VertexDeclaration VertexDeclaration { get; }
+        IVertexDeclaration VertexDeclaration { get; }
     }
 }

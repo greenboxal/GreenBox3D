@@ -16,8 +16,9 @@ namespace GreenBox3D.Platform.Windows.Input
 {
     public class InputManager : IInputManager
     {
-        internal readonly List<IKeyboardFilter> _keyboardFilters;
-        internal readonly List<IMouseFilter> _mouseFilters;
+        internal readonly List<IKeyboardFilter> KeyboardFilters;
+        internal readonly List<IMouseFilter> MouseFilters;
+
         private readonly WindowsGamePlatform _platform;
         private readonly WindowsGameWindow _window;
 
@@ -26,34 +27,34 @@ namespace GreenBox3D.Platform.Windows.Input
             _platform = platform;
             _window = window;
 
-            _mouseFilters = new List<IMouseFilter>();
-            _keyboardFilters = new List<IKeyboardFilter>();
+            MouseFilters = new List<IMouseFilter>();
+            KeyboardFilters = new List<IKeyboardFilter>();
 
             _window.SetInputManager(this);
         }
 
         public void RegisterMouseFilter(IMouseFilter filter)
         {
-            lock (_mouseFilters)
-                _mouseFilters.Add(filter);
+            lock (MouseFilters)
+                MouseFilters.Add(filter);
         }
 
         public void UnregisterMouseFilter(IMouseFilter filter)
         {
-            lock (_mouseFilters)
-                _mouseFilters.Remove(filter);
+            lock (MouseFilters)
+                MouseFilters.Remove(filter);
         }
 
         public void RegisterKeyboardFilter(IKeyboardFilter filter)
         {
-            lock (_keyboardFilters)
-                _keyboardFilters.Add(filter);
+            lock (KeyboardFilters)
+                KeyboardFilters.Add(filter);
         }
 
         public void UnregisterKeyboardFilter(IKeyboardFilter filter)
         {
-            lock (_keyboardFilters)
-                _keyboardFilters.Remove(filter);
+            lock (KeyboardFilters)
+                KeyboardFilters.Remove(filter);
         }
     }
 }

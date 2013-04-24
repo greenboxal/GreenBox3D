@@ -13,16 +13,16 @@ using System.Threading.Tasks;
 
 namespace GreenBox3D.Graphics.Detail
 {
-    public class CompiledInputVariable : CompiledVariable
+    public class CompiledInputVariable
     {
-        public CompiledInputVariable(string name, EffectParameterClass parameterClass, EffectParameterType parameterType,
-                                     int count, int rowCount, int columnCount, VertexElementUsage usage, int usageIndex)
-            : base(name, parameterClass, parameterType, count, rowCount, columnCount)
+        public CompiledInputVariable(string name, VertexElementUsage usage, int usageIndex)
         {
+            Name = name;
             Usage = usage;
             UsageIndex = usageIndex;
         }
 
+        public string Name { get; private set; }
         public VertexElementUsage Usage { get; private set; }
         public int UsageIndex { get; private set; }
     }

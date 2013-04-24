@@ -19,17 +19,16 @@ namespace GreenBox3D.ContentPipeline.Graphics.Shading.Ast
         {
             Version = 210;
             Input = new InputVariableCollection();
-            Parameters = new VariableCollection();
-            Globals = new VariableCollection();
-            Passes = new PassCollection();
         }
 
         public string Name { get; set; }
         public int Version { get; set; }
         public string Fallback { get; set; }
         public InputVariableCollection Input { get; private set; }
-        public VariableCollection Parameters { get; private set; }
-        public VariableCollection Globals { get; private set; }
-        public PassCollection Passes { get; private set; }
+
+        public string GlslVertexCode { get; set; }
+        public string GlslPixelCode { get; set; }
+        public string HlslVertexCode { get; set; }
+        public string HlslPixelCode { get; set; }
     }
 }

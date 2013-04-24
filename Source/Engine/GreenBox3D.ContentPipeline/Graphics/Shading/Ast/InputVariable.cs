@@ -13,8 +13,9 @@ using System.Threading.Tasks;
 
 namespace GreenBox3D.ContentPipeline.Graphics.Shading.Ast
 {
-    public class InputVariable : Variable
+    public class InputVariable
     {
+        public string Name { get; set; }
         public string Usage { get; set; }
         public int UsageIndex { get; set; }
     }

@@ -108,72 +108,6 @@ namespace GreenBox3D.ContentPipeline.Graphics.Shading
                             Next();
                         }
                         break;
-                    case TokenType.Parameters:
-                        {
-                            Next();
-
-                            if (!Match(TokenType.LeftBrackets))
-                                return false;
-
-                            while (_tk.Type != TokenType.RightBrackets)
-                            {
-                                Variable variable;
-
-                                if (!MatchVariable(out variable))
-                                    return false;
-
-                                if (!Match(TokenType.Semicolon))
-                                    return false;
-
-                                shader.Parameters.Add(variable);
-                            }
-
-                            Next();
-                        }
-                        break;
-                    case TokenType.Globals:
-                        {
-                            Next();
-
-                            if (!Match(TokenType.LeftBrackets))
-                                return false;
-
-                            while (_tk.Type != TokenType.RightBrackets)
-                            {
-                                Variable variable;
-
-                                if (!MatchVariable(out variable))
-                                    return false;
-
-                                if (!Match(TokenType.Semicolon))
-                                    return false;
-
-                                shader.Globals.Add(variable);
-                            }
-
-                            Next();
-                        }
-                        break;
-                    case TokenType.Passes:
-                        {
-                            Next();
-
-                            if (!Match(TokenType.LeftBrackets))
-                                return false;
-
-                            while (_tk.Type != TokenType.RightBrackets)
-                            {
-                                Pass pass;
-
-                                if (!MatchPass(out pass))
-                                    return false;
-
-                                shader.Passes.Add(pass);
-                            }
-
-                            Next();
-                        }
-                        break;
                     case TokenType.Fallback:
                         {
                             Next();
@@ -182,6 +116,62 @@ namespace GreenBox3D.ContentPipeline.Graphics.Shading
                                 return false;
 
                             shader.Fallback = text;
+                        }
+                        break;
+                    case TokenType.VertexGlsl:
+                        {
+                            Next();
+
+                            if (_tk.Type != TokenType.String)
+                            {
+                                Report(MessageLevel.Error, _tk, _tk, "SH0003", "Expecting file path'");
+                                return false;
+                            }
+
+                            shader.GlslVertexCode = MakePath(_tk);
+                            Next();
+                        }
+                        break;
+                    case TokenType.VertexHlsl:
+                        {
+                            Next();
+
+                            if (_tk.Type != TokenType.String)
+                            {
+                                Report(MessageLevel.Error, _tk, _tk, "SH0003", "Expecting file path'");
+                                return false;
+                            }
+
+                            shader.HlslVertexCode = MakePath(_tk);
+                            Next();
+                        }
+                        break;
+                    case TokenType.PixelGlsl:
+                        {
+                            Next();
+
+                            if (_tk.Type != TokenType.String)
+                            {
+                                Report(MessageLevel.Error, _tk, _tk, "SH0003", "Expecting file path'");
+                                return false;
+                            }
+
+                            shader.GlslPixelCode = MakePath(_tk);
+                            Next();
+                        }
+                        break;
+                    case TokenType.PixelHlsl:
+                        {
+                            Next();
+
+                            if (_tk.Type != TokenType.String)
+                            {
+                                Report(MessageLevel.Error, _tk, _tk, "SH0003", "Expecting file path'");
+                                return false;
+                            }
+
+                            shader.HlslPixelCode = MakePath(_tk);
+                            Next();
                         }
                         break;
                     default:
@@ -195,59 +185,10 @@ namespace GreenBox3D.ContentPipeline.Graphics.Shading
             return true;
         }
 
-        private bool MatchVariable(out Variable variable)
-        {
-            string text;
-            variable = new Variable();
-
-            if (!Match(TokenType.Identifier, out text))
-                return false;
-
-            variable.Type = text;
-
-            if (_tk.Type == TokenType.LeftSquare)
-            {
-                Next();
-
-                if (!Match(TokenType.Number, out text))
-                    return false;
-
-                variable.Count = int.Parse(text);
-
-                if (!Match(TokenType.RightSquare))
-                    return false;
-            }
-
-            if (!Match(TokenType.Identifier, out text))
-                return false;
-
-            variable.Name = text;
-
-            return true;
-        }
-
         private bool MatchInputVariable(out InputVariable variable)
         {
             string text;
             variable = new InputVariable();
-
-            if (!Match(TokenType.Identifier, out text))
-                return false;
-
-            variable.Type = text;
-
-            if (_tk.Type == TokenType.LeftSquare)
-            {
-                Next();
-
-                if (!Match(TokenType.Number, out text))
-                    return false;
-
-                variable.Count = int.Parse(text);
-
-                if (!Match(TokenType.RightSquare))
-                    return false;
-            }
 
             if (!Match(TokenType.Identifier, out text))
                 return false;
@@ -274,87 +215,6 @@ namespace GreenBox3D.ContentPipeline.Graphics.Shading
                 if (!Match(TokenType.RightSquare))
                     return false;
             }
-
-            return true;
-        }
-
-        private bool MatchPass(out Pass pass)
-        {
-            pass = new Pass();
-
-            if (!Match(TokenType.Pass))
-                return false;
-
-            if (!Match(TokenType.LeftBrackets))
-                return false;
-
-            while (_tk.Type != TokenType.RightBrackets)
-            {
-                switch (_tk.Type)
-                {
-                    case TokenType.VertexGlsl:
-                        {
-                            Next();
-
-                            if (_tk.Type != TokenType.String)
-                            {
-                                Report(MessageLevel.Error, _tk, _tk, "SH0003", "Expecting file path'");
-                                return false;
-                            }
-
-                            pass.VertexGlsl = MakePath(_tk);
-                            Next();
-                        }
-                        break;
-                    case TokenType.VertexHlsl:
-                        {
-                            Next();
-
-                            if (_tk.Type != TokenType.String)
-                            {
-                                Report(MessageLevel.Error, _tk, _tk, "SH0003", "Expecting file path'");
-                                return false;
-                            }
-
-                            pass.VertexHlsl = MakePath(_tk);
-                            Next();
-                        }
-                        break;
-                    case TokenType.PixelGlsl:
-                        {
-                            Next();
-
-                            if (_tk.Type != TokenType.String)
-                            {
-                                Report(MessageLevel.Error, _tk, _tk, "SH0003", "Expecting file path'");
-                                return false;
-                            }
-
-                            pass.PixelGlsl = MakePath(_tk);
-                            Next();
-                        }
-                        break;
-                    case TokenType.PixelHlsl:
-                        {
-                            Next();
-
-                            if (_tk.Type != TokenType.String)
-                            {
-                                Report(MessageLevel.Error, _tk, _tk, "SH0003", "Expecting file path'");
-                                return false;
-                            }
-
-                            pass.PixelHlsl = MakePath(_tk);
-                            Next();
-                        }
-                        break;
-                    default:
-                        Report(MessageLevel.Error, _tk, _tk, "SH0001", "Unexpected token '{0}'", _tk.Type);
-                        break;
-                }
-            }
-
-            Next();
 
             return true;
         }

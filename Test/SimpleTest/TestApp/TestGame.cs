@@ -26,7 +26,7 @@ namespace TestApp
 
         public TestGame()
         {
-            FileManager.RegisterLoader(new FolderFileLoader("./Output/"));
+            FileManager.RegisterLoader(new FolderFileLoader("Data"));
         }
 
         protected override void Initialize()

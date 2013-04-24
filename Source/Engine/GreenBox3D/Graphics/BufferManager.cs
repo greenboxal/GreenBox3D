@@ -24,15 +24,30 @@ namespace GreenBox3D.Graphics
             return CreateIndexBuffer(GetElementSizeFromType(elementType), indexCount, usage);
         }
 
-        public abstract IVertexBuffer CreateVertexBuffer(VertexDeclaration vertexDeclaration, int vertexCount,
+        public abstract IVertexBuffer CreateVertexBuffer(IVertexDeclaration vertexDeclaration, int vertexCount,
                                                          BufferUsage usage);
 
         public virtual IVertexBuffer CreateVertexBuffer(Type elementType, int vertexCount, BufferUsage usage)
         {
-            return CreateVertexBuffer(VertexDeclaration.FromType(elementType), vertexCount, usage);
+            return CreateVertexBuffer(CreateVertexDeclaration(elementType), vertexCount, usage);
         }
 
-        public abstract object CreateVertexDeclarationImplementation(VertexDeclaration vertexDeclaration);
+        public virtual IVertexDeclaration CreateVertexDeclaration(Type elementType)
+        {
+            IVertexType vertexType = Activator.CreateInstance(elementType) as IVertexType;
+
+            if (vertexType == null)
+                throw new ArgumentException("elementType must implement IVertexType", "elementType");
+
+            return CreateVertexDeclaration(vertexType.VertexDeclaration);
+        }
+
+        public virtual IVertexDeclaration CreateVertexDeclaration(VertexElement[] elements)
+        {
+            return CreateVertexDeclaration(CalculateStride(elements), elements);
+        }
+
+        public abstract IVertexDeclaration CreateVertexDeclaration(int stride, VertexElement[] elements);
 
         private static IndexElementSize GetElementSizeFromType(Type type)
         {
@@ -47,6 +62,16 @@ namespace GreenBox3D.Graphics
                 default:
                     throw new NotSupportedException();
             }
+        }
+
+        private static int CalculateStride(IEnumerable<VertexElement> elements)
+        {
+            int stride = 0;
+
+            foreach (VertexElement element in elements)
+                stride = Math.Max(stride, element.Offset + element.SizeInBytes);
+
+            return stride;
         }
     }
 }

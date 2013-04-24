@@ -12,7 +12,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
-using GreenBox3D.Graphics.Detail;
 using GreenBox3D.Graphics;
 
 namespace GreenBox3D.Platform.Windows.Graphics

@@ -1,4 +1,4 @@
-﻿// CompiledVariableCollection.cs
+﻿// ShaderParameterType.cs
 // 
 // Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
 // 
@@ -7,14 +7,24 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GreenBox3D.Graphics.Detail
+namespace GreenBox3D.Graphics
 {
-    public class CompiledVariableCollection : Collection<CompiledVariable>
+    public enum ShaderParameterType
     {
+        Bool,
+        Int32,
+        Single,
+        Double,
+        String,
+        Texture,
+        Texture1D,
+        Texture2D,
+        Texture3D,
+        TextureCube,
+        Void
     }
 }

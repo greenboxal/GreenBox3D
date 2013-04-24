@@ -10,11 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
 using GreenBox3D.Graphics;
-using GreenBox3D.Graphics.Detail;
-using GreenBox3D.Platform.Windows.Graphics.Shading;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
@@ -23,6 +19,9 @@ namespace GreenBox3D.Platform.Windows.Graphics
     public class WindowsGraphicsDevice : GraphicsDevice
     {
         private static readonly ILogger Log = LogManager.GetLogger(typeof(WindowsGraphicsDevice));
+
+        internal Shader ActiveShader;
+
         private readonly BufferManager _bufferManager;
         private readonly Dictionary<int, GraphicsContext> _contexts;
 
@@ -31,16 +30,9 @@ namespace GreenBox3D.Platform.Windows.Graphics
         private readonly WindowsGamePlatform _platform;
         private readonly PresentationParameters _presentationParameters;
         private readonly ShaderManager _shaderManager;
-        private readonly TextureCollection _textures;
         private readonly WindowsGameWindow _window;
 
-        internal GLShader ActiveShader;
-        private GLIndexBuffer _indices;
-        private bool _indicesDirty;
-        private GLVertexBuffer _vertices;
-        private bool _verticesDirty;
         private Viewport _viewport;
-
         private bool _vsync;
 
         public WindowsGraphicsDevice(WindowsGamePlatform platform, PresentationParameters parameters,
@@ -59,7 +51,6 @@ namespace GreenBox3D.Platform.Windows.Graphics
             GraphicsContext.ShareContexts = true;
 
             {
-                int r = 8, g = 8, b = 8, a = 8;
                 int depth = 0, stencil = 0;
 
                 switch (parameters.DepthStencilFormat)
@@ -78,7 +69,7 @@ namespace GreenBox3D.Platform.Windows.Graphics
                         break;
                 }
 
-                _graphicsMode = new GraphicsMode(new ColorFormat(r, g, b, a), depth, stencil,
+                _graphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), depth, stencil,
                                                  parameters.MultiSampleCount);
             }
 
@@ -87,8 +78,6 @@ namespace GreenBox3D.Platform.Windows.Graphics
             _mainContext.LoadAll();
 
             Log.Message("OpenGL context acquired: {0}", _mainContext);
-
-            _textures = new GLTextureCollection();
         }
 
         public bool VSync
@@ -118,11 +107,6 @@ namespace GreenBox3D.Platform.Windows.Graphics
             get { return _shaderManager; }
         }
 
-        public override TextureCollection Textures
-        {
-            get { return _textures; }
-        }
-
         public override PresentationParameters PresentationParameters
         {
             get { return _presentationParameters; }
@@ -143,19 +127,6 @@ namespace GreenBox3D.Platform.Windows.Graphics
                 GL.Viewport(value.X, PresentationParameters.BackBufferHeight - value.Y - value.Height, value.Width,
                             value.Height);
                 // GL.DepthRange(value.MinDepth, value.MaxDepth);
-            }
-        }
-
-        public override IIndexBuffer Indices
-        {
-            get { return _indices; }
-            set
-            {
-                if (_indices != value)
-                {
-                    _indicesDirty = true;
-                    _indices = value as GLIndexBuffer;
-                }
             }
         }
 
@@ -207,99 +178,6 @@ namespace GreenBox3D.Platform.Windows.Graphics
             GL.Clear(mask);
         }
 
-        public override void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertex, int numVertices,
-                                                   int startIndex, int primitiveCount)
-        {
-            if (Indices == null)
-                throw new InvalidOperationException("Indices must be set before calling this method");
-
-            if (ActiveShader == null)
-                throw new InvalidOperationException("An Effect must be applied before calling this method");
-
-            SetRenderingState();
-            (_vertices.VertexDeclaration.GetImplementation(this) as VertexDeclarationImplementation).Bind(IntPtr.Zero);
-
-            var indexOffsetInBytes = (IntPtr)(startIndex * _indices.ElementSize);
-            var indexElementCount = GetElementCountArray(primitiveType, primitiveCount);
-            var target = GetBeginMode(primitiveType);
-
-            GL.DrawElementsBaseVertex(target, indexElementCount, _indices.DrawElementsType, indexOffsetInBytes,
-                                      baseVertex);
-        }
-
-        public override void DrawPrimitives(PrimitiveType primitiveType, int startVertex, int primitiveCount)
-        {
-            if (_vertices == null)
-                throw new InvalidOperationException("SetVertexBuffer must be called before calling this method");
-
-            if (ActiveShader == null)
-                throw new InvalidOperationException("An Effect must be applied before calling this method");
-
-            SetRenderingState();
-            (_vertices.VertexDeclaration.GetImplementation(this) as VertexDeclarationImplementation).Bind(IntPtr.Zero);
-
-            GL.DrawArrays(GetBeginMode(primitiveType), startVertex, primitiveCount);
-        }
-
-        public override void DrawUserIndexedPrimitives<T>(PrimitiveType primitiveType, T[] vertexData, int vertexOffset,
-                                                          int vertexCount, int[] indexData, int indexOffset,
-                                                          int primitiveCount)
-        {
-            if (ActiveShader == null)
-                throw new InvalidOperationException("An Effect must be applied before calling this method");
-
-            VertexDeclaration vertexDeclaration = VertexDeclaration.FromType(typeof(T));
-            SetRenderingState(false, false);
-
-            GCHandle handle = GCHandle.Alloc(vertexData, GCHandleType.Pinned);
-            IntPtr arrayStart = Marshal.UnsafeAddrOfPinnedArrayElement(vertexData, 0);
-
-            if (vertexOffset > 0)
-                arrayStart = new IntPtr(arrayStart.ToInt32() + (vertexOffset * vertexDeclaration.VertexStride));
-
-            (vertexDeclaration.GetImplementation(this) as VertexDeclarationImplementation).Bind(arrayStart);
-
-            unsafe
-            {
-                fixed (int* indicesPtr = &indexData[0])
-                    GL.DrawElementsBaseVertex(GetBeginMode(primitiveType), primitiveCount, DrawElementsType.UnsignedInt,
-                                              (IntPtr)(&indicesPtr[indexOffset]), vertexOffset);
-            }
-
-            handle.Free();
-        }
-
-        public override void DrawUserPrimitives<T>(PrimitiveType primitiveType, T[] vertexData, int vertexOffset,
-                                                   int primitiveCount)
-        {
-            if (ActiveShader == null)
-                throw new InvalidOperationException("An Effect must be applied before calling this method");
-
-            VertexDeclaration vertexDeclaration = VertexDeclaration.FromType(typeof(T));
-            SetRenderingState(false, false);
-
-            GCHandle handle = GCHandle.Alloc(vertexData, GCHandleType.Pinned);
-            IntPtr arrayStart = Marshal.UnsafeAddrOfPinnedArrayElement(vertexData, 0);
-
-            if (vertexOffset > 0)
-                arrayStart = new IntPtr(arrayStart.ToInt32() + (vertexOffset * vertexDeclaration.VertexStride));
-
-            (vertexDeclaration.GetImplementation(this) as VertexDeclarationImplementation).Bind(arrayStart);
-
-            GL.DrawArrays(GetBeginMode(primitiveType), vertexOffset, primitiveCount);
-
-            handle.Free();
-        }
-
-        public override void SetVertexBuffer(IVertexBuffer vertexBuffer)
-        {
-            if (_vertices != vertexBuffer)
-            {
-                _vertices = vertexBuffer as GLVertexBuffer;
-                _verticesDirty = true;
-            }
-        }
-
         public override void Present()
         {
             _mainContext.SwapBuffers();
@@ -327,59 +205,6 @@ namespace GreenBox3D.Platform.Windows.Graphics
             _contexts[threadId] = context;
 
             return context;
-        }
-
-        private static BeginMode GetBeginMode(PrimitiveType primitiveType)
-        {
-            switch (primitiveType)
-            {
-                case PrimitiveType.LineList:
-                    return BeginMode.LineLoop;
-                case PrimitiveType.LineStrip:
-                    return BeginMode.LineStrip;
-                case PrimitiveType.TriangleList:
-                    return BeginMode.TriangleFan;
-                case PrimitiveType.TriangleStrip:
-                    return BeginMode.TriangleStrip;
-                default:
-                    throw new NotSupportedException();
-            }
-        }
-
-        private static int GetElementCountArray(PrimitiveType primitiveType, int primitiveCount)
-        {
-            switch (primitiveType)
-            {
-                case PrimitiveType.LineList:
-                    return primitiveCount * 2;
-                case PrimitiveType.LineStrip:
-                    return primitiveCount + 1;
-                case PrimitiveType.TriangleList:
-                    return primitiveCount * 3;
-                case PrimitiveType.TriangleStrip:
-                    return 3 + (primitiveCount - 1);
-                default:
-                    throw new NotSupportedException();
-            }
-        }
-
-        private void SetRenderingState(bool setIndex = true, bool setVertex = true)
-        {
-            if (setIndex && _indicesDirty)
-            {
-                GL.BindBuffer(BufferTarget.ElementArrayBuffer, _indices.BufferID);
-                _indicesDirty = false;
-            }
-            else
-                GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
-
-            if (setVertex && _verticesDirty)
-            {
-                GL.BindBuffer(BufferTarget.ArrayBuffer, _vertices.BufferID);
-                _verticesDirty = false;
-            }
-            else
-                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
     }
 }

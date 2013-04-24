@@ -63,11 +63,7 @@
     <Compile Include="Graphics\Shading\Ast\CompilationUnit.cs" />
     <Compile Include="Graphics\Shading\Ast\InputVariable.cs" />
     <Compile Include="Graphics\Shading\Ast\InputVariableCollection.cs" />
-    <Compile Include="Graphics\Shading\Ast\Pass.cs" />
-    <Compile Include="Graphics\Shading\Ast\PassCollection.cs" />
     <Compile Include="Graphics\Shading\Ast\Shader.cs" />
-    <Compile Include="Graphics\Shading\Ast\Variable.cs" />
-    <Compile Include="Graphics\Shading\Ast\VariableCollection.cs" />
     <Compile Include="Graphics\Shading\Parser.cs" />
     <Compile Include="Graphics\Shading\Scanner.cs" />
     <Compile Include="Graphics\Shading\ShaderCompiler.cs" />

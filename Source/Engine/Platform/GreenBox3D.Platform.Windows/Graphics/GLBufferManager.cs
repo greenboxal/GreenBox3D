@@ -27,18 +27,18 @@ namespace GreenBox3D.Platform.Windows.Graphics
         public override IIndexBuffer CreateIndexBuffer(IndexElementSize indexElementSize, int indexCount,
                                                        BufferUsage usage)
         {
-            return new GLIndexBuffer(_graphicsDevice, indexElementSize, indexCount, usage);
+            return new IndexBuffer(_graphicsDevice, indexElementSize, indexCount, usage);
         }
 
-        public override IVertexBuffer CreateVertexBuffer(VertexDeclaration vertexDeclaration, int vertexCount,
+        public override IVertexBuffer CreateVertexBuffer(IVertexDeclaration vertexDeclaration, int vertexCount,
                                                          BufferUsage usage)
         {
-            return new GLVertexBuffer(_graphicsDevice, vertexDeclaration, vertexCount, usage);
+            return new VertexBuffer(_graphicsDevice, vertexDeclaration, vertexCount, usage);
         }
 
-        public override object CreateVertexDeclarationImplementation(VertexDeclaration vertexDeclaration)
+        public override IVertexDeclaration CreateVertexDeclaration(int stride, VertexElement[] elements)
         {
-            return new VertexDeclarationImplementation(_graphicsDevice, vertexDeclaration);
+            return new VertexDeclaration(_graphicsDevice, stride, elements);
         }
     }
 }

@@ -27,6 +27,10 @@ namespace GreenBox3D.Platform.Windows
         private readonly PresentationParameters _creationParameters;
         private readonly List<Keys> _keys;
         private readonly WindowsGamePlatform _platform;
+
+        /// <summary>
+        /// GC guard
+        /// </summary>
         private NativeMethods.WndProc _callback;
 
         private IntPtr _class;
@@ -35,8 +39,6 @@ namespace GreenBox3D.Platform.Windows
         private InputManager _inputManager;
         private bool _isActive;
         private bool _isFullscreen;
-
-        // GarbageCollector guard
 
         private MouseState _mouseState;
 
@@ -328,9 +330,9 @@ namespace GreenBox3D.Platform.Windows
                         TranslateKeys(wParam, lParam, out key, out mod);
                         _keys.Add(key);
 
-                        lock (_inputManager._keyboardFilters)
+                        lock (_inputManager.KeyboardFilters)
                         {
-                            foreach (IKeyboardFilter filter in _inputManager._keyboardFilters)
+                            foreach (IKeyboardFilter filter in _inputManager.KeyboardFilters)
                                 if (filter.OnKeyDown(key, mod))
                                     break;
                         }
@@ -344,9 +346,9 @@ namespace GreenBox3D.Platform.Windows
                         TranslateKeys(wParam, lParam, out key, out mod);
                         _keys.Remove(key);
 
-                        lock (_inputManager._keyboardFilters)
+                        lock (_inputManager.KeyboardFilters)
                         {
-                            foreach (IKeyboardFilter filter in _inputManager._keyboardFilters)
+                            foreach (IKeyboardFilter filter in _inputManager.KeyboardFilters)
                                 if (filter.OnKeyUp(key, mod))
                                     break;
                         }
@@ -354,9 +356,9 @@ namespace GreenBox3D.Platform.Windows
                     break;
                 case NativeMethods.WM.CHAR:
                     {
-                        lock (_inputManager._keyboardFilters)
+                        lock (_inputManager.KeyboardFilters)
                         {
-                            foreach (IKeyboardFilter filter in _inputManager._keyboardFilters)
+                            foreach (IKeyboardFilter filter in _inputManager.KeyboardFilters)
                                 filter.OnKeyChar((char)wParam);
                         }
                     }
@@ -381,9 +383,9 @@ namespace GreenBox3D.Platform.Windows
                         int x = unchecked((short)lParam);
                         int y = unchecked((short)((uint)lParam >> 16));
 
-                        lock (_inputManager._mouseFilters)
+                        lock (_inputManager.MouseFilters)
                         {
-                            foreach (IMouseFilter filter in _inputManager._mouseFilters)
+                            foreach (IMouseFilter filter in _inputManager.MouseFilters)
                                 if (filter.OnMouseMove(x, y))
                                     break;
                         }
@@ -415,9 +417,9 @@ namespace GreenBox3D.Platform.Windows
                                 break;
                         }
 
-                        lock (_inputManager._mouseFilters)
+                        lock (_inputManager.MouseFilters)
                         {
-                            foreach (IMouseFilter filter in _inputManager._mouseFilters)
+                            foreach (IMouseFilter filter in _inputManager.MouseFilters)
                                 if (filter.OnMouseDown(button, x, y))
                                     break;
                         }
@@ -448,9 +450,9 @@ namespace GreenBox3D.Platform.Windows
                                 break;
                         }
 
-                        lock (_inputManager._mouseFilters)
+                        lock (_inputManager.MouseFilters)
                         {
-                            foreach (IMouseFilter filter in _inputManager._mouseFilters)
+                            foreach (IMouseFilter filter in _inputManager.MouseFilters)
                                 if (filter.OnMouseUp(button, x, y))
                                     break;
                         }
@@ -464,9 +466,9 @@ namespace GreenBox3D.Platform.Windows
 
                         _mouseState.ScrollWheelValue += wheel;
 
-                        lock (_inputManager._mouseFilters)
+                        lock (_inputManager.MouseFilters)
                         {
-                            foreach (IMouseFilter filter in _inputManager._mouseFilters)
+                            foreach (IMouseFilter filter in _inputManager.MouseFilters)
                                 if (filter.OnMouseWheel(wheel, x, y))
                                     break;
                         }
