@@ -20,6 +20,9 @@ namespace GreenBox3D.ContentPipeline.Task
 {
     public class BuildContent : Microsoft.Build.Utilities.Task
     {
+        [Output]
+        public ITaskItem[] OutputContentFiles { get; set; }
+
         [Required]
         public ITaskItem[] SourceAssets { get; set; }
 
@@ -40,16 +43,28 @@ namespace GreenBox3D.ContentPipeline.Task
         {
             // We use this isolation to permit developers to rebuild their pipeline libraries without getting locked by MSBuild AppDomain
             using (IsolationAppDomain isolation = new IsolationAppDomain())
-                return isolation.CreateProxy<IsolationProxy>()
+            {
+                string[] files;
+                bool result = isolation.CreateProxy<IsolationProxy>()
                                 .Execute(Log, SourceAssets, PipelineAssemblies, BuildConfiguration,
-                                         IntermediateDirectory, OutputDirectory, RootDirectory);
+                                         IntermediateDirectory, OutputDirectory, RootDirectory, out files);
+
+                if (!result)
+                    return false;
+
+                OutputContentFiles = new ITaskItem[files.Length];
+                for (int i = 0; i < files.Length; i++)
+                    OutputContentFiles[i] = new TaskItem(files[i]);
+
+                return true;
+            }
         }
 
         private class IsolationProxy : MarshalByRefObject
         {
             public bool Execute(TaskLoggingHelper log, ITaskItem[] sourceAssets, ITaskItem[] pipelineAssemblies,
                                 string buildConfiguration, string intermediateDirectory, string outputDirectory,
-                                string rootDirectory)
+                                string rootDirectory, out string[] files)
             {
                 BuildCoordinatorSettings settings = new BuildCoordinatorSettings
                 {
@@ -105,7 +120,9 @@ namespace GreenBox3D.ContentPipeline.Task
                         result = false;
                 }
 
+                files = build.GetBuiltFiles(false);
                 build.FinishBuild();
+
                 return result;
             }
         }

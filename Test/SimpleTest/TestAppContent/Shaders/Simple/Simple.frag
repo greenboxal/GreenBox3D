@@ -4,6 +4,10 @@
 // of this file without the owner consent may lead to legal actions
 //
 
+in vec2 gTexCoord;
+
+uniform sampler2D pTexture;
+
 void main()
 {
 	gl_Color = tex(pTexture, gTexCoord);

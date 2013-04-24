@@ -9,76 +9,225 @@
   <PropertyGroup Condition="'$(GB3DDevToolsPath)' == ''">
     <GB3DDevToolsPath>..\Build\$(Configuration)\</GB3DDevToolsPath>
   </PropertyGroup>
-  
+
   <UsingTask TaskName="BuildContent" AssemblyFile="$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll" />
   <UsingTask TaskName="CleanContent" AssemblyFile="$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll" />
   <UsingTask TaskName="GetLastOutputs" AssemblyFile="$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll" />
 
   <!-- Check DevTools presence -->
-  <Target Name="_CheckGB3DDevTools">    
+  <Target Name="_CheckGB3DDevTools">
     <Error Condition="Exists('$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll')" Text="GreenBox3D Developer Tools are missing or not correctly installed" />
   </Target>
-  
-  <!-- Create file list -->
-  <Target 
-    Name="_BuildContentLists" 
-    Condition="'$(BuildingProject)'=='true'">
 
-    <CreateItem Include="@(Compile)">
-      <Output ItemName="PipelineContent" TaskParameter="Include"/>
-    </CreateItem>
-  </Target>
+  <!--
+    ============================================================
+                                        CreateManifestResourceNames
 
-  <!-- MSBuild targets -->
+    This target is required by Microsoft.Common.targets.
+    ============================================================
+    -->
   <Target
     Name="CreateManifestResourceNames"
     Condition="false"
     DependsOnTargets="$(CreateManifestResourceNamesDependsOn)"/>
 
-  <!-- Build -->
-  <Target 
+  <!--
+    ============================================================
+                                        _BuildGB3DContentLists
+
+    Build the ItemGroups of content we want to process with the
+    GB3D Content Pipeline.
+    ============================================================
+    -->
+  <Target
+  Name="_BuildGB3DContentLists"
+  Condition="'$(BuildingProject)'=='true'">
+
+    <CreateItem Include="@(Compile)">
+      <Output ItemName="PipelineContent" TaskParameter="Include"/>
+    </CreateItem>
+
+  </Target>
+
+  <!--
+    ============================================================
+                                        CoreCompile
+
+    This target is required by Microsoft.Common.targets. It compiles
+    content using the GB3D Framework Content Pipeline.
+    ============================================================
+    -->
+  <Target
     Name="CoreCompile"
-    DependsOnTargets="$(CoreCompileDependsOn);_CheckGB3DDevTools" 
+    DependsOnTargets="$(CoreCompileDependsOn);_CheckGB3DDevTools"
     Condition="'$(BuildingProject)'=='true'">
 
+    <!-- Build the content. -->
     <BuildContent
       BuildConfiguration="$(Configuration)"
       IntermediateDirectory="$(ProjectDir)$(IntermediateOutputPath)"
       OutputDirectory="$(ParentOutputDir)$(ContentRootDirectory)"
       PipelineAssemblies="@(ReferencePath)"
       RootDirectory="$(ProjectDir)"
-      SourceAssets="@(PipelineContent)" />
+      SourceAssets="@(PipelineContent)">
+      <Output ItemName="OutputContentFiles" TaskParameter="OutputContentFiles"/>
+    </BuildContent>
+
+    <!-- Items in the Content item group are not built by the GB3D Framework
+         Content Pipeline. This warning is for informational purposes only,
+         but can be disabled by advanced users if custom targets have been
+         defined.
+     -->
+    <Warning
+      Condition="'@(Content)'!='' and '$(DisableContentItemWarning)'!='true'"
+      Text="Project item '%(Content.Identity)' was not built with the GB3D Framework Content Pipeline. Set its Build Action property to Compile to build it."/>
+
+    <!-- Items in the EmbeddedResource item group are not supported in nested
+         content projects. This error can be disabled by advanced users if custom
+         targets have been defined.
+     -->
+    <Error
+      Condition="'@(EmbeddedResource)'!='' and '$(DisableEmbeddedResourceItemError)'!='true'"
+      Text="Project item '%(EmbeddedResource.Identity)' could not be built. Embedded Resource is not a supported Build Action for items in the Content subproject."/>
+
+
+    <!-- Begin figuring out files that should go into cache file -->
+
+    <AssignTargetPath
+      Files="@(GB3DOutputContentFiles)"
+      RootFolder="$(ParentOutputDir)">
+      <Output TaskParameter="AssignedFiles" ItemName="_GB3DOutputCacheFilesWithTargetPath"/>
+    </AssignTargetPath>
+
+    <!-- Grab everything marked as 'Copy always' or 'Copy if newer' 
+         Do this for files marked with build action 'None', 'Compile', and 'Content'-->
+    <CreateItem
+      Include="@(ContentWithTargetPath->'%(FullPath)')"
+      Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(ContentWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'">
+      <Output TaskParameter="Include" ItemName="_GB3DOutputCacheFilesWithTargetPath"/>
+    </CreateItem>
+
+    <CreateItem
+      Include="@(Compile->'%(FullPath)')"
+      Condition="'%(Compile.CopyToOutputDirectory)'=='Always' or '%(Compile.CopyToOutputDirectory)'=='PreserveNewest'">
+      <Output TaskParameter="Include" ItemName="_CacheCompileItemsToCopy"/>
+    </CreateItem>
+    <AssignTargetPath Files="@(_CacheCompileItemsToCopy)" RootFolder="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="AssignedFiles" ItemName="_CacheCompileItemsToCopyWithTargetPathTemp" />
+    </AssignTargetPath>
+    <CreateItem
+      Include="@(_CacheCompileItemsToCopyWithTargetPathTemp)"
+      AdditionalMetadata="TargetPath=$(ContentRootDirectoryDir)%(_CacheCompileItemsToCopyWithTargetPathTemp.TargetPath)">
+      <Output TaskParameter="Include" ItemName="_CacheCompileItemsToCopyWithTargetPath"/>
+    </CreateItem>
+    <CreateItem Include="@(_CacheCompileItemsToCopyWithTargetPath)">
+      <Output TaskParameter="Include" ItemName="_GB3DOutputCacheFilesWithTargetPath"/>
+    </CreateItem>
+
+    <CreateItem
+        Include="@(_NoneWithTargetPath->'%(FullPath)')"
+        Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_NoneWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'">
+      <Output TaskParameter="Include" ItemName="_GB3DOutputCacheFilesWithTargetPath"/>
+    </CreateItem>
+
+    <WriteLinesToFile
+      File="$(ParentIntermediateDir)cachefile-$(ProjectGuid)-targetpath.txt"
+      Lines="@(_GB3DOutputCacheFilesWithTargetPath->'%(TargetPath)')"
+      Overwrite="true" />
   </Target>
-  
-  <!-- Clean -->
-  <Target Name="ContentClean" DependsOnTargets="_CheckGB3DDevTools">
+
+  <!--
+    ============================================================
+                                        GB3DContentClean
+
+    Clean the GB3D content from the project.
+    ============================================================
+    -->
+  <Target Name="GB3DContentClean" DependsOnTargets="_CheckGB3DDevTools">
     <CleanContent
       IntermediateDirectory="$(ProjectDir)$(IntermediateOutputPath)"
       OutputDirectory="$(ParentOutputDir)$(ContentRootDirectory)" />
+
+    <CreateItem Include="$(ParentIntermediateDir)cachefile-*-targetpath.txt">
+      <Output TaskParameter="Include" ItemName="_GB3DContentCleanCacheFiles"/>
+    </CreateItem>
+
+    <Delete
+      Files="@(_GB3DContentCleanCacheFiles)"
+      Condition="'@(_GB3DContentCleanCacheFiles)' != ''"
+      TreatErrorsAsWarnings="true" />
   </Target>
-  
-  <!-- Get Built Files -->
-  <Target Name="GetBuiltContentWithTargetPaths" Outputs="@(BuiltContentWithTargetPaths)">
+
+  <!--
+    ============================================================
+                                        GetBuiltContentWithTargetPaths
+
+    Gathers the built content so that it can be copied by parent
+    projects.
+    ============================================================
+    -->
+  <Target
+    Name="GetBuiltContentWithTargetPaths"
+    Outputs="@(BuiltContentWithTargetPaths)"
+    DependsOnTargets="_CheckGB3DDevTools">
+
     <GetLastOutputs
       IntermediateDirectory="$(ProjectDir)$(IntermediateOutputPath)">
       <Output TaskParameter="OutputContentFiles" ItemName="LastBuiltContentFiles" />
     </GetLastOutputs>
 
+    <!-- Add metadata so only new built content is copied to the output directory. -->
     <CreateItem
       Include="@(LastBuiltContentFiles)"
       AdditionalMetadata="CopyToOutputDirectory=PreserveNewest">
       <Output TaskParameter="Include" ItemName="LastBuiltContentFilesPreserveNewest"/>
     </CreateItem>
-    
+
     <AssignTargetPath
       Files="@(LastBuiltContentFilesPreserveNewest)"
       RootFolder="$(ParentOutputDir)">
       <Output TaskParameter="AssignedFiles" ItemName="BuiltContentWithTargetPaths" />
     </AssignTargetPath>
+
   </Target>
-  
-  <!-- Target Paths -->
-  <Target Name="AssignTargetPaths">
+
+  <!-- Microsoft.Common.targets must be imported *before* overriding anything in it. -->
+
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+
+  <PropertyGroup>
+    <!-- This is normally specified by the parent code project, but we'll define it when content is being built stand-alone. -->
+    <ParentOutputDir Condition="'$(ParentOutputDir)'==''">$(TargetDir)</ParentOutputDir>
+
+    <!-- Have our content build run when the user builds the project. -->
+    <CoreCompileDependsOn>_BuildGB3DContentLists</CoreCompileDependsOn>
+
+    <!-- Have our clean targets run when the user cleans the project (also invoked by Rebuild). -->
+    <CleanDependsOn>
+      GB3DContentClean;
+      $(CleanDependsOn)
+    </CleanDependsOn>
+
+    <ContentRootDirectory Condition="'$(ContentRootDirectory)' == ''">$(ProjectName)</ContentRootDirectory>
+    <!-- Example, Content\ -->
+    <!-- Make sure this is set to String.Empty for our special case as some tasks we don't own don't like /./ in paths -->
+    <ContentRootDirectoryDir Condition="'$(ContentRootDirectoryDir)' == '' and '$(ContentRootDirectory)' != '.'">$(ContentRootDirectory)</ContentRootDirectoryDir>
+    <!-- Ensure ContentDir has a trailing slash, so it can be concatenated -->
+    <ContentRootDirectoryDir Condition="'$(ContentRootDirectoryDir)' != '' and !HasTrailingSlash('$(ContentRootDirectoryDir)')">$(ContentRootDirectory)\</ContentRootDirectoryDir>
+  </PropertyGroup>
+
+  <!--
+    ============================================================
+                                        AssignTargetPaths
+
+    This target creates <TargetPath> tags for items. <TargetPath> is a relative folder plus filename
+    for the destination of this item. Overridden so that the nested project's source items can be
+    copied to the output directory.
+    ============================================================
+    -->
+  <Target
+      Name="AssignTargetPaths">
+
     <AssignTargetPath Files="@(Content)" RootFolder="$(MSBuildProjectDirectory)">
       <Output TaskParameter="AssignedFiles" ItemName="ContentWithTargetPathTemp" />
     </AssignTargetPath>
@@ -98,30 +247,18 @@
       AdditionalMetadata="TargetPath=$(ContentRootDirectoryDir)%(_NoneWithTargetPathTemp.TargetPath)">
       <Output TaskParameter="Include" ItemName="_NoneWithTargetPath"/>
     </CreateItem>
+
   </Target>
-  
-  <!-- Microsoft.Common.targets must be imported before it overrides -->
-  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
 
-  <PropertyGroup>
-    <!-- This is normally specified by the parent code project, but we'll define it when content is being built stand-alone. -->
-    <ParentOutputDir Condition="'$(ParentOutputDir)'==''">$(TargetDir)</ParentOutputDir>
+  <!--
+    ============================================================
+                                        GetCopyToOutputDirectoryItems
 
-    <!-- Have our content build run when the user builds the project. -->
-    <CoreCompileDependsOn>_BuildContentLists</CoreCompileDependsOn>
-
-    <!-- Have our clean targets run when the user cleans the project (also invoked by Rebuild). -->
-    <CleanDependsOn>
-      ContentClean;
-      $(CleanDependsOn)
-    </CleanDependsOn>
-
-    <ContentRootDirectory Condition="'$(ContentRootDirectory)' == ''">$(ProjectName)</ContentRootDirectory>
-    <ContentRootDirectoryDir Condition="'$(ContentRootDirectoryDir)' == '' and '$(ContentRootDirectory)' != '.'">$(ContentRootDirectory)</ContentRootDirectoryDir>
-    <ContentRootDirectoryDir Condition="'$(ContentRootDirectoryDir)' != '' and !HasTrailingSlash('$(ContentRootDirectoryDir)')">$(ContentRootDirectory)\</ContentRootDirectoryDir>
-  </PropertyGroup>
-  
-  <!-- Get Ouput Files -->
+    Override the standard Microsoft.Common.targets' definition of
+    GetCopyToOutputDirectoryItems in order to add our built content
+    to @(AllItemsFullPathWithTargetPath).
+    ============================================================
+    -->
   <PropertyGroup>
     <GetCopyToOutputDirectoryItemsDependsOn>
       GetBuiltContentWithTargetPaths;
@@ -134,6 +271,11 @@
       Outputs="@(AllItemsFullPathWithTargetPath)"
       DependsOnTargets="$(GetCopyToOutputDirectoryItemsDependsOn)">
 
+    <!-- Do not get items from child projects. Referenced projects are used by the Content Pipeline,
+         and we do not want to pass build-related assemblies to projects that reference this one. This
+         also means a Content project cannot reference another Content project. -->
+
+    <!-- Get built content items from this project. -->
     <CreateItem
         Include="@(BuiltContentWithTargetPaths->'%(FullPath)')"
         Condition="'%(BuiltContentWithTargetPaths.CopyToOutputDirectory)'=='Always' or '%(BuiltContentWithTargetPaths.CopyToOutputDirectory)'=='PreserveNewest'"
@@ -156,6 +298,8 @@
       <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
               Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
     </CreateItem>
+
+    <!-- Content projects do not have Embedded Resource build actions. -->
 
     <CreateItem
         Include="@(Compile->'%(FullPath)')"
@@ -188,8 +332,20 @@
       <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
               Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
     </CreateItem>
+
   </Target>
-  
-  <!-- The parent project should do this -->
-  <Target Name="CopyFilesToOutputDirectory" />
+
+  <!--
+    ============================================================
+                                        CopyFilesToOutputDirectory
+
+    Override the standard Microsoft.Common.targets CopyFilesToOutputDirectory, since our content
+    project type doesn't build most of the regular code build outputs. We also don't copy references
+    that were copy local into the output directory, since references are for use during build only,
+    not runtime. Finally, we leave it up to the parent project to copy any of our source items to
+    its own output directory.
+    ============================================================
+    -->
+  <Target Name="CopyFilesToOutputDirectory"/>
+
 </Project>

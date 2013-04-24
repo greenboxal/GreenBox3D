@@ -23,6 +23,7 @@ namespace TestApp
 
         private GraphicsDevice _graphicsDevice;
         private IInputManager _inputManager;
+        private ContentManager _contentManager;
 
         public TestGame()
         {
@@ -41,6 +42,9 @@ namespace TestApp
 
             _graphicsDevice = GetService<IGraphicsDeviceManager>().GraphicsDevice;
             _inputManager = GetService<IInputManager>();
+            _contentManager = new ContentManager(_graphicsDevice);
+
+            IShader test = _contentManager.LoadContent<IShader>("Shaders/Simple");
         }
 
         protected override void Update(GameTime gameTime)

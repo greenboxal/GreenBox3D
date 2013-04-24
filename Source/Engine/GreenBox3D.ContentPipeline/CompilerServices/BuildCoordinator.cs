@@ -18,12 +18,12 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
     // FIXME: Deleted files will stay stuck in the file until a Rebuild is performed
     public class BuildCoordinator
     {
-        private readonly BuildCache _cache;
+        private BuildCache _cache;
+        private BuildCache _newCache;
 
         private readonly Dictionary<string, string> _extension2importer;
         private readonly Dictionary<string, ImporterDescriptor> _importers;
         private readonly ILoggerHelper _logger;
-        private readonly BuildCache _newCache;
         private readonly Dictionary<string, ProcessorDescriptor> _processors;
 
         private readonly BuildCoordinatorSettings _settings;
@@ -31,8 +31,6 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
         public BuildCoordinator(BuildCoordinatorSettings settings, ILoggerHelper logger)
         {
-            _cache = new BuildCache();
-            _newCache = new BuildCache();
             _settings = settings;
             _logger = logger;
 
@@ -97,6 +95,9 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
         public void StartBuild()
         {
+            _cache = new BuildCache();
+            _newCache = new BuildCache();
+
             if (!_settings.RebuildAll)
                 _cache.LoadFrom(Path.Combine(_settings.IntermediateDirectory, "PipelineBuildCache.cache"));
 
@@ -128,6 +129,8 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
                 string extension = Path.GetExtension(partialName);
                 string importerName = parameters.GetValue<string>("Importer");
                 string processorName = parameters.GetValue<string>("Processor");
+
+                _logger.Log(MessageLevel.None, null, null, 0, 0, 0, 0, "Builiding {0}...", partialName);
 
                 if (importerName == null)
                     _extension2importer.TryGetValue(extension, out importerName);
@@ -231,6 +234,8 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
             if (Path.IsPathRooted(filename))
                 filename = new Uri(_settings.BasePath).MakeRelativeUri(new Uri(filename)).ToString();
 
+            filename = filename.Replace('/', Path.DirectorySeparatorChar);
+
             string fullPath = Path.Combine(_settings.BasePath, filename);
 
             if (entry.Filename == filename)
@@ -317,8 +322,9 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
         public void CleanAll()
         {
-            if (_cache != null ||
-                _cache.LoadFrom(Path.Combine(_settings.IntermediateDirectory, "PipelineBuildCache.cache")))
+            _cache = new BuildCache();
+
+            if (_cache.LoadFrom(Path.Combine(_settings.IntermediateDirectory, "PipelineBuildCache.cache")))
             {
                 foreach (BuildCacheEntry entry in _cache)
                 {
@@ -335,16 +341,24 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
             }
         }
 
-        public string[] GetLastBuiltFiles()
+        public string[] GetBuiltFiles(bool onlyLast)
         {
             List<string> files = new List<string>();
+            BuildCache cache = _cache;
 
-            if (_cache != null ||
-                _cache.LoadFrom(Path.Combine(_settings.IntermediateDirectory, "PipelineBuildCache.cache")))
-                foreach (BuildCacheEntry entry in _cache)
-                    if (entry.LastBuilt)
-                        foreach (string file in entry.OutputFiles)
-                            files.Add(file);
+            if (_newCache != null)
+                cache = _newCache;
+
+            if (cache == null)
+            {
+                cache = new BuildCache();
+                cache.LoadFrom(Path.Combine(_settings.IntermediateDirectory, "PipelineBuildCache.cache"));
+            }
+
+            foreach (BuildCacheEntry entry in cache)
+                if (!onlyLast || entry.LastBuilt)
+                    foreach (string file in entry.OutputFiles)
+                        files.Add(file);
 
             return files.ToArray();
         }

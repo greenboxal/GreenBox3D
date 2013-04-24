@@ -38,12 +38,13 @@ namespace GreenBox3D.ContentPipeline.Writers
                 stream.Write(shader.Name);
                 stream.Write(shader.Version);
                 stream.Write(shader.Fallback);
-                stream.Write(shader.Input.Count);
 
                 stream.Write(shader.GlslVertexCode ?? "");
                 stream.Write(shader.GlslPixelCode ?? "");
                 stream.Write(shader.HlslVertexCode ?? "");
                 stream.Write(shader.HlslPixelCode ?? "");
+
+                stream.Write(shader.Input.Count);
 
                 foreach (CompiledInputVariable ci in shader.Input)
                 {

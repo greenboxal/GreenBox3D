@@ -33,6 +33,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAppContent", "Test\Simp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{20125BF9-3E63-4558-839F-424823A7E458}"
 	ProjectSection(SolutionItems) = preProject
+		Targets\GreenBox3D.Common.targets = Targets\GreenBox3D.Common.targets
 		Targets\GreenBox3D.Content.targets = Targets\GreenBox3D.Content.targets
 		Targets\GreenBox3D.ContentPipeline.targets = Targets\GreenBox3D.ContentPipeline.targets
 		Targets\GreenBox3D.targets = Targets\GreenBox3D.targets

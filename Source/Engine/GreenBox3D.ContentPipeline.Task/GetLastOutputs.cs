@@ -51,7 +51,7 @@ namespace GreenBox3D.ContentPipeline.Task
 
                 BuildCoordinator build = new BuildCoordinator(settings, new MSBuildLoggerHelper(log));
 
-                files = build.GetLastBuiltFiles();
+                files = build.GetBuiltFiles(false);
 
                 return true;
             }
