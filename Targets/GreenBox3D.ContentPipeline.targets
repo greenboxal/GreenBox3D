@@ -46,7 +46,6 @@
     <CreateItem Include="@(Compile)">
       <Output ItemName="PipelineContent" TaskParameter="Include"/>
     </CreateItem>
-
   </Target>
 
   <!--
@@ -60,7 +59,7 @@
   <Target
     Name="CoreCompile"
     DependsOnTargets="$(CoreCompileDependsOn);_CheckGB3DDevTools"
-    Condition="'$(BuildingProject)'=='true'">
+    Condition="'$(BuildingProject)'=='true' and '$(BuildingContent)'=='true'">
 
     <!-- Build the content. -->
     <BuildContent
@@ -70,7 +69,7 @@
       PipelineAssemblies="@(ReferencePath)"
       RootDirectory="$(ProjectDir)"
       SourceAssets="@(PipelineContent)">
-      <Output ItemName="OutputContentFiles" TaskParameter="OutputContentFiles"/>
+      <Output ItemName="GB3DOutputContentFiles" TaskParameter="OutputContentFiles"/>
     </BuildContent>
 
     <!-- Items in the Content item group are not built by the GB3D Framework
@@ -92,7 +91,6 @@
 
 
     <!-- Begin figuring out files that should go into cache file -->
-
     <AssignTargetPath
       Files="@(GB3DOutputContentFiles)"
       RootFolder="$(ParentOutputDir)">
@@ -182,13 +180,12 @@
       AdditionalMetadata="CopyToOutputDirectory=PreserveNewest">
       <Output TaskParameter="Include" ItemName="LastBuiltContentFilesPreserveNewest"/>
     </CreateItem>
-
+    
     <AssignTargetPath
       Files="@(LastBuiltContentFilesPreserveNewest)"
       RootFolder="$(ParentOutputDir)">
       <Output TaskParameter="AssignedFiles" ItemName="BuiltContentWithTargetPaths" />
     </AssignTargetPath>
-
   </Target>
 
   <!-- Microsoft.Common.targets must be imported *before* overriding anything in it. -->
@@ -247,7 +244,6 @@
       AdditionalMetadata="TargetPath=$(ContentRootDirectoryDir)%(_NoneWithTargetPathTemp.TargetPath)">
       <Output TaskParameter="Include" ItemName="_NoneWithTargetPath"/>
     </CreateItem>
-
   </Target>
 
   <!--
@@ -332,7 +328,6 @@
       <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
               Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
     </CreateItem>
-
   </Target>
 
   <!--
@@ -347,5 +342,4 @@
     ============================================================
     -->
   <Target Name="CopyFilesToOutputDirectory"/>
-
 </Project>

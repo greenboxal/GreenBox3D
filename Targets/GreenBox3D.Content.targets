@@ -100,8 +100,7 @@
 
   <Target
     Name="BuildContentProjects"
-    DependsOnTargets="$(BuildContentProjectsDependsOn)"
-    Condition="'$(SkipNestedContentBuild)'!='true'" >
+    DependsOnTargets="$(BuildContentProjectsDependsOn)">
 
     <!--
         Always build nested content projects, because the IDE and/or solution does not build them.
@@ -115,13 +114,11 @@
       Projects="@(_MSBuildContentProjectExistent)"
       BuildInParallel="true"
       Targets="$(ContentProjectBuildTargets)"
-      Properties="Configuration=$(Configuration); Platform=$(Platform); GB3DPlatform=$(GB3DContentPlatform); GB3DProfile=$(GB3DContentProfile); ParentOutputDir=$(ParentOutputDir); ParentIntermediateDir=$(ParentIntermediateDir); ParentProjectDir=$(ProjectDir); GB3DCompressContent=$(GB3DCompressContent)"
+      Properties="Configuration=$(Configuration); Platform=$(Platform); ParentOutputDir=$(ParentOutputDir); ParentIntermediateDir=$(ParentIntermediateDir); ParentProjectDir=$(ProjectDir); BuildingContent=true"
       Condition="'@(_MSBuildContentProjectExistent)'!=''">
 
       <Output TaskParameter="TargetOutputs" ItemName="_BuiltNestedContentFiles"/>
-
     </MSBuild>
-
   </Target>
 
   <!--
@@ -148,7 +145,6 @@
       Targets="Clean"
       Properties="Configuration=$(Configuration); Platform=$(Platform); ParentOutputDir=$(ParentOutputDir); ParentIntermediateDir=$(ParentIntermediateDir)"
       Condition="'@(_MSBuildContentProjectExistent)'!=''" />
-
   </Target>
 
   <!--
@@ -206,7 +202,6 @@
       <Output TaskParameter="Include" ItemName="_NestedContentItemsToCopyToOutputDirectory"
               Condition="'%(_AllNestedContentProjectItemsWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
     </CreateItem>
-
   </Target>
 
   <!--
@@ -240,7 +235,7 @@
       Condition=" '@(_NestedContentItemsToCopyToOutputDirectory)' != '' "
       Inputs="@(_NestedContentItemsToCopyToOutputDirectory)"
       Outputs="@(_NestedContentItemsToCopyToOutputDirectory->'$(OutDir)%(TargetPath)')">
-
+    <Warning Text="@(_NestedContentItemsToCopyToOutputDirectory) @(_NestedContentItemsToCopyToOutputDirectory->'$(OutDir)%(TargetPath)')"/>
     <!--
     Not using SkipUnchangedFiles="true" because the application may want to change
     one of these files and not have an incremental build replace it.
@@ -250,9 +245,7 @@
         DestinationFiles = "@(_NestedContentItemsToCopyToOutputDirectory->'$(OutDir)%(TargetPath)')">
 
       <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
-
     </Copy>
-
   </Target>
 
   <!--
@@ -265,7 +258,7 @@
   <Target
       Name="_CopyOutOfDateNestedContentItemsToOutputDirectoryAlways"
       Condition=" '@(_NestedContentItemsToCopyToOutputDirectoryAlways)' != '' ">
-
+    
     <!--
     Not using SkipUnchangedFiles="true" because the application may want to change
     one of these files and not have an incremental build replace it.
@@ -275,51 +268,6 @@
         DestinationFiles = "@(_NestedContentItemsToCopyToOutputDirectoryAlways->'$(OutDir)%(TargetPath)')">
 
       <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
-
     </Copy>
-
-  </Target>
-
-
-  <!--
-    ============================================================
-                                        GB3DReadContentCacheFile
-
-    Reads all cache files that we output to the intermediate path during the 
-    content build process.  Cache files contain the Content files target path 
-    information, which we use to populate the manifest ItemGroup 
-    _DeploymentManifestFiles
-    ============================================================
-    -->
-
-  <PropertyGroup>
-    <GenerateManifestsDependsOn>
-      _GetContentReferences;
-      _CopySourceItemsToOutputDirectory;
-      GB3DReadContentCacheFile;
-      $(GenerateManifestsDependsOn)
-    </GenerateManifestsDependsOn>
-  </PropertyGroup>
-
-  <Target Name="GB3DReadContentCacheFile">
-    <XmlPeek XmlInputPath="%(ContentReference.Identity)"
-             Namespaces="&lt;Namespace Prefix='msbuild' Uri='http://schemas.microsoft.com/developer/msbuild/2003'/&gt;"
-             Query="/msbuild:Project/msbuild:PropertyGroup/msbuild:ProjectGuid/text()">
-      <Output TaskParameter="Result" ItemName="ContentProjectGuid" />
-    </XmlPeek>
-    <CreateItem Include="$(MSBuildProjectDirectory)\$(IntermediateOutputPath)cachefile-%(ContentProjectGuid.Identity)-targetpath.txt">
-      <Output ItemName="GB3DAllCacheFiles" TaskParameter="Include"/>
-    </CreateItem>
-
-    <ReadLinesFromFile File="%(GB3DAllCacheFiles.Identity)"
-                       Condition="'@(GB3DAllCacheFiles)' != ''">
-      <Output TaskParameter="Lines" ItemName="_FromBuiltContentTargetPath"/>
-    </ReadLinesFromFile>
-
-    <CreateItem Include="$(OutputPath)%(_FromBuiltContentTargetPath.Identity)"
-                AdditionalMetadata="TargetPath=%(_FromBuiltContentTargetPath.Identity);IsDataFile=false"
-                Condition="'@(_FromBuiltContentTargetPath)' != ''">
-      <Output ItemName="_DeploymentManifestFiles" TaskParameter="Include" />
-    </CreateItem>
   </Target>
 </Project>

@@ -120,7 +120,7 @@ namespace GreenBox3D.ContentPipeline.Task
                         result = false;
                 }
 
-                files = build.GetBuiltFiles(false);
+                files = build.GetBuiltFiles();
                 build.FinishBuild();
 
                 return result;

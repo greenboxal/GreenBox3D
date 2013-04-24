@@ -180,8 +180,10 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
                 }
 
                 string outputFilename =
-                    Path.Combine(_settings.OutputDirectory, Path.GetDirectoryName(partialName),
+                    Path.Combine(Path.GetDirectoryName(partialName),
                                  Path.GetFileNameWithoutExtension(partialName)) + writer.Extension;
+                string fullOutputFilename =
+                    Path.Combine(_settings.OutputDirectory, outputFilename);
                 object temporary = importer.CachedInstance.Import(fullPath, new ContentImporterContext(this, entry));
 
                 if (temporary == null)
@@ -202,8 +204,8 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
                 try
                 {
-                    Directory.CreateDirectory(Path.GetDirectoryName(outputFilename));
-                    stream = new FileStream(outputFilename, FileMode.Create);
+                    Directory.CreateDirectory(Path.GetDirectoryName(fullOutputFilename));
+                    stream = new FileStream(fullOutputFilename, FileMode.Create);
                 }
                 catch (IOException ex)
                 {
@@ -217,7 +219,7 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
                 entry.LastBuilt = true;
                 entry.Timestamp = File.GetLastWriteTimeUtc(fullPath);
-                entry.OutputFiles.Add(outputFilename);
+                entry.OutputFiles.Add(fullOutputFilename);
 
                 _newCache.Add(entry);
             }
@@ -341,7 +343,7 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
             }
         }
 
-        public string[] GetBuiltFiles(bool onlyLast)
+        public string[] GetBuiltFiles()
         {
             List<string> files = new List<string>();
             BuildCache cache = _cache;
@@ -356,9 +358,8 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
             }
 
             foreach (BuildCacheEntry entry in cache)
-                if (!onlyLast || entry.LastBuilt)
-                    foreach (string file in entry.OutputFiles)
-                        files.Add(file);
+                foreach (string file in entry.OutputFiles)
+                    files.Add(file);
 
             return files.ToArray();
         }
