@@ -25,6 +25,7 @@ namespace GreenBox3D.Graphics
 
         public abstract BufferManager BufferManager { get; }
         public abstract ShaderManager ShaderManager { get; }
+        public abstract TextureManager TextureManager { get; }
 
         public abstract PresentationParameters PresentationParameters { get; }
         public abstract Viewport Viewport { get; set; }
@@ -50,6 +51,15 @@ namespace GreenBox3D.Graphics
         public abstract void Clear(ClearOptions options, Color color);
 
         public abstract void Present();
+
+        public abstract void SetVertexBuffer(IVertexBuffer vertexBuffer);
+
+        public abstract void SetIndexBuffer(IIndexBuffer indexBuffer);
+
+        public abstract void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertex, int numVertices,
+                                                   int startIndex, int primitiveCount);
+
+        public abstract void DrawPrimitives(PrimitiveType primitiveType, int startVertex, int primitiveCount);
 
         protected abstract bool MakeCurrentInternal();
     }

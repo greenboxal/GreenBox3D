@@ -22,9 +22,9 @@ namespace GreenBox3D.Platform.Windows.Graphics
         private static IntPtr _lastUsedPointer;
         private static Shader _lastUsedShader;
 
-        private readonly WindowsGraphicsDevice _graphicsDevice;
         private readonly VertexElement[] _elements;
         private readonly InternalVertexElement[] _glelements;
+        private readonly WindowsGraphicsDevice _graphicsDevice;
         private readonly int _stride;
 
         public VertexDeclaration(WindowsGraphicsDevice graphicsDevice, int stride, VertexElement[] elements)
@@ -38,6 +38,16 @@ namespace GreenBox3D.Platform.Windows.Graphics
                 _glelements[i] = new InternalVertexElement(_elements[i]);
         }
 
+        public int VertexStride
+        {
+            get { return _stride; }
+        }
+
+        public VertexElement[] GetVertexElements()
+        {
+            return (VertexElement[])_elements.Clone();
+        }
+
         public void Bind(IntPtr baseAddress)
         {
             if (_lastUsed == this && _lastUsedPointer == baseAddress && _lastUsedShader == _graphicsDevice.ActiveShader)
@@ -48,6 +58,9 @@ namespace GreenBox3D.Platform.Windows.Graphics
                 VertexElement element = null;
                 InternalVertexElement gle = null;
                 ShaderInput input = _graphicsDevice.ActiveShader.Input[i];
+
+                if (input.Index == -1)
+                    continue;
 
                 for (int j = 0; j < _elements.Length; j++)
                 {
@@ -74,16 +87,6 @@ namespace GreenBox3D.Platform.Windows.Graphics
             _lastUsed = this;
             _lastUsedPointer = baseAddress;
             _lastUsedShader = _graphicsDevice.ActiveShader;
-        }
-
-        public int VertexStride
-        {
-            get { return _stride; }
-        }
-
-        public VertexElement[] GetVertexElements()
-        {
-            return (VertexElement[])_elements.Clone();
         }
     }
 }

@@ -4,11 +4,13 @@
 // of this file without the owner consent may lead to legal actions
 //
 
-in vec2 gTexCoord;
+in vec4 gColor;
 
-uniform sampler2D pTexture;
+uniform float Alpha;
+
+out vec4 OutFragColor;
 
 void main()
 {
-	gl_Color = tex(pTexture, gTexCoord);
+	OutFragColor = vec4(1,1,1,1);
 }

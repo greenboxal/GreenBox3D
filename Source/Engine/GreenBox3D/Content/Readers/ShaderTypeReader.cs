@@ -32,17 +32,17 @@ namespace GreenBox3D.Content.Readers
         protected override IShader Load(ContentManager manager, ContentReader reader)
         {
             CompiledShader shader = new CompiledShader(reader.ReadString(), reader.ReadInt32(), reader.ReadString(),
-                                                        reader.ReadString(), reader.ReadString(), reader.ReadString(),
-                                                        reader.ReadString());
+                                                       reader.ReadString(), reader.ReadString(), reader.ReadString(),
+                                                       reader.ReadString());
 
             int inputCount = reader.ReadInt32();
 
             for (int j = 0; j < inputCount; j++)
                 shader.Input.Add(new CompiledInputVariable(
-                                        reader.ReadString(),
-                                        (VertexElementUsage)reader.ReadInt32(),
-                                        reader.ReadInt32()
-                                        ));
+                                     reader.ReadString(),
+                                     (VertexElementUsage)reader.ReadInt32(),
+                                     reader.ReadInt32()
+                                     ));
 
             return manager.GraphicsDevice.ShaderManager.CreateShader(shader);
         }

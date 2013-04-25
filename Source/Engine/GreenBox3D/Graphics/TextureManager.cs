@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GreenBox3D.Graphics.Detail;
 
 namespace GreenBox3D.Graphics
 {
-    public abstract class ShaderManager
+    public abstract class TextureManager
     {
-        public abstract IShader CreateShader(CompiledShader compiledShader);
+        public abstract ITexture2D CreateTexture2D(SurfaceFormat format, int width, int height);
     }
 }

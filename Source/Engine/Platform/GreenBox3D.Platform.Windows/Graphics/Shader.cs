@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using GreenBox3D.Graphics;
 using GreenBox3D.Graphics.Detail;
 using OpenTK.Graphics.OpenGL;
@@ -12,18 +11,14 @@ namespace GreenBox3D.Platform.Windows.Graphics
 {
     public class Shader : GraphicsResource, IShader
     {
-        private readonly int _program;
-        private readonly int _vertex;
-        private readonly int _pixel;
-        private readonly ShaderInput[] _input;
-
         private readonly WindowsGraphicsDevice _graphicsDevice;
+        private readonly ShaderInput[] _input;
         private readonly string _name;
         private readonly ShaderParameterCollection _parameters;
-
-        public string Name { get { return _name; } }
-        public ShaderInput[] Input { get { return _input; } }
-        public ShaderParameterCollection Parameters { get { return _parameters; } }
+        private readonly int _pixel;
+        private readonly int _program;
+        private readonly int _vertex;
+        internal int TextureUnitCounter;
 
         public Shader(WindowsGraphicsDevice graphicsDevice, CompiledShader shader)
             : base(graphicsDevice)
@@ -71,13 +66,32 @@ namespace GreenBox3D.Platform.Windows.Graphics
             ShaderParameter[] parameters = new ShaderParameter[status];
 
             for (int i = 0; i < status; i++)
-                parameters[i] = new ShaderParameter(_program, i);
+                parameters[i] = new ShaderParameter(this, _program, i);
 
             _input = new ShaderInput[shader.Input.Count];
             for (int i = 0; i < _input.Length; i++)
                 _input[i] = new ShaderInput(_program, shader.Input[i]);
 
             _parameters = new ShaderParameterCollection(parameters);
+
+            GL.GetInteger(GetPName.MaxCombinedTextureImageUnits, out status);
+            if (TextureUnitCounter > status)
+                throw new Exception("This shader uses too many Texture Units");
+        }
+
+        public ShaderInput[] Input
+        {
+            get { return _input; }
+        }
+
+        public string Name
+        {
+            get { return _name; }
+        }
+
+        public ShaderParameterCollection Parameters
+        {
+            get { return _parameters; }
         }
 
         public void Apply()

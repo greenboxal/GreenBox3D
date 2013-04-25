@@ -29,7 +29,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenBox3D.MonoDevelop", "D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "Test\SimpleTest\TestApp\TestApp.csproj", "{65159C1E-E651-4070-802B-71F08405787E}"
 	ProjectSection(ProjectDependencies) = postProject
-		{3BD45E60-D6E2-41AF-9F7B-9033F702D1F9} = {3BD45E60-D6E2-41AF-9F7B-9033F702D1F9}
+		{CA17FAA1-57B4-4A07-92D1-F928B5731535} = {CA17FAA1-57B4-4A07-92D1-F928B5731535}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAppContent", "Test\SimpleTest\TestAppContent\TestAppContent.csproj", "{2F4AE659-CF75-4D7A-B862-378C42B1E943}"

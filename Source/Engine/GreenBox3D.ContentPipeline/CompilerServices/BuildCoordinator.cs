@@ -18,9 +18,6 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
     // FIXME: Deleted files will stay stuck in the file until a Rebuild is performed
     public class BuildCoordinator
     {
-        private BuildCache _cache;
-        private BuildCache _newCache;
-
         private readonly Dictionary<string, string> _extension2importer;
         private readonly Dictionary<string, ImporterDescriptor> _importers;
         private readonly ILoggerHelper _logger;
@@ -28,6 +25,8 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
         private readonly BuildCoordinatorSettings _settings;
         private readonly Dictionary<string, WriterDescriptor> _writers;
+        private BuildCache _cache;
+        private BuildCache _newCache;
 
         public BuildCoordinator(BuildCoordinatorSettings settings, ILoggerHelper logger)
         {

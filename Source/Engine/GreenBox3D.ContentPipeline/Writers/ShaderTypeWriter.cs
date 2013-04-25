@@ -52,7 +52,7 @@ namespace GreenBox3D.ContentPipeline.Writers
                     stream.Write((int)ci.Usage);
                     stream.Write(ci.UsageIndex);
                 }
-                
+
                 // FIXME: Just one shader per file
                 break;
             }

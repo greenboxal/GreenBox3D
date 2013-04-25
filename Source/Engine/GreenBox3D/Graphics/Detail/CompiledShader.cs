@@ -15,7 +15,8 @@ namespace GreenBox3D.Graphics.Detail
 {
     public class CompiledShader
     {
-        public CompiledShader(string name, int version, string fallback, string glslVertexCode, string glslPixelCode, string hlslVertexCode, string hlslPixelCode)
+        public CompiledShader(string name, int version, string fallback, string glslVertexCode, string glslPixelCode,
+                              string hlslVertexCode, string hlslPixelCode)
         {
             Name = name;
             Version = version;

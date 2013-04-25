@@ -22,7 +22,7 @@ namespace GreenBox3D.Platform.Windows.Graphics
         #region Constructors and Destructors
 
         public VertexBuffer(GraphicsDevice graphicsDevice, IVertexDeclaration vertexDeclaration, int vertexCount,
-                              BufferUsage usage)
+                            BufferUsage usage)
             : base(graphicsDevice, BufferTarget.ArrayBuffer, vertexDeclaration.VertexStride, vertexCount, usage)
         {
             VertexDeclaration = vertexDeclaration;

@@ -35,7 +35,7 @@ namespace GreenBox3D.Graphics
             Normal = normal;
             Color = color;
         }
-    
+
         VertexElement[] IVertexType.VertexDeclaration
         {
             get { return Declaration; }

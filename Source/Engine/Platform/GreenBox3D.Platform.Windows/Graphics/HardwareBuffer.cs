@@ -84,12 +84,20 @@ namespace GreenBox3D.Platform.Windows.Graphics
 
         public void SetData<T>(T[] data) where T : struct
         {
-            SetData(0, data, 0, data.Length);
+            SetData(data, 0, data.Length);
         }
 
         public void SetData<T>(T[] data, int offset, int count) where T : struct
         {
-            SetData(0, data, offset, count);
+            Create();
+
+            GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+            IntPtr address = Marshal.UnsafeAddrOfPinnedArrayElement(data, offset);
+
+            Bind();
+            GL.BufferData(BufferTarget, (IntPtr)(count * Marshal.SizeOf(typeof(T))), address, BufferUsageHint);
+
+            handle.Free();
         }
 
         public void SetData<T>(int offsetInBytes, T[] data, int offset, int count) where T : struct
@@ -123,8 +131,8 @@ namespace GreenBox3D.Platform.Windows.Graphics
                 if (BufferID == -1)
                     throw new OpenGLException();
 
-                Bind();
-                GL.BufferData(BufferTarget, (IntPtr)(ElementSize * ElementCount), IntPtr.Zero, BufferUsageHint);
+                // Bind();
+                // GL.BufferData(BufferTarget, (IntPtr)(ElementSize * ElementCount), IntPtr.Zero, BufferUsageHint);
             }
         }
 

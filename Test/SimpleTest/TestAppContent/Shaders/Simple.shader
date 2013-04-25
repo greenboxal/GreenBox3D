@@ -13,13 +13,13 @@
 
 Shader "Simple"
 { 
-	Version 400
+	Version 330
 
 	Input
 	{
 		iPosition : POSITION[0];
 		iNormal : NORMAL[0];
-		iTexCoord : TEXCOORD[0];
+		iColor : COLOR[0];
 	}
 
 	// GLSL shaders

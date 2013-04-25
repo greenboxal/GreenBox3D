@@ -93,6 +93,7 @@
     <Compile Include="Graphics\IGraphicsResource.cs" />
     <Compile Include="Graphics\IVertexType.cs" />
     <Compile Include="Graphics\IVertexDeclaration.cs" />
+    <Compile Include="Graphics\TextureManager.cs" />
     <Compile Include="Graphics\VertexElement.cs" />
     <Compile Include="Graphics\VertexElementFormat.cs" />
     <Compile Include="Graphics\VertexElementUsage.cs" />

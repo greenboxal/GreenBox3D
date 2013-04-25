@@ -83,6 +83,7 @@ namespace GreenBox3D.Platform.Windows
             Log.Message("Initializing Graphic subsystem");
 
             _gameWindow = new WindowsGameWindow(this, parameters);
+            _gameWindow.Create();
             _graphicsDeviceManager = new GraphicsDeviceManager(this, parameters, _gameWindow);
 
             Controller.RegisterService(typeof(IGraphicsDeviceManager), _graphicsDeviceManager);

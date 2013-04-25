@@ -36,7 +36,8 @@ namespace GreenBox3D.ContentPipeline.Processors
                 glslVertex = CompileGlslStub(ash, CompileGlsl(ash.GlslVertexCode, context, 0));
                 glslPixel = CompileGlslStub(ash, CompileGlsl(ash.GlslPixelCode, context, 0));
 
-                CompiledShader shader = new CompiledShader(ash.Name, ash.Version, ash.Fallback, glslVertex, glslPixel, null, null);
+                CompiledShader shader = new CompiledShader(ash.Name, ash.Version, ash.Fallback, glslVertex, glslPixel,
+                                                           null, null);
 
                 foreach (Ast.InputVariable aiv in ash.Input)
                     shader.Input.Add(CompiledShaderUtils.InputVariableFromAst(aiv));

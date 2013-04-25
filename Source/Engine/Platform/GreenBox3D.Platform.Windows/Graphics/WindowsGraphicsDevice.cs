@@ -13,14 +13,13 @@ using System.Threading;
 using GreenBox3D.Graphics;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Platform.Windows;
 
 namespace GreenBox3D.Platform.Windows.Graphics
 {
     public class WindowsGraphicsDevice : GraphicsDevice
     {
         private static readonly ILogger Log = LogManager.GetLogger(typeof(WindowsGraphicsDevice));
-
-        internal Shader ActiveShader;
 
         private readonly BufferManager _bufferManager;
         private readonly Dictionary<int, GraphicsContext> _contexts;
@@ -30,7 +29,13 @@ namespace GreenBox3D.Platform.Windows.Graphics
         private readonly WindowsGamePlatform _platform;
         private readonly PresentationParameters _presentationParameters;
         private readonly ShaderManager _shaderManager;
+        private readonly TextureManager _textureManager;
         private readonly WindowsGameWindow _window;
+        internal Shader ActiveShader;
+        private IndexBuffer _indices;
+        private bool _indicesDirty;
+        private VertexBuffer _vertices;
+        private bool _verticesDirty;
 
         private Viewport _viewport;
         private bool _vsync;
@@ -44,6 +49,7 @@ namespace GreenBox3D.Platform.Windows.Graphics
             _contexts = new Dictionary<int, GraphicsContext>();
             _bufferManager = new GLBufferManager(this);
             _shaderManager = new GLShaderManager(this);
+            _textureManager = new GLTextureManager(this);
 
             if (parameters.BackBufferFormat != SurfaceFormat.Color)
                 throw new NotSupportedException("PresentationParameters's BackBufferFormat must be SurfaceFormat.Color");
@@ -74,7 +80,7 @@ namespace GreenBox3D.Platform.Windows.Graphics
             }
 
             _mainContext = CreateNewContext(Thread.CurrentThread.ManagedThreadId);
-            _mainContext.MakeCurrent(new OpenTK.Platform.Windows.WinWindowInfo(_window.NativeHandle, null));
+            _mainContext.MakeCurrent(new WinWindowInfo(_window.NativeHandle, null));
             _mainContext.LoadAll();
 
             Log.Message("OpenGL context acquired: {0}", _mainContext);
@@ -105,6 +111,11 @@ namespace GreenBox3D.Platform.Windows.Graphics
         public override ShaderManager ShaderManager
         {
             get { return _shaderManager; }
+        }
+
+        public override TextureManager TextureManager
+        {
+            get { return _textureManager; }
         }
 
         public override PresentationParameters PresentationParameters
@@ -148,7 +159,7 @@ namespace GreenBox3D.Platform.Windows.Graphics
             try
             {
                 // We use a hacked version of OpenTK which exposes WinWindowInfo as well IWindowInfo implementation for other platforms
-                context.MakeCurrent(new OpenTK.Platform.Windows.WinWindowInfo(_window.NativeHandle, null));
+                context.MakeCurrent(new WinWindowInfo(_window.NativeHandle, null));
             }
             catch
             {
@@ -198,13 +209,120 @@ namespace GreenBox3D.Platform.Windows.Graphics
 
         private GraphicsContext CreateNewContext(int threadId)
         {
-            OpenTK.Platform.Windows.WinWindowInfo window =
-                new OpenTK.Platform.Windows.WinWindowInfo(_window.NativeHandle, null);
+            WinWindowInfo window =
+                new WinWindowInfo(_window.NativeHandle, null);
             GraphicsContext context = new GraphicsContext(_graphicsMode, window, 4, 2, GraphicsContextFlags.Default);
 
             _contexts[threadId] = context;
 
             return context;
+        }
+
+        public override void SetVertexBuffer(IVertexBuffer vertexBuffer)
+        {
+            if (_vertices != vertexBuffer)
+            {
+                _vertices = vertexBuffer as VertexBuffer;
+                _verticesDirty = true;
+            }
+        }
+
+        public override void SetIndexBuffer(IIndexBuffer indexBuffer)
+        {
+            if (_indices != indexBuffer)
+            {
+                _indices = indexBuffer as IndexBuffer;
+                _indicesDirty = true;
+            }
+        }
+
+        public override void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertex, int numVertices,
+                                                   int startIndex, int primitiveCount)
+        {
+            if (_vertices == null)
+                throw new InvalidOperationException("A VertexBuffer must be set before calling this method");
+
+            if (_indices == null)
+                throw new InvalidOperationException("An IndexBuffer must be set before calling this method");
+
+            if (ActiveShader == null)
+                throw new InvalidOperationException("An Effect must be applied before calling this method");
+
+            SetRenderingState();
+            (_vertices.VertexDeclaration as VertexDeclaration).Bind(IntPtr.Zero);
+
+            var indexOffsetInBytes = (IntPtr)(startIndex * _indices.ElementSize);
+            var indexElementCount = GetElementCountArray(primitiveType, primitiveCount);
+            var target = GetBeginMode(primitiveType);
+
+            GL.DrawElementsBaseVertex(target, indexElementCount, _indices.DrawElementsType, indexOffsetInBytes,
+                                      baseVertex);
+        }
+
+        public override void DrawPrimitives(PrimitiveType primitiveType, int startVertex, int primitiveCount)
+        {
+            if (_vertices == null)
+                throw new InvalidOperationException("A VertexBuffer must be set before calling this method");
+
+            if (_indices == null)
+                throw new InvalidOperationException("An IndexBuffer must be set before calling this method");
+
+            if (ActiveShader == null)
+                throw new InvalidOperationException("An Effect must be applied before calling this method");
+
+            SetRenderingState();
+            (_vertices.VertexDeclaration as VertexDeclaration).Bind(IntPtr.Zero);
+
+            GL.DrawArrays(GetBeginMode(primitiveType), startVertex, primitiveCount);
+        }
+
+        private static BeginMode GetBeginMode(PrimitiveType primitiveType)
+        {
+            switch (primitiveType)
+            {
+                case PrimitiveType.LineList:
+                    return BeginMode.LineLoop;
+                case PrimitiveType.LineStrip:
+                    return BeginMode.LineStrip;
+                case PrimitiveType.TriangleList:
+                    return BeginMode.TriangleFan;
+                case PrimitiveType.TriangleStrip:
+                    return BeginMode.TriangleStrip;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        private static int GetElementCountArray(PrimitiveType primitiveType, int primitiveCount)
+        {
+            switch (primitiveType)
+            {
+                case PrimitiveType.LineList:
+                    return primitiveCount * 2;
+                case PrimitiveType.LineStrip:
+                    return primitiveCount + 1;
+                case PrimitiveType.TriangleList:
+                    return primitiveCount * 3;
+                case PrimitiveType.TriangleStrip:
+                    return 3 + (primitiveCount - 1);
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        private void SetRenderingState()
+        {
+            if (_indicesDirty)
+            {
+                GL.BindBuffer(BufferTarget.ElementArrayBuffer, _indices.BufferID);
+                _indicesDirty = false;
+            }
+
+            if (_verticesDirty)
+            {
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _vertices.BufferID);
+                _verticesDirty = false;
+            }
         }
     }
 }

@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Graphics\GLBufferManager.cs" />
     <Compile Include="Graphics\GLShaderManager.cs" />
+    <Compile Include="Graphics\GLTextureManager.cs" />
     <Compile Include="Graphics\InternalVertexElement.cs" />
     <Compile Include="Graphics\HardwareBuffer.cs" />
     <Compile Include="Graphics\IndexBuffer.cs" />
@@ -60,6 +61,8 @@
     <Compile Include="Graphics\Shader.cs" />
     <Compile Include="Graphics\ShaderInput.cs" />
     <Compile Include="Graphics\ShaderParameter.cs" />
+    <Compile Include="Graphics\Texture.cs" />
+    <Compile Include="Graphics\Texture2D.cs" />
     <Compile Include="Graphics\VertexBuffer.cs" />
     <Compile Include="Graphics\VertexDeclaration.cs" />
     <Compile Include="Graphics\WindowsGraphicsDevice.cs" />

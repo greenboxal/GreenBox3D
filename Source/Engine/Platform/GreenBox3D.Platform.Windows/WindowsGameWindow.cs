@@ -29,7 +29,7 @@ namespace GreenBox3D.Platform.Windows
         private readonly WindowsGamePlatform _platform;
 
         /// <summary>
-        /// GC guard
+        ///     GC guard
         /// </summary>
         private NativeMethods.WndProc _callback;
 
@@ -55,14 +55,6 @@ namespace GreenBox3D.Platform.Windows
             _platform = platform;
             _mouseState = new MouseState();
             _keys = new List<Keys>();
-
-            CreateClass();
-            CreateWindow();
-
-            ShowCursor = true;
-            Resizable = false;
-
-            NativeMethods.SetFocus(_handle);
         }
 
         public IntPtr NativeHandle
@@ -170,6 +162,17 @@ namespace GreenBox3D.Platform.Windows
         void IMouse.SetPosition(int x, int y)
         {
             NativeMethods.SetCursorPos(x, y);
+        }
+
+        public void Create()
+        {
+            CreateClass();
+            CreateWindow();
+
+            ShowCursor = true;
+            Resizable = false;
+
+            NativeMethods.SetFocus(_handle);
         }
 
         ~WindowsGameWindow()
@@ -302,7 +305,7 @@ namespace GreenBox3D.Platform.Windows
             switch (msg)
             {
                 case NativeMethods.WM.SIZE:
-                    _size = new Point((int)wParam, (int)lParam);
+                    _size = new Point(lParam.ToInt32() & 0xffff, lParam.ToInt32() >> 16);
                     _platform.WindowResized();
                     break;
                 case NativeMethods.WM.MOVING:

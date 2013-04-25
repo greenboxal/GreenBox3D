@@ -15,5 +15,7 @@ namespace GreenBox3D.Graphics
 {
     public interface ITexture : IGraphicsResource
     {
+        int LevelCount { get; }
+        SurfaceFormat Format { get; }
     }
 }

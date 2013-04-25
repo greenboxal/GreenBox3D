@@ -28,7 +28,7 @@ namespace GreenBox3D.Platform.Windows.Graphics
         #region Constructors and Destructors
 
         public IndexBuffer(GraphicsDevice graphicsDevice, IndexElementSize indexElementSize, int indexCount,
-                             BufferUsage usage)
+                           BufferUsage usage)
             : base(
                 graphicsDevice, BufferTarget.ElementArrayBuffer, GetElementSizeInBytes(indexElementSize), indexCount,
                 usage)

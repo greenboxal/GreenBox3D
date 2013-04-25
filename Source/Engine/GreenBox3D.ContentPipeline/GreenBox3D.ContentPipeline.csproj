@@ -73,6 +73,7 @@
     <Compile Include="IContentProcessor.cs" />
     <Compile Include="IContentTypeWriter.cs" />
     <Compile Include="Importers\ShaderImporter.cs" />
+    <Compile Include="Importers\TextureImporter.cs" />
     <Compile Include="Processors\ShaderProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Writers\ContentWriter.cs" />

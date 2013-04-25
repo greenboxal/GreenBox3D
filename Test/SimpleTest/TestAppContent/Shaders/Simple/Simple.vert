@@ -6,12 +6,14 @@
 
 in vec3 iPosition;
 in vec3 iNormal;
-in vec2 iTexCoord;
+in vec4 iColor;
 
-out vec2 gTexCoord;
+out vec4 gColor;
+
+uniform mat4 WorldViewProjection;
 
 void main()
 {
-	gTexCoord = iTexCoord;
-	gl_Position = iPosition * pWorldViewProjection;
+	gColor = iColor;
+	gl_Position = WorldViewProjection * vec4(iPosition, 1);
 }

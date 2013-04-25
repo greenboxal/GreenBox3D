@@ -11,11 +11,6 @@ namespace GreenBox3D.Platform.Windows.Graphics
 {
     public class ShaderInput
     {
-        public string Name { get; private set; }
-        public VertexElementUsage Usage { get; private set; }
-        public int UsageIndex { get; private set; }
-        public int Index { get; private set; }
-
         public ShaderInput(int programID, CompiledInputVariable variable)
         {
             Name = variable.Name;
@@ -23,5 +18,10 @@ namespace GreenBox3D.Platform.Windows.Graphics
             UsageIndex = variable.UsageIndex;
             Index = GL.GetAttribLocation(programID, variable.Name);
         }
+
+        public string Name { get; private set; }
+        public VertexElementUsage Usage { get; private set; }
+        public int UsageIndex { get; private set; }
+        public int Index { get; private set; }
     }
 }

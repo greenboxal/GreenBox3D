@@ -46,8 +46,8 @@ namespace GreenBox3D.ContentPipeline.Task
             {
                 string[] files;
                 bool result = isolation.CreateProxy<IsolationProxy>()
-                                .Execute(Log, SourceAssets, PipelineAssemblies, BuildConfiguration,
-                                         IntermediateDirectory, OutputDirectory, RootDirectory, out files);
+                                       .Execute(Log, SourceAssets, PipelineAssemblies, BuildConfiguration,
+                                                IntermediateDirectory, OutputDirectory, RootDirectory, out files);
 
                 if (!result)
                     return false;

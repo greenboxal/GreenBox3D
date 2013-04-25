@@ -15,5 +15,11 @@ namespace GreenBox3D.Graphics
 {
     public interface ITexture2D : ITexture
     {
+        int Width { get; }
+        int Height { get; }
+
+        void SetData<T>(T[] data) where T : struct;
+        void SetData<T>(int level, T[] data, int startIndex) where T : struct;
+        void SetData<T>(int level, Rectangle? rect, T[] data, int startIndex) where T : struct;
     }
 }
