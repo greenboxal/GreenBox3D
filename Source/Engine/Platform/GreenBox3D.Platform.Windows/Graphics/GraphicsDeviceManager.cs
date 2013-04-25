@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GreenBox3D.Graphics;
+using OpenTK.Platform.Windows;
 
 namespace GreenBox3D.Platform.Windows.Graphics
 {
@@ -28,6 +29,8 @@ namespace GreenBox3D.Platform.Windows.Graphics
 
             _graphicsDevice = new WindowsGraphicsDevice(platform, parameters, window);
             _graphicsDevice.MakeCurrent();
+
+            Update();
         }
 
         public GraphicsDevice GraphicsDevice
@@ -38,6 +41,11 @@ namespace GreenBox3D.Platform.Windows.Graphics
         public void Dispose()
         {
             _graphicsDevice.Dispose();
+        }
+
+        internal void Update()
+        {
+            _graphicsDevice.MainContext.Update(new WinWindowInfo(_window.NativeHandle, null));
         }
     }
 }

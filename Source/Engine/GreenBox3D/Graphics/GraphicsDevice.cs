@@ -56,10 +56,10 @@ namespace GreenBox3D.Graphics
 
         public abstract void SetIndexBuffer(IIndexBuffer indexBuffer);
 
-        public abstract void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertex, int numVertices,
-                                                   int startIndex, int primitiveCount);
+        public abstract void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertex,
+                                                   int startIndex, int numVertices);
 
-        public abstract void DrawPrimitives(PrimitiveType primitiveType, int startVertex, int primitiveCount);
+        public abstract void DrawPrimitives(PrimitiveType primitiveType, int startVertex, int numVertices);
 
         protected abstract bool MakeCurrentInternal();
     }

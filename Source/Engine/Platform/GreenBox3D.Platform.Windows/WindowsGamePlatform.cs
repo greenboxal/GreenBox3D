@@ -129,6 +129,9 @@ namespace GreenBox3D.Platform.Windows
         public void WindowResized()
         {
             Controller.OnResize();
+
+            if (_graphicsDeviceManager != null && _graphicsDeviceManager.GraphicsDevice != null)
+                _graphicsDeviceManager.Update();
         }
     }
 }

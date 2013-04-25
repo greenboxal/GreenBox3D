@@ -13,7 +13,7 @@
 
 Shader "Simple"
 { 
-	Version 330
+	Version 130
 
 	Input
 	{

@@ -25,7 +25,7 @@ namespace GreenBox3D.Platform.Windows.Graphics
         private readonly Dictionary<int, GraphicsContext> _contexts;
 
         private readonly GraphicsMode _graphicsMode;
-        private readonly GraphicsContext _mainContext;
+        internal readonly GraphicsContext MainContext;
         private readonly WindowsGamePlatform _platform;
         private readonly PresentationParameters _presentationParameters;
         private readonly ShaderManager _shaderManager;
@@ -79,11 +79,11 @@ namespace GreenBox3D.Platform.Windows.Graphics
                                                  parameters.MultiSampleCount);
             }
 
-            _mainContext = CreateNewContext(Thread.CurrentThread.ManagedThreadId);
-            _mainContext.MakeCurrent(new WinWindowInfo(_window.NativeHandle, null));
-            _mainContext.LoadAll();
+            MainContext = CreateNewContext(Thread.CurrentThread.ManagedThreadId);
+            MainContext.MakeCurrent(new WinWindowInfo(_window.NativeHandle, null));
+            MainContext.LoadAll();
 
-            Log.Message("OpenGL context acquired: {0}", _mainContext);
+            Log.Message("OpenGL context acquired: {0}", MainContext);
         }
 
         public bool VSync
@@ -94,9 +94,9 @@ namespace GreenBox3D.Platform.Windows.Graphics
                 if (_vsync != value)
                 {
                     if (value)
-                        _mainContext.SwapInterval = -1;
+                        MainContext.SwapInterval = -1;
                     else
-                        _mainContext.SwapInterval = 0;
+                        MainContext.SwapInterval = 0;
 
                     _vsync = value;
                 }
@@ -135,7 +135,7 @@ namespace GreenBox3D.Platform.Windows.Graphics
                 //    GL.Viewport(value.X, value.Y, value.Width, value.Height);
                 //else
 
-                GL.Viewport(value.X, PresentationParameters.BackBufferHeight - value.Y - value.Height, value.Width,
+                GL.Viewport(value.X, value.Y, value.Width,
                             value.Height);
                 // GL.DepthRange(value.MinDepth, value.MaxDepth);
             }
@@ -191,12 +191,12 @@ namespace GreenBox3D.Platform.Windows.Graphics
 
         public override void Present()
         {
-            _mainContext.SwapBuffers();
+            MainContext.SwapBuffers();
         }
 
         public override void Dispose()
         {
-            _mainContext.Dispose();
+            MainContext.Dispose();
 
             lock (_contexts)
             {
@@ -236,9 +236,11 @@ namespace GreenBox3D.Platform.Windows.Graphics
             }
         }
 
-        public override void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertex, int numVertices,
-                                                   int startIndex, int primitiveCount)
+        public override void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertex,
+                                                   int startIndex, int numVertices)
         {
+            IntPtr indexOffsetInBytes = (IntPtr)(startIndex * _indices.ElementSize);
+
             if (_vertices == null)
                 throw new InvalidOperationException("A VertexBuffer must be set before calling this method");
 
@@ -251,15 +253,11 @@ namespace GreenBox3D.Platform.Windows.Graphics
             SetRenderingState();
             (_vertices.VertexDeclaration as VertexDeclaration).Bind(IntPtr.Zero);
 
-            var indexOffsetInBytes = (IntPtr)(startIndex * _indices.ElementSize);
-            var indexElementCount = GetElementCountArray(primitiveType, primitiveCount);
-            var target = GetBeginMode(primitiveType);
-
-            GL.DrawElementsBaseVertex(target, indexElementCount, _indices.DrawElementsType, indexOffsetInBytes,
+            GL.DrawElementsBaseVertex(GetBeginMode(primitiveType), numVertices, _indices.DrawElementsType, indexOffsetInBytes,
                                       baseVertex);
         }
 
-        public override void DrawPrimitives(PrimitiveType primitiveType, int startVertex, int primitiveCount)
+        public override void DrawPrimitives(PrimitiveType primitiveType, int startVertex, int numVertices)
         {
             if (_vertices == null)
                 throw new InvalidOperationException("A VertexBuffer must be set before calling this method");
@@ -273,7 +271,7 @@ namespace GreenBox3D.Platform.Windows.Graphics
             SetRenderingState();
             (_vertices.VertexDeclaration as VertexDeclaration).Bind(IntPtr.Zero);
 
-            GL.DrawArrays(GetBeginMode(primitiveType), startVertex, primitiveCount);
+            GL.DrawArrays(GetBeginMode(primitiveType), startVertex, numVertices);
         }
 
         private static BeginMode GetBeginMode(PrimitiveType primitiveType)
