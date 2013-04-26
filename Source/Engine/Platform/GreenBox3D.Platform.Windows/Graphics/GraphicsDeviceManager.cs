@@ -45,7 +45,15 @@ namespace GreenBox3D.Platform.Windows.Graphics
 
         internal void Update()
         {
-            _graphicsDevice.MainContext.Update(new WinWindowInfo(_window.NativeHandle, null));
+            _graphicsDevice.MainContext.Update(new WinWindowInfo(_window.Handle, null));
+            _graphicsDevice.SetPresentationParameters(new PresentationParameters
+            {
+                BackBufferWidth = _window.ClientBounds.Width,
+                BackBufferHeight = _window.ClientBounds.Height,
+                DepthStencilFormat = _graphicsDevice.PresentationParameters.DepthStencilFormat,
+                IsFullScreen = _graphicsDevice.PresentationParameters.IsFullScreen,
+                MultiSampleCount = _graphicsDevice.PresentationParameters.MultiSampleCount
+            });
         }
     }
 }

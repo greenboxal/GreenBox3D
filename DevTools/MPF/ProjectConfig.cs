@@ -220,7 +220,7 @@ namespace Microsoft.VisualStudio.Project
             if (newGroup == null)
             {
                 newGroup = project.BuildProject.Xml.AddPropertyGroup();
-                    // Adds after last existing PG, else at start of project
+                // Adds after last existing PG, else at start of project
                 newGroup.Condition = condition;
             }
 

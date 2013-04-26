@@ -2357,6 +2357,9 @@ namespace GreenBox3D.Platform.Windows
         public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
 
         [DllImport("User32.dll")]
+        public static extern bool SetWindowText(IntPtr hwnd, String lpString);
+
+        [DllImport("User32.dll")]
         public static extern bool DestroyWindow(IntPtr hWnd);
 
         [DllImport("User32.dll")]

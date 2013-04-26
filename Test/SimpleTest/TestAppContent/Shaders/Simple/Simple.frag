@@ -12,5 +12,5 @@ out vec4 OutFragColor;
 
 void main()
 {
-	OutFragColor = vec4(1,1,1,1);
+	OutFragColor = gColor;
 }

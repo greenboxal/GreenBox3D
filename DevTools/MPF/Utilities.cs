@@ -616,7 +616,7 @@ namespace Microsoft.VisualStudio.Project
         public static T? ConvertFromType<T>(string value, CultureInfo culture)
             where T : struct
         {
-            Nullable<T> returnValue = new T?();
+            T? returnValue = new T?();
 
             returnValue = returnValue.GetValueOrDefault();
 

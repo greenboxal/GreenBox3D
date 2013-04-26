@@ -31,7 +31,8 @@ namespace GreenBox3D.Graphics
 
         ~GraphicsResource()
         {
-            Dispose(false);
+            if (!_graphicsDevice.IsDisposed)
+                Dispose(false);
         }
 
         #endregion
@@ -61,7 +62,8 @@ namespace GreenBox3D.Graphics
         public void Dispose()
         {
             // Dispose of managed objects as well
-            Dispose(true);
+            if (!_graphicsDevice.IsDisposed)
+                Dispose(true);
 
             // Since we have been manually disposed, do not call the finalizer on this object
             GC.SuppressFinalize(this);

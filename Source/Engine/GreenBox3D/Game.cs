@@ -7,9 +7,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GreenBox3D.Graphics;
 using GreenBox3D.Platform;
 
 namespace GreenBox3D
@@ -19,11 +21,26 @@ namespace GreenBox3D
         private static readonly ILogger Log = LogManager.GetLogger(typeof(Game));
         private readonly Dictionary<Type, object> _services;
 
+        private bool _isActive;
+
         public Game()
         {
             _services = new Dictionary<Type, object>();
+
+            Platform = GamePlatform.Create(this);
         }
 
+        public bool IsActive
+        {
+            get { return _isActive; }
+        }
+
+        public IGameWindow Window
+        {
+            get { return Platform.Window; }
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public GamePlatform Platform { get; private set; }
 
         public virtual void Dispose()
@@ -54,6 +71,11 @@ namespace GreenBox3D
         void IPlatformController.Shutdown()
         {
             Shutdown();
+        }
+
+        void IPlatformController.SetActive(bool active)
+        {
+            _isActive = active;
         }
 
         public object GetService(Type serviceType)
@@ -90,8 +112,12 @@ namespace GreenBox3D
         {
             Log.Message("GreenBox3D starting");
 
-            Platform = GamePlatform.Create(this);
             Platform.Run();
+        }
+
+        public void SurpressRender()
+        {
+            Platform.SkipFrame();
         }
 
         public void Exit()

@@ -686,7 +686,7 @@ namespace Microsoft.VisualStudio.Project
             {
                 case __VSHPROPID2.VSHPROPID_NoDefaultNestedHierSorting:
                     return true;
-                        // We are doing the sorting ourselves through VSHPROPID_FirstChild and VSHPROPID_NextSibling
+                    // We are doing the sorting ourselves through VSHPROPID_FirstChild and VSHPROPID_NextSibling
                 case __VSHPROPID2.VSHPROPID_BrowseObjectCATID:
                     {
                         // If there is a browse object and it is a NodeProperties, then get it's CATID
@@ -1137,7 +1137,7 @@ namespace Microsoft.VisualStudio.Project
             ErrorHandler.ThrowOnFailure(addItemDialog.AddProjectItemDlg(hierarchyId, ref projectGuid, project, uiFlags,
                                                                         null, null, ref strBrowseLocations,
                                                                         ref strFilter, out iDontShowAgain));
-                /*&fDontShowAgain*/
+            /*&fDontShowAgain*/
 
             return VSConstants.S_OK;
         }

@@ -2952,7 +2952,7 @@ namespace Microsoft.VisualStudio.Project
             MSBuildResult result = MSBuildResult.Failed;
             const bool designTime = true;
             bool requiresUIThread = UIThread.Instance.IsUIThread;
-                // we don't run tasks that require calling the STA thread, so unless we're ON it, we don't need it.
+            // we don't run tasks that require calling the STA thread, so unless we're ON it, we don't need it.
 
             IVsBuildManagerAccessor accessor =
                 Site.GetService(typeof(SVsBuildManagerAccessor)) as IVsBuildManagerAccessor;
@@ -3016,7 +3016,7 @@ namespace Microsoft.VisualStudio.Project
         {
             const bool designTime = false;
             bool requiresUIThread = buildKind == BuildKind.Sync && UIThread.Instance.IsUIThread;
-                // we don't run tasks that require calling the STA thread, so unless we're ON it, we don't need it.
+            // we don't run tasks that require calling the STA thread, so unless we're ON it, we don't need it.
 
             IVsBuildManagerAccessor accessor = (IVsBuildManagerAccessor)Site.GetService(typeof(SVsBuildManagerAccessor));
             if (accessor == null)
@@ -6306,7 +6306,7 @@ namespace Microsoft.VisualStudio.Project
                         }
 
                         releaseUIThread = true;
-                            // assume we need to release this immediately until we get through the whole gauntlet.
+                        // assume we need to release this immediately until we get through the whole gauntlet.
                     }
 
                     if (designTime)

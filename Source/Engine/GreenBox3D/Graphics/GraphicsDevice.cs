@@ -29,6 +29,7 @@ namespace GreenBox3D.Graphics
 
         public abstract PresentationParameters PresentationParameters { get; }
         public abstract Viewport Viewport { get; set; }
+        public abstract bool IsDisposed { get; }
 
         public abstract void Dispose();
 

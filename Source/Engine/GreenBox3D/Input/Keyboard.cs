@@ -18,7 +18,7 @@ namespace GreenBox3D.Input
     {
         private static IKeyboard _keyboard;
 
-        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static void SetKeyboardImplementation(IKeyboard keyboard)
         {
             _keyboard = keyboard;

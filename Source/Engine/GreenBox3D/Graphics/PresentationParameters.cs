@@ -23,7 +23,6 @@ namespace GreenBox3D.Graphics
 
         #region Fields
 
-        private SurfaceFormat _backBufferFormat;
         private int _backBufferHeight;
         private int _backBufferWidth;
         private DepthFormat _depthStencilFormat;
@@ -47,12 +46,6 @@ namespace GreenBox3D.Graphics
         #endregion
 
         #region Public Properties
-
-        public SurfaceFormat BackBufferFormat
-        {
-            get { return _backBufferFormat; }
-            set { _backBufferFormat = value; }
-        }
 
         public int BackBufferHeight
         {
@@ -92,7 +85,6 @@ namespace GreenBox3D.Graphics
 
         public void Clear()
         {
-            _backBufferFormat = SurfaceFormat.Color;
             _backBufferWidth = 1024;
             _backBufferHeight = 768;
             _depthStencilFormat = DepthFormat.None;
@@ -102,7 +94,6 @@ namespace GreenBox3D.Graphics
         public PresentationParameters Clone()
         {
             PresentationParameters clone = new PresentationParameters();
-            clone._backBufferFormat = _backBufferFormat;
             clone._backBufferHeight = _backBufferHeight;
             clone._backBufferWidth = _backBufferWidth;
             clone._disposed = _disposed;

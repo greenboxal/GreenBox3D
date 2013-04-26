@@ -14,19 +14,18 @@ using GreenBox3D;
 using GreenBox3D.Content;
 using GreenBox3D.Graphics;
 using GreenBox3D.Input;
-using OpenTK.Graphics.OpenGL;
 
 namespace TestApp
 {
     public class TestGame : Game
     {
         private static readonly ILogger Log = LogManager.GetLogger(typeof(TestGame));
+        private ContentManager _contentManager;
 
         private GraphicsDevice _graphicsDevice;
-        private IInputManager _inputManager;
-        private ContentManager _contentManager;
-        private IShader _shader;
         private IIndexBuffer _indices;
+        private IInputManager _inputManager;
+        private IShader _shader;
         private IVertexBuffer _vertices;
 
         public TestGame()
@@ -50,33 +49,35 @@ namespace TestApp
 
             _shader = _contentManager.LoadContent<IShader>("Shaders/Simple");
 
-            int[] indices = new[] {
+            int[] indices = new[]
+            {
                 0, 1, 2, 2, 3, 0,
                 3, 2, 6, 6, 7, 3,
                 7, 6, 5, 5, 4, 7,
                 4, 0, 3, 3, 7, 4,
                 0, 1, 5, 5, 4, 0,
-                1, 5, 6, 6, 2, 1 };
+                1, 5, 6, 6, 2, 1
+            };
 
             VertexPositionNormalColor[] positions = new[]
-                                                    {
-                                                        new VertexPositionNormalColor(new Vector3(-1.0f, -1.0f,  1.0f), new Vector3(), new Color(255, 0, 0)), 
-                                                        new VertexPositionNormalColor(new Vector3(1.0f, -1.0f,  1.0f), new Vector3(), new Color(0, 255, 0)),
-                                                        new VertexPositionNormalColor(new Vector3( 1.0f,  1.0f,  1.0f), new Vector3(), new Color(0, 0, 255)),
-                                                        new VertexPositionNormalColor(new Vector3(-1.0f,  1.0f,  1.0f), new Vector3(), new Color(255, 0, 0)), 
-                                                        new VertexPositionNormalColor(new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(), new Color(0, 255, 0)),
-                                                        new VertexPositionNormalColor(new Vector3(1.0f, -1.0f, -1.0f), new Vector3(), new Color(0, 0, 255)),
-                                                        new VertexPositionNormalColor(new Vector3(1.0f,  1.0f, -1.0f), new Vector3(), new Color(0, 255, 0)),
-                                                        new VertexPositionNormalColor(new Vector3(-1.0f,  1.0f, -1.0f), new Vector3(), new Color(0, 0, 255)),
-                                                    };
+            {
+                new VertexPositionNormalColor(new Vector3(-1.0f, -1.0f, 1.0f), new Vector3(), new Color(255, 0, 0)),
+                new VertexPositionNormalColor(new Vector3(1.0f, -1.0f, 1.0f), new Vector3(), new Color(0, 255, 0)),
+                new VertexPositionNormalColor(new Vector3(1.0f, 1.0f, 1.0f), new Vector3(), new Color(0, 0, 255)),
+                new VertexPositionNormalColor(new Vector3(-1.0f, 1.0f, 1.0f), new Vector3(), new Color(255, 0, 0)),
+                new VertexPositionNormalColor(new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(), new Color(0, 255, 0)),
+                new VertexPositionNormalColor(new Vector3(1.0f, -1.0f, -1.0f), new Vector3(), new Color(0, 0, 255)),
+                new VertexPositionNormalColor(new Vector3(1.0f, 1.0f, -1.0f), new Vector3(), new Color(0, 255, 0)),
+                new VertexPositionNormalColor(new Vector3(-1.0f, 1.0f, -1.0f), new Vector3(), new Color(0, 0, 255)),
+            };
 
-            _indices = _graphicsDevice.BufferManager.CreateIndexBuffer(IndexElementSize.ThirtyTwoBits, indices.Length, BufferUsage.StaticDraw);
+            _indices = _graphicsDevice.BufferManager.CreateIndexBuffer(IndexElementSize.ThirtyTwoBits, indices.Length,
+                                                                       BufferUsage.StaticDraw);
             _indices.SetData(indices);
 
-            _vertices = _graphicsDevice.BufferManager.CreateVertexBuffer(typeof(VertexPositionNormalColor), positions.Length, BufferUsage.StaticDraw);
+            _vertices = _graphicsDevice.BufferManager.CreateVertexBuffer(typeof(VertexPositionNormalColor),
+                                                                         positions.Length, BufferUsage.StaticDraw);
             _vertices.SetData(positions);
-
-            GL.Enable(EnableCap.DepthTest);
         }
 
         protected override void Update(GameTime gameTime)
@@ -93,11 +94,14 @@ namespace TestApp
             _shader.Apply();
 
             _shader.Parameters["WorldViewProjection"].SetValueTranspose(
-                Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45), 16 / 9.0f, 1, 5) *
+                Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45),
+                                                     _graphicsDevice.Viewport.AspectRatio, 1, 5) *
                 Matrix4.LookAt(0, 0, 3, 0, 0, 0, 0, 1, 0));
-           // _shader.Parameters["Alpha"].SetValue(1.0f);
+            // _shader.Parameters["Alpha"].SetValue(1.0f);
 
             _graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleStrip, 0, 0, _indices.ElementCount);
+
+            _graphicsDevice.Present();
         }
 
         protected override void OnResize()
@@ -105,7 +109,8 @@ namespace TestApp
             if (_graphicsDevice == null)
                 return;
 
-            _graphicsDevice.Viewport = new Viewport(0, 0, Platform.Window.Size.X, Platform.Window.Size.Y);
+            _graphicsDevice.Viewport = new Viewport(0, 0, _graphicsDevice.PresentationParameters.BackBufferWidth,
+                                                    _graphicsDevice.PresentationParameters.BackBufferHeight);
         }
 
         protected override void Shutdown()

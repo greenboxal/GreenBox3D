@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GreenBox3D.Graphics;
 
 namespace GreenBox3D.Platform
 {
@@ -20,5 +21,7 @@ namespace GreenBox3D.Platform
         void Update(GameTime gameTime);
         void Render(GameTime gameTime);
         void Shutdown();
+
+        void SetActive(bool active);
     }
 }

@@ -20,20 +20,21 @@ namespace GreenBox3D.Platform.Windows.Graphics
     public class WindowsGraphicsDevice : GraphicsDevice
     {
         private static readonly ILogger Log = LogManager.GetLogger(typeof(WindowsGraphicsDevice));
+        internal readonly GraphicsContext MainContext;
 
         private readonly BufferManager _bufferManager;
         private readonly Dictionary<int, GraphicsContext> _contexts;
 
         private readonly GraphicsMode _graphicsMode;
-        internal readonly GraphicsContext MainContext;
         private readonly WindowsGamePlatform _platform;
-        private readonly PresentationParameters _presentationParameters;
         private readonly ShaderManager _shaderManager;
         private readonly TextureManager _textureManager;
         private readonly WindowsGameWindow _window;
         internal Shader ActiveShader;
+        private bool _disposed;
         private IndexBuffer _indices;
         private bool _indicesDirty;
+        private PresentationParameters _presentationParameters;
         private VertexBuffer _vertices;
         private bool _verticesDirty;
 
@@ -50,9 +51,6 @@ namespace GreenBox3D.Platform.Windows.Graphics
             _bufferManager = new GLBufferManager(this);
             _shaderManager = new GLShaderManager(this);
             _textureManager = new GLTextureManager(this);
-
-            if (parameters.BackBufferFormat != SurfaceFormat.Color)
-                throw new NotSupportedException("PresentationParameters's BackBufferFormat must be SurfaceFormat.Color");
 
             GraphicsContext.ShareContexts = true;
 
@@ -80,10 +78,17 @@ namespace GreenBox3D.Platform.Windows.Graphics
             }
 
             MainContext = CreateNewContext(Thread.CurrentThread.ManagedThreadId);
-            MainContext.MakeCurrent(new WinWindowInfo(_window.NativeHandle, null));
+            MainContext.MakeCurrent(new WinWindowInfo(_window.Handle, null));
             MainContext.LoadAll();
 
+            SetViewport(new Viewport(0, 0, _presentationParameters.BackBufferWidth,
+                                     _presentationParameters.BackBufferHeight));
             Log.Message("OpenGL context acquired: {0}", MainContext);
+        }
+
+        public override bool IsDisposed
+        {
+            get { return _disposed; }
         }
 
         public bool VSync
@@ -126,19 +131,15 @@ namespace GreenBox3D.Platform.Windows.Graphics
         public override Viewport Viewport
         {
             get { return _viewport; }
-            set
-            {
-                _viewport = value;
+            set { SetViewport(value); }
+        }
 
-                // TODO: Reimplement after render target reimplementation
-                //if (IsRenderTargetBound)
-                //    GL.Viewport(value.X, value.Y, value.Width, value.Height);
-                //else
-
-                GL.Viewport(value.X, value.Y, value.Width,
-                            value.Height);
-                // GL.DepthRange(value.MinDepth, value.MaxDepth);
-            }
+        private void SetViewport(Viewport viewport)
+        {
+            _viewport = viewport;
+            GL.Viewport(viewport.X, viewport.Y, viewport.Width,
+                        viewport.Height);
+            GL.DepthRange(viewport.MinDepth, viewport.MaxDepth);
         }
 
         protected override bool MakeCurrentInternal()
@@ -159,7 +160,7 @@ namespace GreenBox3D.Platform.Windows.Graphics
             try
             {
                 // We use a hacked version of OpenTK which exposes WinWindowInfo as well IWindowInfo implementation for other platforms
-                context.MakeCurrent(new WinWindowInfo(_window.NativeHandle, null));
+                context.MakeCurrent(new WinWindowInfo(_window.Handle, null));
             }
             catch
             {
@@ -196,21 +197,26 @@ namespace GreenBox3D.Platform.Windows.Graphics
 
         public override void Dispose()
         {
-            MainContext.Dispose();
-
-            lock (_contexts)
+            if (!_disposed)
             {
-                foreach (GraphicsContext context in _contexts.Values)
-                    context.Dispose();
+                MainContext.Dispose();
 
-                _contexts.Clear();
+                lock (_contexts)
+                {
+                    foreach (GraphicsContext context in _contexts.Values)
+                        context.Dispose();
+
+                    _contexts.Clear();
+                }
+
+                _disposed = true;
             }
         }
 
         private GraphicsContext CreateNewContext(int threadId)
         {
             WinWindowInfo window =
-                new WinWindowInfo(_window.NativeHandle, null);
+                new WinWindowInfo(_window.Handle, null);
             GraphicsContext context = new GraphicsContext(_graphicsMode, window, 4, 2, GraphicsContextFlags.Default);
 
             _contexts[threadId] = context;
@@ -253,7 +259,8 @@ namespace GreenBox3D.Platform.Windows.Graphics
             SetRenderingState();
             (_vertices.VertexDeclaration as VertexDeclaration).Bind(IntPtr.Zero);
 
-            GL.DrawElementsBaseVertex(GetBeginMode(primitiveType), numVertices, _indices.DrawElementsType, indexOffsetInBytes,
+            GL.DrawElementsBaseVertex(GetBeginMode(primitiveType), numVertices, _indices.DrawElementsType,
+                                      indexOffsetInBytes,
                                       baseVertex);
         }
 
@@ -321,6 +328,11 @@ namespace GreenBox3D.Platform.Windows.Graphics
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _vertices.BufferID);
                 _verticesDirty = false;
             }
+        }
+
+        public void SetPresentationParameters(PresentationParameters presentationParameters)
+        {
+            _presentationParameters = presentationParameters;
         }
     }
 }

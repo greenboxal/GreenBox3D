@@ -47,7 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Annotations.cs" />
     <Compile Include="ConfigurationProvider.cs" />
     <Compile Include="ConsoleManager.cs" />
     <Compile Include="Content\ContentCachePolicy.cs" />

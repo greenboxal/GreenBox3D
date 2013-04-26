@@ -18,7 +18,7 @@ namespace GreenBox3D.Input
     {
         private static IMouse _mouse;
 
-        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static void SetMouseImplementation(IMouse mouse)
         {
             _mouse = mouse;

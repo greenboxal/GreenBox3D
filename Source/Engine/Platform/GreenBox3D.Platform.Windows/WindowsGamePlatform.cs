@@ -21,7 +21,6 @@ namespace GreenBox3D.Platform.Windows
     public class WindowsGamePlatform : GamePlatform
     {
         private static readonly ILogger Log = LogManager.GetLogger(typeof(WindowsGamePlatform));
-        private bool _doPostDispose;
 
         private WindowsGameWindow _gameWindow;
         private GraphicsDeviceManager _graphicsDeviceManager;
@@ -53,29 +52,27 @@ namespace GreenBox3D.Platform.Windows
         public override void Run()
         {
             Controller.Initialize();
+            WindowResized();
 
             _running = true;
             while (_running)
             {
                 _gameWindow.HandleEvents();
 
+                if (!_running)
+                    return;
+
                 Controller.Update(null);
 
                 if (_skipFrame)
-                {
                     _skipFrame = false;
-                }
-                else
-                {
+                else if (_running)
                     Controller.Render(null);
-                    _graphicsDeviceManager.GraphicsDevice.Present();
-                }
             }
 
             Controller.Shutdown();
 
-            if (_doPostDispose)
-                Dispose();
+            Exit();
         }
 
         public override void InitializeGraphics(PresentationParameters parameters)
@@ -84,6 +81,7 @@ namespace GreenBox3D.Platform.Windows
 
             _gameWindow = new WindowsGameWindow(this, parameters);
             _gameWindow.Create();
+
             _graphicsDeviceManager = new GraphicsDeviceManager(this, parameters, _gameWindow);
 
             Controller.RegisterService(typeof(IGraphicsDeviceManager), _graphicsDeviceManager);
@@ -97,6 +95,7 @@ namespace GreenBox3D.Platform.Windows
                 throw new InvalidOperationException("Graphics subsystem must be initialized before the Input subsystem");
 
             _inputManager = new InputManager(this, _gameWindow);
+
             Mouse.SetMouseImplementation(_gameWindow);
             Keyboard.SetKeyboardImplementation(_gameWindow);
 
@@ -111,27 +110,28 @@ namespace GreenBox3D.Platform.Windows
         public override void Exit()
         {
             _running = false;
+
+            _graphicsDeviceManager.Dispose();
+            _gameWindow.Dispose();
         }
 
         public override void Dispose()
         {
             if (_running)
-            {
-                _doPostDispose = true;
                 Exit();
-                return;
-            }
-
-            if (_gameWindow != null)
-                _gameWindow.Dispose();
         }
 
         public void WindowResized()
         {
-            Controller.OnResize();
-
             if (_graphicsDeviceManager != null && _graphicsDeviceManager.GraphicsDevice != null)
                 _graphicsDeviceManager.Update();
+
+            Controller.OnResize();
+        }
+
+        public void SetActive(bool active)
+        {
+            Controller.SetActive(active);
         }
     }
 }
