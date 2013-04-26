@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,9 +29,17 @@ namespace GreenBox3D.Platform.Windows
         private bool _running;
         private bool _skipFrame;
 
+        private DateTime _startTime;
+        private readonly Stopwatch _updateTimer, _renderTimer;
+        private double _nextUpdate, _updateTime, _nextRender, _renderTime;
+        private double _updatePeriod, _renderPeriod;
+        private double _targetUpdatePeriod, _targetRenderPeriod;
+
         public WindowsGamePlatform(IPlatformController controller)
             : base(controller)
         {
+            _updateTimer = new Stopwatch();
+            _renderTimer = new Stopwatch();
         }
 
         public override bool Running
@@ -49,30 +58,256 @@ namespace GreenBox3D.Platform.Windows
             set { ((WindowsGraphicsDevice)_graphicsDeviceManager.GraphicsDevice).VSync = value; }
         }
 
+        public override double RenderFrequency
+        {
+            get
+            {
+                if (_renderPeriod == 0.0)
+                    return 1.0;
+
+                return 1.0 / _renderPeriod;
+            }
+        }
+
+        public override double RenderPeriod
+        {
+            get { return _renderPeriod; }
+        }
+
+        public override double RenderTime
+        {
+            get { return _renderTime; }
+        }
+
+        public override double TargetRenderFrequency
+        {
+            get
+            {
+                if (TargetRenderPeriod == 0.0)
+                    return 0.0;
+
+                return 1.0 / TargetRenderPeriod;
+            }
+            set
+            {
+                if (value < 1.0)
+                {
+                    TargetRenderPeriod = 0.0;
+                }
+                else if (value <= 200.0)
+                {
+                    TargetRenderPeriod = 1.0 / value;
+                }
+            }
+        }
+
+        public override double TargetRenderPeriod
+        {
+            get
+            {
+                return _targetRenderPeriod;
+            }
+            set
+            {
+                if (value <= 0.005)
+                {
+                    _targetRenderPeriod = 0.0;
+                }
+                else if (value <= 1.0)
+                {
+                    _targetRenderPeriod = value;
+                }
+            }
+        }
+
+        public override double TargetUpdateFrequency
+        {
+            get
+            {
+                if (TargetUpdatePeriod == 0.0)
+                    return 0.0;
+
+                return 1.0 / TargetUpdatePeriod;
+            }
+            set
+            {
+                if (value < 1.0)
+                {
+                    TargetUpdatePeriod = 0.0;
+                }
+                else if (value <= 200.0)
+                {
+                    TargetUpdatePeriod = 1.0 / value;
+                }
+            }
+        }
+
+        public override double TargetUpdatePeriod
+        {
+            get
+            {
+                return _targetUpdatePeriod;
+            }
+            set
+            {
+                if (value <= 0.005)
+                {
+                    _targetUpdatePeriod = 0.0;
+                }
+                else if (value <= 1.0)
+                {
+                    _targetUpdatePeriod = value;
+                }
+            }
+        }
+
+        public override double UpdateFrequency
+        {
+            get
+            {
+                if (_updatePeriod == 0.0)
+                    return 1.0;
+
+                return 1.0 / _updatePeriod;
+            }
+        }
+
+        public override double UpdatePeriod
+        {
+            get
+            {
+                return _updatePeriod;
+            }
+        }
+
+        public override double UpdateTime
+        {
+            get
+            {
+                return _updateTime;
+            }
+        }
+
         public override void Run()
         {
             Controller.Initialize();
             WindowResized();
 
+            _startTime = DateTime.Now;
+            _updateTimer.Start();
+            _renderTimer.Start();
             _running = true;
+
             while (_running)
             {
+                DispatchUpdate();
+
+                if (!_running)
+                    return;
+
+                DispatchRender();
+            }
+
+            _updateTimer.Stop();
+            _renderTimer.Stop();
+
+            Controller.Shutdown();
+
+            Exit();
+        }
+
+        private void DispatchUpdate()
+        {
+            int numUpdates = 0;
+            double totalUpdateTime = 0;
+            double time = _updateTimer.Elapsed.TotalSeconds;
+
+            if (time <= 0)
+            {
+                _updateTimer.Reset();
+                _updateTimer.Start();
+                return;
+            }
+
+            if (time > 1.0)
+                time = 1.0;
+
+            while (_nextUpdate - time <= 0 && time > 0)
+            {
+                _nextUpdate -= time;
+
                 _gameWindow.HandleEvents();
 
                 if (!_running)
                     return;
 
-                Controller.Update(null);
+                Controller.Update(new GameTime(DateTime.Now - _startTime, TimeSpan.FromSeconds(time)));
 
-                if (_skipFrame)
-                    _skipFrame = false;
-                else if (_running)
-                    Controller.Render(null);
+                if (!_running)
+                    return;
+
+                time = _updateTime = Math.Max(_updateTimer.Elapsed.TotalSeconds, 0) - time;
+
+                _updateTimer.Reset();
+                _updateTimer.Start();
+
+                // Don't schedule a new update more than 1 second in the future.
+                // Sometimes the hardware cannot keep up with updates
+                // (e.g. when the update rate is too high, or the UpdateFrame processing
+                // is too costly). This cap ensures  we can catch up in a reasonable time
+                // once the load becomes lighter.
+                _nextUpdate += TargetUpdatePeriod;
+                _nextUpdate = Math.Max(_nextUpdate, -1.0);
+
+                totalUpdateTime += _updateTime;
+
+                // Allow up to 10 consecutive UpdateFrame events to prevent the
+                // application from "hanging" when the hardware cannot keep up
+                // with the requested update rate.
+                if (++numUpdates >= 10 || TargetUpdateFrequency == 0.0)
+                    break;
             }
 
-            Controller.Shutdown();
+            if (numUpdates > 0)
+                _updatePeriod = totalUpdateTime / (double)numUpdates;
+        }
 
-            Exit();
+        private void DispatchRender()
+        {
+            double time = _renderTimer.Elapsed.TotalSeconds;
+
+            if (time <= 0)
+            {
+                _renderTimer.Reset();
+                _renderTimer.Start();
+                return;
+            }
+
+            if (time > 1.0)
+                time = 1.0;
+
+            double timeLeft = _nextRender - time;
+
+            if (timeLeft <= 0.0 && time > 0)
+            {
+                _nextRender = timeLeft + TargetRenderPeriod;
+
+                if (_nextRender < -1.0)
+                    _nextRender = -1.0;
+
+                _renderTimer.Reset();
+                _renderTimer.Start();
+
+                if (time > 0 && !_skipFrame)
+                {
+                    Controller.Render(new GameTime(DateTime.Now - _startTime, TimeSpan.FromSeconds(time), RenderTime > 2.0 * TargetRenderPeriod));
+                    _renderTime = _renderTimer.Elapsed.TotalSeconds;
+                }
+                else if (_skipFrame)
+                {
+                    _skipFrame = false;
+                }
+            }
         }
 
         public override void InitializeGraphics(PresentationParameters parameters)

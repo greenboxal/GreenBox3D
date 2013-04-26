@@ -24,6 +24,17 @@ namespace GreenBox3D.Platform
 
         protected IPlatformController Controller { get; private set; }
 
+        public abstract double RenderFrequency { get; }
+        public abstract double RenderPeriod { get; }
+        public abstract double RenderTime { get; }
+        public abstract double TargetRenderFrequency { get; set; }
+        public abstract double TargetRenderPeriod { get; set; }
+        public abstract double TargetUpdateFrequency { get; set; }
+        public abstract double TargetUpdatePeriod { get; set; }
+        public abstract double UpdateFrequency { get; }
+        public abstract double UpdatePeriod { get; }
+        public abstract double UpdateTime { get; }
+
         public abstract bool Running { get; }
         public abstract bool VSync { get; set; }
         public abstract IGameWindow Window { get; }
