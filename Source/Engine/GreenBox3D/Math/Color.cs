@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace GreenBox3D
 {
     [Serializable]
-    public struct Color : IEquatable<Color>
+    public struct Color : IEquatable<Color>, IPackedVector
     {
         #region Fields
 
@@ -925,11 +925,16 @@ namespace GreenBox3D
             return new Vector3(R / 255.0f, G / 255.0f, B / 255.0f);
         }
 
+        #endregion
+
         public Vector4 ToVector4()
         {
             return new Vector4(R / 255.0f, G / 255.0f, B / 255.0f, A / 255.0f);
         }
 
-        #endregion
+        public void LoadFromVector4(Vector4 value)
+        {
+            this = new Color(value);
+        }
     }
 }

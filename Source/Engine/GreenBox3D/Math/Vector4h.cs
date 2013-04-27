@@ -430,5 +430,13 @@ namespace GreenBox3D
         }
 
         #endregion BitConverter
+
+        public void LoadFromVector4(Vector4 value)
+        {
+            X = new Half(value.X);
+            Y = new Half(value.Y);
+            Z = new Half(value.Z);
+            W = new Half(value.W);
+        }
     }
 }

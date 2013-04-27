@@ -25,7 +25,7 @@ namespace GreenBox3D
     ///     predictable results.
     /// </remarks>
     [Serializable, StructLayout(LayoutKind.Sequential)]
-    public struct Half : ISerializable, IComparable<Half>, IFormattable, IEquatable<Half>
+    public struct Half : ISerializable, IComparable<Half>, IFormattable, IEquatable<Half>, IPackedVector
     {
         #region Internal Field
 
@@ -575,5 +575,15 @@ namespace GreenBox3D
         }
 
         #endregion BitConverter
+
+        public Vector4 ToVector4()
+        {
+            return new Vector4(ToSingle(), 0.0f, 0.0f, 1.0f);
+        }
+
+        public void LoadFromVector4(Vector4 value)
+        {
+            this = new Half(value.X);
+        }
     }
 }

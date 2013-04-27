@@ -47,7 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigurationProvider.cs" />
     <Compile Include="ConsoleManager.cs" />
     <Compile Include="Content\ContentCachePolicy.cs" />
     <Compile Include="Content\ContentHeader.cs" />
@@ -131,6 +130,7 @@
     <Compile Include="Math\Color.cs" />
     <Compile Include="Math\Functions.cs" />
     <Compile Include="Math\Half.cs" />
+    <Compile Include="Math\IPackedVector.cs" />
     <Compile Include="Math\MathHelper.cs" />
     <Compile Include="Math\Matrix3d.cs" />
     <Compile Include="Math\Matrix4.cs" />
@@ -149,6 +149,7 @@
     <Compile Include="Math\Vector4.cs" />
     <Compile Include="Math\Vector4d.cs" />
     <Compile Include="Math\Vector4h.cs" />
+    <Compile Include="Math\VectorUtils.cs" />
     <Compile Include="Platform\GamePlatform.cs" />
     <Compile Include="Platform\GamePlatformAttribute.cs" />
     <Compile Include="Platform\IGameWindow.cs" />

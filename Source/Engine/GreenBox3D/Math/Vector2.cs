@@ -16,7 +16,7 @@ namespace GreenBox3D
     /// </remarks>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public struct Vector2 : IEquatable<Vector2>
+    public struct Vector2 : IEquatable<Vector2>, IPackedVector
     {
         #region Fields
 
@@ -1062,5 +1062,16 @@ namespace GreenBox3D
         }
 
         #endregion
+
+        public Vector4 ToVector4()
+        {
+            return new Vector4(X, Y, 0.0f, 1.0f);
+        }
+
+        public void LoadFromVector4(Vector4 value)
+        {
+            X = value.X;
+            Y = value.Y;
+        }
     }
 }

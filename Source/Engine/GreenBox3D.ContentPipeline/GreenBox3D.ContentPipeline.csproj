@@ -59,7 +59,10 @@
     <Compile Include="ContentProcessor.cs" />
     <Compile Include="ContentProcessorContext.cs" />
     <Compile Include="ContentTypeWriter.cs" />
+    <Compile Include="Graphics\BitmapContent.cs" />
     <Compile Include="Graphics\CompiledShaderUtils.cs" />
+    <Compile Include="Graphics\ImageHelper.cs" />
+    <Compile Include="Graphics\PixelBitmapContent.cs" />
     <Compile Include="Graphics\Shading\Ast\CompilationUnit.cs" />
     <Compile Include="Graphics\Shading\Ast\InputVariable.cs" />
     <Compile Include="Graphics\Shading\Ast\InputVariableCollection.cs" />
@@ -69,15 +72,21 @@
     <Compile Include="Graphics\Shading\ShaderCompiler.cs" />
     <Compile Include="Graphics\Shading\Token.cs" />
     <Compile Include="Graphics\Shading\TokenType.cs" />
+    <Compile Include="Graphics\Texture2DContent.cs" />
+    <Compile Include="Graphics\TextureContent.cs" />
+    <Compile Include="Graphics\TextureFace.cs" />
+    <Compile Include="Graphics\TextureFaceCollection.cs" />
     <Compile Include="IContentImporter.cs" />
     <Compile Include="IContentProcessor.cs" />
     <Compile Include="IContentTypeWriter.cs" />
     <Compile Include="Importers\ShaderImporter.cs" />
     <Compile Include="Importers\TextureImporter.cs" />
     <Compile Include="Processors\ShaderProcessor.cs" />
+    <Compile Include="Processors\TextureProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Writers\ContentWriter.cs" />
     <Compile Include="Writers\ShaderTypeWriter.cs" />
+    <Compile Include="Writers\TextureTypeWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GreenBox3D\GreenBox3D.csproj">

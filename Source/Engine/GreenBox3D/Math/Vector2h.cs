@@ -14,7 +14,7 @@ namespace GreenBox3D
 {
     /// <summary>2-component Vector of the Half type. Occupies 4 Byte total.</summary>
     [Serializable, StructLayout(LayoutKind.Sequential)]
-    public struct Vector2h : ISerializable, IEquatable<Vector2h>
+    public struct Vector2h : ISerializable, IEquatable<Vector2h>, IPackedVector
     {
         #region Fields
 
@@ -330,5 +330,16 @@ namespace GreenBox3D
         }
 
         #endregion BitConverter
+
+        public Vector4 ToVector4()
+        {
+            return new Vector4(X, Y, 0.0f, 1.0f);
+        }
+
+        public void LoadFromVector4(Vector4 value)
+        {
+            X = new Half(value.X);
+            Y = new Half(value.Y);
+        }
     }
 }
