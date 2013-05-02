@@ -57,6 +57,8 @@ namespace GreenBox3D.Content
 
             object result = reader.Load(manager, stream);
 
+            stream.Close();
+
             if (result != null)
                 manager.CacheObject(filename, result);
 
@@ -64,6 +66,16 @@ namespace GreenBox3D.Content
         }
 
         #endregion
+
+        public static object StartLoadRawObject(ContentManager manager, Type type, Stream stream)
+        {
+            ReaderDescriptor descriptor;
+
+            if (!_readers.TryGetValue(type, out descriptor))
+                return null;
+
+            return ((IContentTypeReader)Activator.CreateInstance(descriptor.Type)).Load(manager, stream);
+        }
 
         private class ReaderDescriptor
         {

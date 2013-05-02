@@ -9,16 +9,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using GreenBox3D.ContentPipeline.CompilerServices;
 
 namespace GreenBox3D.ContentPipeline.Writers
 {
     public class ContentWriter : BinaryWriter
     {
+        private readonly BuildCoordinator _coordinator;
+
         #region Constructors and Destructors
 
-        internal ContentWriter(Stream stream, Encoding encoding)
+        internal ContentWriter(BuildCoordinator coordinator, Stream stream, Encoding encoding)
             : base(stream, encoding, true)
         {
+            _coordinator = coordinator;
         }
 
         #endregion
@@ -94,5 +98,11 @@ namespace GreenBox3D.ContentPipeline.Writers
         }
 
         #endregion
+
+        public void WriteRawObject<T>(T value)
+        {
+            Flush();
+            _coordinator.StartWriteRawObject(typeof(T), BaseStream, value);
+        }
     }
 }

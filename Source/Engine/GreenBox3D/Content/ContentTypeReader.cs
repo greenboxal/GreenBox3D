@@ -42,14 +42,14 @@ namespace GreenBox3D.Content
                 encoding = Encoding.GetEncoding(reader.ReadInt32());
 
             uint hash = reader.ReadUInt32();
+            long len = reader.ReadInt64();
             reader.Close();
 
             if (!CheckHeader(new ContentHeader(magic, version, encoding)))
                 return null;
 
-            byte[] data = new byte[stream.Length - stream.Position];
+            byte[] data = new byte[len];
             stream.Read(data, 0, data.Length);
-            stream.Close();
 
             using (Stream ms = new MemoryStream(data))
             {
@@ -70,7 +70,7 @@ namespace GreenBox3D.Content
                 if ((flags & 2) == 2)
                     cr = new DeflateStream(ms, CompressionMode.Decompress);
 
-                return Load(manager, new ContentReader(cr, encoding));
+                return Load(manager, new ContentReader(manager, cr, encoding));
             }
         }
 

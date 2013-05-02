@@ -20,12 +20,14 @@ namespace TestApp
     public class TestGame : Game
     {
         private static readonly ILogger Log = LogManager.GetLogger(typeof(TestGame));
+        private Font _arial;
         private ContentManager _contentManager;
 
         private GraphicsDevice _graphicsDevice;
         private IIndexBuffer _indices;
         private IInputManager _inputManager;
         private IShader _shader;
+        private ITexture2D _tex;
         private IVertexBuffer _vertices;
 
         public TestGame()
@@ -48,6 +50,8 @@ namespace TestApp
             _contentManager = new ContentManager(_graphicsDevice);
 
             _shader = _contentManager.LoadContent<IShader>("Shaders/Simple");
+            _tex = _contentManager.LoadContent<ITexture2D>("Image1");
+            _arial = _contentManager.LoadContent<Font>("Fonts/Arial");
 
             int[] indices = new[]
             {

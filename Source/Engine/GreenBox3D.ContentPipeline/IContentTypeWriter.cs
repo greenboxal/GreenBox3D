@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GreenBox3D.ContentPipeline.CompilerServices;
+using GreenBox3D.ContentPipeline.Writers;
 
 namespace GreenBox3D.ContentPipeline
 {
@@ -19,7 +20,7 @@ namespace GreenBox3D.ContentPipeline
     {
         #region Public Methods and Operators
 
-        void Write(Stream stream, object input);
+        void Write(BuildCoordinator coordinator, Stream stream, object input);
 
         #endregion
     }

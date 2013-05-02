@@ -128,6 +128,7 @@
     <Compile Include="Math\BezierCurveQuadric.cs" />
     <Compile Include="Math\Box2.cs" />
     <Compile Include="Math\Color.cs" />
+    <Compile Include="Math\ColorTypeConverter.cs" />
     <Compile Include="Math\Functions.cs" />
     <Compile Include="Math\Half.cs" />
     <Compile Include="Math\IPackedVector.cs" />

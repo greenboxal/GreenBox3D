@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -15,11 +16,12 @@ using System.Threading.Tasks;
 
 namespace GreenBox3D.ContentPipeline.CompilerServices
 {
-    // FIXME: Deleted files will stay stuck in the file until a Rebuild is performed
+    // FIXME: Perform or make possible a Intermediate Clean
     public class BuildCoordinator
     {
-        private readonly Dictionary<string, string> _extension2importer;
+        private readonly Dictionary<string, string> _extension2Importer;
         private readonly Dictionary<string, ImporterDescriptor> _importers;
+        private readonly Dictionary<Type, WriterDescriptor> _input2writer;
         private readonly ILoggerHelper _logger;
         private readonly Dictionary<string, ProcessorDescriptor> _processors;
 
@@ -33,10 +35,11 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
             _settings = settings;
             _logger = logger;
 
-            _extension2importer = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            _extension2Importer = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
             _importers = new Dictionary<string, ImporterDescriptor>(StringComparer.InvariantCultureIgnoreCase);
             _processors = new Dictionary<string, ProcessorDescriptor>(StringComparer.InvariantCultureIgnoreCase);
             _writers = new Dictionary<string, WriterDescriptor>(StringComparer.InvariantCultureIgnoreCase);
+            _input2writer = new Dictionary<Type, WriterDescriptor>();
         }
 
         public BuildCoordinatorSettings Settings
@@ -65,8 +68,8 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
                     foreach (string ext in attribute.Extensions)
                     {
-                        if (!_extension2importer.ContainsKey(ext))
-                            _extension2importer[ext] = type.Name;
+                        if (!_extension2Importer.ContainsKey(ext))
+                            _extension2Importer[ext] = type.Name;
                     }
                 }
                 else if (Attribute.IsDefined(type, typeof(ContentProcessorAttribute)))
@@ -82,12 +85,14 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
                 else if (Attribute.IsDefined(type, typeof(ContentTypeWriterAttribute)))
                 {
                     ContentTypeWriterAttribute attribute = type.GetCustomAttribute<ContentTypeWriterAttribute>();
-
-                    _writers.Add(type.Name, new WriterDescriptor
+                    WriterDescriptor descriptor = new WriterDescriptor
                     {
                         Type = type,
                         Extension = attribute.Extension
-                    });
+                    };
+
+                    _writers.Add(type.Name, descriptor);
+                    _input2writer.Add(type.BaseType.GenericTypeArguments[0], descriptor);
                 }
             }
         }
@@ -132,7 +137,7 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
                 _logger.Log(MessageLevel.None, null, null, 0, 0, 0, 0, "Builiding {0}...", partialName);
 
                 if (importerName == null)
-                    _extension2importer.TryGetValue(extension, out importerName);
+                    _extension2Importer.TryGetValue(extension, out importerName);
 
                 if (importerName == null)
                 {
@@ -171,7 +176,7 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
 
                 WriterDescriptor writer = GetWriter(processor.Writer);
 
-                if (processor == null)
+                if (writer == null)
                 {
                     _logger.Log(MessageLevel.Error, "GB0005", fullPath, 0, 0, 0, 0, "No such Content Type Writer: {0}",
                                 processorName);
@@ -194,7 +199,7 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
                                                                                              .GetValue<BuildParameters>(
                                                                                                  "ProcessorParameters") ??
                                                                                          new BuildParameters(),
-                                                                                         outputFilename));
+                                                                                         outputFilename, partialName));
 
                 if (temporary == null)
                     return false;
@@ -213,7 +218,7 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
                     return false;
                 }
 
-                writer.CachedInstance.Write(stream, temporary);
+                writer.CachedInstance.Write(this, stream, temporary);
                 stream.Close();
 
                 entry.LastBuilt = true;
@@ -295,6 +300,19 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
             return descriptor;
         }
 
+        private WriterDescriptor GetWriterFromInput(Type type)
+        {
+            WriterDescriptor descriptor;
+
+            if (!_input2writer.TryGetValue(type, out descriptor))
+                return null;
+
+            if (descriptor.CachedInstance == null)
+                descriptor.CachedInstance = (IContentTypeWriter)Activator.CreateInstance(descriptor.Type);
+
+            return descriptor;
+        }
+
         private bool CanBuild(string partialName)
         {
             BuildCacheEntry entry = _cache.Query(partialName);
@@ -361,6 +379,82 @@ namespace GreenBox3D.ContentPipeline.CompilerServices
                     files.Add(file);
 
             return files.ToArray();
+        }
+
+        public object BuildAndLoadAsset(string path, string processorName, BuildParameters parameters,
+                                        string importerName)
+        {
+            string extension = Path.GetExtension(path);
+            BuildCacheEntry entry = new BuildCacheEntry(path);
+
+            if (string.IsNullOrEmpty(importerName))
+                _extension2Importer.TryGetValue(extension, out importerName);
+
+            if (importerName == null)
+            {
+                _logger.Log(MessageLevel.Error, "GB0001", path, 0, 0, 0, 0,
+                            "No default Content Importer defined for {0} files.", extension);
+                return false;
+            }
+
+            ImporterDescriptor importer = GetImporter(importerName);
+
+            if (importer == null)
+            {
+                _logger.Log(MessageLevel.Error, "GB0002", path, 0, 0, 0, 0, "No such Content Importer: {0}",
+                            importerName);
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(processorName))
+                processorName = importer.DefaultProcessor;
+
+            if (processorName == null)
+            {
+                _logger.Log(MessageLevel.Error, "GB0003", path, 0, 0, 0, 0,
+                            "No default processor defined for Content Importer {0}.", importer);
+                return false;
+            }
+
+            ProcessorDescriptor processor = GetProcessor(processorName);
+
+            if (processor == null)
+            {
+                _logger.Log(MessageLevel.Error, "GB0004", path, 0, 0, 0, 0, "No such Content Processor: {0}",
+                            processorName);
+                return false;
+            }
+
+            object temporary = importer.CachedInstance.Import(path, new ContentImporterContext(this, entry));
+
+            if (temporary == null)
+                return false;
+
+            return processor.CachedInstance.Process(temporary,
+                                                    new ContentProcessorContext(this, entry,
+                                                                                parameters
+                                                                                    .GetValue<BuildParameters>(
+                                                                                        "ProcessorParameters") ??
+                                                                                new BuildParameters(),
+                                                                                null, path));
+        }
+
+        public string ResolveRelativePath(string path)
+        {
+            if (Path.IsPathRooted(path))
+                path = new Uri(_settings.BasePath).MakeRelativeUri(new Uri(path)).ToString();
+
+            return path.Replace('/', Path.DirectorySeparatorChar);
+        }
+
+        public void StartWriteRawObject(Type type, Stream stream, object value)
+        {
+            WriterDescriptor writer = GetWriterFromInput(type);
+
+            if (writer == null)
+                throw new NotSupportedException("There is no writer associated with this " + type);
+
+            writer.CachedInstance.Write(this, stream, value);
         }
 
         private class ImporterDescriptor

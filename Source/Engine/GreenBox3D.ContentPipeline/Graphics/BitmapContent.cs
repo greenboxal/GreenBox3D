@@ -33,14 +33,16 @@ namespace GreenBox3D.ContentPipeline.Graphics
             ValidateCopyArguments(sourceBitmap, sourceRegion, destinationBitmap, destinationRegion);
 
             // Try a direct copy
-            if (sourceBitmap.TryCopyTo(destinationBitmap, sourceRegion, destinationRegion) || destinationBitmap.TryCopyFrom(sourceBitmap, sourceRegion, destinationRegion))
+            if (sourceBitmap.TryCopyTo(destinationBitmap, sourceRegion, destinationRegion) ||
+                destinationBitmap.TryCopyFrom(sourceBitmap, sourceRegion, destinationRegion))
                 return;
 
             // Try two step copy: src -> PixelBitmap, PixelBitmap -> dst
             copy1 = new PixelBitmapContent<Vector4>(destinationRegion.Width, destinationRegion.Height);
             rect1 = new Rectangle(0, 0, copy1.Width, copy1.Height);
 
-            if (sourceBitmap.TryCopyTo(copy1, sourceRegion, rect1) && destinationBitmap.TryCopyFrom(copy1, rect1, destinationRegion))
+            if (sourceBitmap.TryCopyTo(copy1, sourceRegion, rect1) &&
+                destinationBitmap.TryCopyFrom(copy1, rect1, destinationRegion))
                 return;
 
             copy1 = new PixelBitmapContent<Vector4>(sourceBitmap.Width, sourceBitmap.Height);
@@ -50,7 +52,9 @@ namespace GreenBox3D.ContentPipeline.Graphics
             rect2 = new Rectangle(0, 0, destinationBitmap.Width, destinationBitmap.Height);
 
             // Try four step copy: src -> PixelBitmap1, dst -> PixelBitmap2, PixelBitmap1 -> PixelBitmap2, PixelBitmap2 -> dst
-            if (!sourceBitmap.TryCopyTo(copy1, rect1, rect1) || !destinationBitmap.TryCopyTo(copy2, rect2, rect2) || (!copy2.TryCopyFrom(copy1, sourceRegion, destinationRegion) || !destinationBitmap.TryCopyFrom(copy2, rect2, rect2)))
+            if (!sourceBitmap.TryCopyTo(copy1, rect1, rect1) || !destinationBitmap.TryCopyTo(copy2, rect2, rect2) ||
+                (!copy2.TryCopyFrom(copy1, sourceRegion, destinationRegion) ||
+                 !destinationBitmap.TryCopyFrom(copy2, rect2, rect2)))
                 throw new NotSupportedException();
         }
 
@@ -60,7 +64,8 @@ namespace GreenBox3D.ContentPipeline.Graphics
                  new Rectangle(0, 0, destinationBitmap.Width, destinationBitmap.Height));
         }
 
-        protected static void ValidateCopyArguments(BitmapContent sourceBitmap, Rectangle sourceRegion, BitmapContent destinationBitmap, Rectangle destinationRegion)
+        protected static void ValidateCopyArguments(BitmapContent sourceBitmap, Rectangle sourceRegion,
+                                                    BitmapContent destinationBitmap, Rectangle destinationRegion)
         {
             if (sourceBitmap == null)
                 throw new ArgumentNullException("sourceBitmap");
@@ -68,10 +73,14 @@ namespace GreenBox3D.ContentPipeline.Graphics
             if (destinationBitmap == null)
                 throw new ArgumentNullException("destinationBitmap");
 
-            if (sourceRegion.Left < 0 || sourceRegion.Top < 0 || (sourceRegion.Width < 0 || sourceRegion.Height < 0) || (sourceRegion.Right > sourceBitmap.Width || sourceRegion.Bottom > sourceBitmap.Height))
+            if (sourceRegion.Left < 0 || sourceRegion.Top < 0 || (sourceRegion.Width < 0 || sourceRegion.Height < 0) ||
+                (sourceRegion.Right > sourceBitmap.Width || sourceRegion.Bottom > sourceBitmap.Height))
                 throw new ArgumentOutOfRangeException("sourceRegion");
 
-            if (destinationRegion.Left < 0 || destinationRegion.Top < 0 || (destinationRegion.Width < 0 || destinationRegion.Height < 0) || (destinationRegion.Right > destinationBitmap.Width || destinationRegion.Bottom > destinationBitmap.Height))
+            if (destinationRegion.Left < 0 || destinationRegion.Top < 0 ||
+                (destinationRegion.Width < 0 || destinationRegion.Height < 0) ||
+                (destinationRegion.Right > destinationBitmap.Width ||
+                 destinationRegion.Bottom > destinationBitmap.Height))
                 throw new ArgumentOutOfRangeException("destinationRegion");
         }
 
@@ -89,7 +98,7 @@ namespace GreenBox3D.ContentPipeline.Graphics
 
             g.DrawImage(bitmap, new System.Drawing.Rectangle(0, 0, dest.Width, dest.Height), 0, 0, bitmap.Width,
                         bitmap.Height, GraphicsUnit.Pixel);
-                
+
             try
             {
                 Copy(ImageHelper.BitmapContentFromBitmap(dest), new Rectangle(0, 0, dest.Width, dest.Height),

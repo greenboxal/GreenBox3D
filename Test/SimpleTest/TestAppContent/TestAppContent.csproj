@@ -37,6 +37,7 @@
     <Compile Include="Shaders\Simple.shader" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fonts\Arial.bmfont" />
     <None Include="Shaders\Simple\Simple.frag" />
     <None Include="Shaders\Simple\Simple.vert" />
   </ItemGroup>
@@ -45,9 +46,16 @@
       <Project>{3bd45e60-d6e2-41af-9f7b-9033f702d1f9}</Project>
       <Name>GreenBox3D.ContentPipeline</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Source\Engine\GreenBox3D.Framework.ContentPipeline\GreenBox3D.Framework.ContentPipeline.csproj">
+      <Project>{08715376-0225-41bc-85d3-4df7268559c7}</Project>
+      <Name>GreenBox3D.Framework.ContentPipeline</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Image1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Fonts\Arial_0.png" />
   </ItemGroup>
   <Import Project="..\..\..\Targets\GreenBox3D.ContentPipeline.targets" />
 </Project>

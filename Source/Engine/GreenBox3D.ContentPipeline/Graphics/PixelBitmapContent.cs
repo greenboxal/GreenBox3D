@@ -15,7 +15,20 @@ namespace GreenBox3D.ContentPipeline.Graphics
         private static Converter<Vector4, T> _packer;
         private static Converter<T, Vector4> _unpacker;
 
-        private T[][] _pixelData;
+        private readonly T[][] _pixelData;
+
+        public PixelBitmapContent(int width, int height)
+        {
+            StaticInit();
+
+            Width = width;
+            Height = height;
+
+            _pixelData = new T[height][];
+
+            for (int i = 0; i < height; i++)
+                _pixelData[i] = new T[width];
+        }
 
         private static void StaticInit()
         {
@@ -31,19 +44,6 @@ namespace GreenBox3D.ContentPipeline.Graphics
             {
                 throw new InvalidOperationException("This type can't be a Bitmap");
             }
-        }
-
-        public PixelBitmapContent(int width, int height)
-        {
-            StaticInit();
-
-            Width = width;
-            Height = height;
-
-            _pixelData = new T[height][];
-
-            for (int i = 0; i < height; i++)
-                _pixelData[i] = new T[width];
         }
 
         public T[] GetRow(int y)
@@ -79,7 +79,7 @@ namespace GreenBox3D.ContentPipeline.Graphics
         public override void SetPixelData(byte[] sourceData)
         {
             int stride = Marshal.SizeOf(typeof(T)) * Width;
-            
+
             if (sourceData.Length != stride * Height)
                 throw new ArgumentException("Source array is too small", "sourceData");
 
@@ -117,12 +117,13 @@ namespace GreenBox3D.ContentPipeline.Graphics
             return VectorUtils.TryGetSurfaceFormat(typeof(T), out format);
         }
 
-        protected override bool TryCopyTo(BitmapContent destinationBitmap, Rectangle sourceRegion, Rectangle destinationRegion)
+        protected override bool TryCopyTo(BitmapContent destinationBitmap, Rectangle sourceRegion,
+                                          Rectangle destinationRegion)
         {
             ValidateCopyArguments(this, sourceRegion, destinationBitmap, destinationRegion);
 
             if (sourceRegion.Width != destinationRegion.Width || sourceRegion.Height != destinationRegion.Height)
-               return ResizeCopy(this, sourceRegion, destinationBitmap, destinationRegion);
+                return ResizeCopy(this, sourceRegion, destinationBitmap, destinationRegion);
 
             Point sourceLocation = new Point(sourceRegion.X, sourceRegion.Y);
             PixelBitmapContent<T> destinationBitmap1 = destinationBitmap as PixelBitmapContent<T>;
@@ -145,7 +146,8 @@ namespace GreenBox3D.ContentPipeline.Graphics
             }
         }
 
-        protected override bool TryCopyFrom(BitmapContent sourceBitmap, Rectangle sourceRegion, Rectangle destinationRegion)
+        protected override bool TryCopyFrom(BitmapContent sourceBitmap, Rectangle sourceRegion,
+                                            Rectangle destinationRegion)
         {
             ValidateCopyArguments(sourceBitmap, sourceRegion, this, destinationRegion);
 
@@ -173,7 +175,8 @@ namespace GreenBox3D.ContentPipeline.Graphics
             }
         }
 
-        private static void CopySameType(PixelBitmapContent<T> sourceBitmap, Point sourceLocation, PixelBitmapContent<T> destinationBitmap, Rectangle destinationRegion)
+        private static void CopySameType(PixelBitmapContent<T> sourceBitmap, Point sourceLocation,
+                                         PixelBitmapContent<T> destinationBitmap, Rectangle destinationRegion)
         {
             int num1;
             int num2;
@@ -204,7 +207,8 @@ namespace GreenBox3D.ContentPipeline.Graphics
             }
         }
 
-        private void CopyFromVector4(PixelBitmapContent<Vector4> sourceBitmap, Point sourceLocation, Rectangle destinationRegion)
+        private void CopyFromVector4(PixelBitmapContent<Vector4> sourceBitmap, Point sourceLocation,
+                                     Rectangle destinationRegion)
         {
             for (int index1 = 0; index1 < destinationRegion.Height; ++index1)
             {
@@ -216,7 +220,8 @@ namespace GreenBox3D.ContentPipeline.Graphics
             }
         }
 
-        private void CopyToVector4(PixelBitmapContent<Vector4> destinationBitmap, Point sourceLocation, Rectangle destinationRegion)
+        private void CopyToVector4(PixelBitmapContent<Vector4> destinationBitmap, Point sourceLocation,
+                                   Rectangle destinationRegion)
         {
             for (int index1 = 0; index1 < destinationRegion.Height; ++index1)
             {

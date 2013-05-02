@@ -16,11 +16,14 @@ namespace GreenBox3D.Content
 {
     public class ContentReader : BinaryReader
     {
+        private readonly ContentManager _manager;
+
         #region Constructors and Destructors
 
-        internal ContentReader(Stream input, Encoding encoding)
+        internal ContentReader(ContentManager manager, Stream input, Encoding encoding)
             : base(input, encoding, true)
         {
+            _manager = manager;
         }
 
         #endregion
@@ -65,5 +68,10 @@ namespace GreenBox3D.Content
         }
 
         #endregion
+
+        public T ReadRawObject<T>()
+        {
+            return (T)RuntimeContentLoader.StartLoadRawObject(_manager, typeof(T), BaseStream);
+        }
     }
 }

@@ -99,6 +99,7 @@ namespace GreenBox3D
                 return packed;
             };
         }
+
 // ReSharper restore UnusedMember.Local
 
         private static bool IsPackedVector(Type type)

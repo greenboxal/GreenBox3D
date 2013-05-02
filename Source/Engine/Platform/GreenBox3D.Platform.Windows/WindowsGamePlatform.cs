@@ -22,18 +22,24 @@ namespace GreenBox3D.Platform.Windows
     public class WindowsGamePlatform : GamePlatform
     {
         private static readonly ILogger Log = LogManager.GetLogger(typeof(WindowsGamePlatform));
+        private readonly Stopwatch _renderTimer;
+        private readonly Stopwatch _updateTimer;
 
         private WindowsGameWindow _gameWindow;
         private GraphicsDeviceManager _graphicsDeviceManager;
         private InputManager _inputManager;
+        private double _nextRender;
+        private double _nextUpdate;
+        private double _renderPeriod;
+        private double _renderTime;
         private bool _running;
         private bool _skipFrame;
 
         private DateTime _startTime;
-        private readonly Stopwatch _updateTimer, _renderTimer;
-        private double _nextUpdate, _updateTime, _nextRender, _renderTime;
-        private double _updatePeriod, _renderPeriod;
-        private double _targetUpdatePeriod, _targetRenderPeriod;
+        private double _targetRenderPeriod;
+        private double _targetUpdatePeriod;
+        private double _updatePeriod;
+        private double _updateTime;
 
         public WindowsGamePlatform(IPlatformController controller)
             : base(controller)
@@ -103,10 +109,7 @@ namespace GreenBox3D.Platform.Windows
 
         public override double TargetRenderPeriod
         {
-            get
-            {
-                return _targetRenderPeriod;
-            }
+            get { return _targetRenderPeriod; }
             set
             {
                 if (value <= 0.005)
@@ -144,10 +147,7 @@ namespace GreenBox3D.Platform.Windows
 
         public override double TargetUpdatePeriod
         {
-            get
-            {
-                return _targetUpdatePeriod;
-            }
+            get { return _targetUpdatePeriod; }
             set
             {
                 if (value <= 0.005)
@@ -174,18 +174,12 @@ namespace GreenBox3D.Platform.Windows
 
         public override double UpdatePeriod
         {
-            get
-            {
-                return _updatePeriod;
-            }
+            get { return _updatePeriod; }
         }
 
         public override double UpdateTime
         {
-            get
-            {
-                return _updateTime;
-            }
+            get { return _updateTime; }
         }
 
         public override void Run()
@@ -269,7 +263,7 @@ namespace GreenBox3D.Platform.Windows
             }
 
             if (numUpdates > 0)
-                _updatePeriod = totalUpdateTime / (double)numUpdates;
+                _updatePeriod = totalUpdateTime / numUpdates;
         }
 
         private void DispatchRender()
@@ -300,7 +294,8 @@ namespace GreenBox3D.Platform.Windows
 
                 if (time > 0 && !_skipFrame)
                 {
-                    Controller.Render(new GameTime(DateTime.Now - _startTime, TimeSpan.FromSeconds(time), RenderTime > 2.0 * TargetRenderPeriod));
+                    Controller.Render(new GameTime(DateTime.Now - _startTime, TimeSpan.FromSeconds(time),
+                                                   RenderTime > 2.0 * TargetRenderPeriod));
                     _renderTime = _renderTimer.Elapsed.TotalSeconds;
                 }
                 else if (_skipFrame)

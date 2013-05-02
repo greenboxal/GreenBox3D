@@ -21,7 +21,7 @@ namespace GreenBox3D.ContentPipeline.Importers
             {
                 Texture2DContent texture = new Texture2DContent(bitmap.Width, bitmap.Height);
                 BitmapContent content = ImageHelper.BitmapContentFromBitmap(bitmap);
-                
+
                 if (content == null)
                     context.Logger.Log(MessageLevel.Error, null, filename, 0, 0, 0, 0,
                                        "Unsupported image pixel format");

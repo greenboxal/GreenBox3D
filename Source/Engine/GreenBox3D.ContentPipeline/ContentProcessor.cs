@@ -41,7 +41,7 @@ namespace GreenBox3D.ContentPipeline
 
                 TypeConverter converter = TypeDescriptor.GetConverter(info.PropertyType);
 
-                if (converter == null || !converter.IsValid(kvp.Value))
+                if (!converter.IsValid(kvp.Value))
                     continue;
 
                 info.SetValue(this, converter.ConvertFrom(kvp.Value));

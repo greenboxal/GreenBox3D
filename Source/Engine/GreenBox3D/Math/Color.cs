@@ -7,10 +7,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace GreenBox3D
 {
     [Serializable]
+    [TypeConverter(typeof(ColorTypeConverter))]
     public struct Color : IEquatable<Color>, IPackedVector
     {
         #region Fields

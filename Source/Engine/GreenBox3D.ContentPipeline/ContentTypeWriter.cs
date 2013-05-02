@@ -23,13 +23,13 @@ namespace GreenBox3D.ContentPipeline
     {
         #region Explicit Interface Methods
 
-        void IContentTypeWriter.Write(Stream stream, object input)
+        void IContentTypeWriter.Write(BuildCoordinator coordinator, Stream stream, object input)
         {
             ContentHeader header = GetHeader((TInput)input);
             BinaryWriter writer = new BinaryWriter(stream, Encoding.UTF8, true);
             bool cenc = !header.Encoding.Equals(Encoding.UTF8);
-            byte flags = 0;
             bool compress = ShouldCompressContent((TInput)input);
+            byte flags = 0;
 
             if (cenc)
                 flags |= 1;
@@ -52,7 +52,7 @@ namespace GreenBox3D.ContentPipeline
             if (compress)
                 s = new DeflateStream(ms, CompressionMode.Compress, true);
 
-            var cw = new ContentWriter(s, header.Encoding);
+            var cw = new ContentWriter(coordinator, s, header.Encoding);
             Write(cw, (TInput)input);
             cw.Close();
 
@@ -63,13 +63,12 @@ namespace GreenBox3D.ContentPipeline
             ms.Position = 0;
             crc32.ComputeHash(ms);
             writer.Write(crc32.CrcValue);
+            writer.Write(ms.Length);
             writer.Close();
 
             ms.Position = 0;
             ms.CopyTo(stream);
             ms.Close();
-
-            stream.Close();
         }
 
         #endregion

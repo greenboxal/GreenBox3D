@@ -12,10 +12,10 @@ using System.Text;
 using System.Threading.Tasks;
 using GreenBox3D.Graphics;
 
-namespace GreenBox3D.Content.Loaders
+namespace GreenBox3D.Content.Readers
 {
-    /*  [ContentTypeReader(Extension = ".tex")]
-    public class Texture2DLoader : ContentTypeReader<Texture2D>
+    [ContentTypeReader(Extension = ".tex")]
+    public class Texture2DLoader : ContentTypeReader<ITexture2D>
     {
         #region Constructors and Destructors
 
@@ -29,21 +29,32 @@ namespace GreenBox3D.Content.Loaders
 
         #region Methods
 
-        protected override Texture2D Load(ContentManager manager, ContentReader reader)
+        protected override ITexture2D Load(ContentManager manager, ContentReader reader)
         {
-            SurfaceFormat format = (SurfaceFormat)reader.ReadInt32();
-            int width = reader.ReadInt32();
-            int height = reader.ReadInt32();
-            int mipmapCount = reader.ReadInt32();
+            // A Texture2D has only 1 face
+            reader.ReadInt32();
 
-            Texture2D texture = new Texture2D(manager.GraphicsDevice, format, width, height);
+            int mipmapCount = reader.ReadInt32();
+            ITexture2D texture = null;
 
             for (int i = 0; i < mipmapCount; i++)
-                texture.SetData(i, reader.ReadBytes(reader.ReadInt32()), 0);
+            {
+                SurfaceFormat format = (SurfaceFormat)reader.ReadInt32();
+                int width = reader.ReadInt32();
+                int height = reader.ReadInt32();
+
+                if (texture == null)
+                    texture = manager.GraphicsDevice.TextureManager.CreateTexture2D(format, width, height);
+
+                int len = reader.ReadInt32();
+                byte[] data = reader.ReadBytes(len);
+
+                texture.SetData(i, data, 0);
+            }
 
             return texture;
         }
 
         #endregion
-    }*/
+    }
 }

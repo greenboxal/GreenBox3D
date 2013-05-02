@@ -8,11 +8,11 @@ namespace GreenBox3D.ContentPipeline.Graphics
 {
     public abstract class TextureContent
     {
-        public TextureFaceCollection Faces { get; private set; }
-
         protected TextureContent()
         {
             Faces = new TextureFaceCollection();
         }
+
+        public TextureFaceCollection Faces { get; private set; }
     }
 }

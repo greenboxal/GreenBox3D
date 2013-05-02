@@ -12,7 +12,7 @@ namespace GreenBox3D.ContentPipeline.Graphics
 {
     public static class ImageHelper
     {
-        public unsafe static BitmapContent BitmapContentFromBitmap(Bitmap bitmap)
+        public static unsafe BitmapContent BitmapContentFromBitmap(Bitmap bitmap)
         {
             BitmapContent pbmp;
             bool direct = false;
