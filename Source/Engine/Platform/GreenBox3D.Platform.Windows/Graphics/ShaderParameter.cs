@@ -105,6 +105,14 @@ namespace GreenBox3D.Platform.Windows.Graphics
             GL.Uniform4(_location, 1, (float*)&value);
         }
 
+        public void SetValue(Color value)
+        {
+            if (_location == -1)
+                return;
+
+            GL.Uniform4(_location, value.R / 255.0f, value.G / 255.0f, value.B / 255.0f, value.A / 255.0f);
+        }
+
         public unsafe void SetValue(Matrix4 value)
         {
             if (_location == -1)

@@ -96,6 +96,7 @@
     <Compile Include="Graphics\VertexElementFormat.cs" />
     <Compile Include="Graphics\VertexElementUsage.cs" />
     <Compile Include="Graphics\VertexPositionNormalColor.cs" />
+    <Compile Include="Graphics\VertexPositionTexture.cs" />
     <Compile Include="Graphics\ÎShaderParameter.cs" />
     <Compile Include="IConsoleCommand.cs" />
     <Compile Include="IConsoleSink.cs" />

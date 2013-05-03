@@ -18,6 +18,7 @@ namespace GreenBox3D.Graphics
         void SetValue(Vector2 value);
         void SetValue(Vector3 value);
         void SetValue(Vector4 value);
+        void SetValue(Color value);
         void SetValue(Matrix4 value);
         void SetValue(ITexture[] value);
         void SetValue(bool[] value);

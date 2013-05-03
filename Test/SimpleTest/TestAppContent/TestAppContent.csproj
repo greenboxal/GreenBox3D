@@ -40,6 +40,9 @@
     <Compile Include="Fonts\Arial.bmfont" />
     <None Include="Shaders\Simple\Simple.frag" />
     <None Include="Shaders\Simple\Simple.vert" />
+    <Compile Include="Shaders\SpriteTexture.shader" />
+    <None Include="Shaders\SpriteTexture\SpriteTexture.frag" />
+    <None Include="Shaders\SpriteTexture\SpriteTexture.vert" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Source\Engine\GreenBox3D.ContentPipeline\GreenBox3D.ContentPipeline.csproj">
@@ -56,6 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Fonts\Arial_0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
   </ItemGroup>
   <Import Project="..\..\..\Targets\GreenBox3D.ContentPipeline.targets" />
 </Project>

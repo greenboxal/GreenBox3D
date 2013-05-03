@@ -44,12 +44,24 @@ namespace GreenBox3D.Platform.Windows.Graphics
             try
             {
                 if (rect.HasValue)
+                {
+                    Create(true);
+
                     GL.TexSubImage2D(TextureTarget.Texture2D, level, rect.Value.X, rect.Value.Y, rect.Value.Width,
                                      rect.Value.Height, PixelFormat, PixelType,
                                      Marshal.UnsafeAddrOfPinnedArrayElement(data, startIndex));
+                }
                 else
+                {
+
+                    GL.BindTexture(TextureTarget.Texture2D, TextureID);
                     GL.TexImage2D(TextureTarget.Texture2D, level, InternalFormat, Width, Height, 0, PixelFormat,
                                   PixelType, Marshal.UnsafeAddrOfPinnedArrayElement(data, startIndex));
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+                }
             }
             finally
             {
@@ -88,8 +100,13 @@ namespace GreenBox3D.Platform.Windows.Graphics
 
             if (texImage && !_hasTexture)
             {
+                GL.BindTexture(TextureTarget.Texture2D, TextureID);
                 GL.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat, Width, Height, 0, PixelFormat, PixelType,
                               IntPtr.Zero);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
                 _hasTexture = true;
             }
         }

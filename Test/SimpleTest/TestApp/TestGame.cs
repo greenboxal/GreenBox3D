@@ -24,6 +24,8 @@ namespace TestApp
         private ContentManager _contentManager;
 
         private GraphicsDevice _graphicsDevice;
+        private GraphicBatch _graphicBatch;
+
         private IIndexBuffer _indices;
         private IInputManager _inputManager;
         private IShader _shader;
@@ -48,6 +50,7 @@ namespace TestApp
             _graphicsDevice = GetService<IGraphicsDeviceManager>().GraphicsDevice;
             _inputManager = GetService<IInputManager>();
             _contentManager = new ContentManager(_graphicsDevice);
+            _graphicBatch = new GraphicBatch(_graphicsDevice);
 
             _shader = _contentManager.LoadContent<IShader>("Shaders/Simple");
             _tex = _contentManager.LoadContent<ITexture2D>("Image1");
@@ -104,6 +107,10 @@ namespace TestApp
             // _shader.Parameters["Alpha"].SetValue(1.0f);
 
             _graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleStrip, 0, 0, _indices.ElementCount);
+
+            _graphicBatch.Begin();
+            _graphicBatch.Draw(_tex, new Vector2(0, 0), Color.White);
+            _graphicBatch.End();
 
             _graphicsDevice.Present();
         }
