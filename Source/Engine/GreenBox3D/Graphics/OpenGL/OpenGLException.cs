@@ -4,6 +4,7 @@
 // 
 // This file is a proprietary part of GreenBox3D, disclosing the content
 // of this file without the owner consent may lead to legal actions
+#if DESKTOP
 
 using System;
 using System.Collections.Generic;
@@ -46,3 +47,5 @@ namespace GreenBox3D.Graphics
         #endregion
     }
 }
+
+#endif
