@@ -19,15 +19,14 @@ namespace GreenBox3D.Graphics
     {
         #region Constructors and Destructors
 
-        public VertexBuffer(VertexDeclaration vertexDeclaration, int vertexCount,
-                            BufferUsage usage)
-            : base(BufferTarget.ArrayBuffer, vertexDeclaration.VertexStride, vertexCount, usage)
+        public VertexBuffer(VertexDeclaration vertexDeclaration, BufferUsage usage)
+            : base(BufferTarget.ArrayBuffer, usage)
         {
             VertexDeclaration = vertexDeclaration;
         }
 
-        public VertexBuffer(Type elementType, int vertexCount, BufferUsage usage)
-            : this(CreateVertexDeclaration(elementType), vertexCount, usage)
+        public VertexBuffer(Type elementType, BufferUsage usage)
+            : this(CreateVertexDeclaration(elementType), usage)
         {
         }
 

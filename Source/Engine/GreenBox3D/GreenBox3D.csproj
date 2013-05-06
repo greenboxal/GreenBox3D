@@ -69,6 +69,7 @@
     <Compile Include="DefaultLogger.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameTime.cs" />
+    <Compile Include="Graphics\Enums\SurfaceFormat.cs" />
     <Compile Include="Graphics\IVertexType.cs" />
     <Compile Include="Graphics\OpenGL\BlendState.cs" />
     <Compile Include="Graphics\Detail\CompiledInputVariable.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Graphics\OpenGL\HardwareBuffer.cs" />
     <Compile Include="Graphics\OpenGL\IndexBuffer.cs" />
     <Compile Include="Graphics\OpenGL\OpenGLException.cs" />
+    <Compile Include="Graphics\OpenGL\PixelBufferObject.cs" />
     <Compile Include="Graphics\OpenGL\Shader.cs" />
     <Compile Include="Graphics\OpenGL\ShaderInput.cs" />
     <Compile Include="Graphics\OpenGL\ShaderParameter.cs" />
@@ -110,6 +112,8 @@
     <Compile Include="Graphics\OpenGL\VertexElement.cs" />
     <Compile Include="Graphics\Enums\VertexElementFormat.cs" />
     <Compile Include="Graphics\Enums\VertexElementUsage.cs" />
+    <Compile Include="Graphics\Enums\PixelType.cs" />
+    <Compile Include="Graphics\PixelDataType.cs" />
     <Compile Include="Graphics\VertexPositionNormalColor.cs" />
     <Compile Include="Graphics\VertexPositionTexture.cs" />
     <Compile Include="IConsoleCommand.cs" />
@@ -124,7 +128,7 @@
     <Compile Include="Graphics\PresentationParameters.cs" />
     <Compile Include="Graphics\Enums\PrimitiveType.cs" />
     <Compile Include="Graphics\Enums\RenderTargetUsage.cs" />
-    <Compile Include="Graphics\Enums\SurfaceFormat.cs" />
+    <Compile Include="Graphics\Enums\PixelFormat.cs" />
     <Compile Include="Graphics\Viewport.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="ILogRouter.cs" />

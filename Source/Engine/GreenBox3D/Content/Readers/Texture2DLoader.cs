@@ -31,6 +31,7 @@ namespace GreenBox3D.Content.Readers
         protected override Texture2D Load(ContentManager manager, ContentReader reader)
         {
             // A Texture2D has only 1 face
+            SurfaceFormat format = (SurfaceFormat)reader.ReadInt32();
             reader.ReadInt32();
 
             int mipmapCount = reader.ReadInt32();
@@ -38,7 +39,8 @@ namespace GreenBox3D.Content.Readers
 
             for (int i = 0; i < mipmapCount; i++)
             {
-                SurfaceFormat format = (SurfaceFormat)reader.ReadInt32();
+                PixelFormat pFormat = (PixelFormat)reader.ReadInt32();
+                PixelType pType = (PixelType)reader.ReadInt32();
                 int width = reader.ReadInt32();
                 int height = reader.ReadInt32();
 
@@ -48,7 +50,7 @@ namespace GreenBox3D.Content.Readers
                 int len = reader.ReadInt32();
                 byte[] data = reader.ReadBytes(len);
 
-                texture.SetData(i, data, 0);
+                texture.SetData(i, data, 0, pFormat, pType);
             }
 
             return texture;

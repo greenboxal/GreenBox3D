@@ -18,25 +18,18 @@ namespace GreenBox3D.Graphics
 {
     public abstract class HardwareBuffer : GraphicsResource
     {
-        #region Fields
-
         internal int BufferID;
         internal BufferTarget BufferTarget;
         internal BufferUsageHint BufferUsageHint;
-        internal int ElementSize;
+        
+        public BufferUsage BufferUsage { get; private set; }
+        public int ElementCount { get; private set; }
 
-        #endregion
-
-        #region Constructors and Destructors
-
-        internal protected HardwareBuffer(BufferTarget bufferTarget, int elementSize,
-                                int elementCount, BufferUsage usage)
+        internal protected HardwareBuffer(BufferTarget bufferTarget, BufferUsage usage)
         {
-            BufferID = -1;
+            BufferID = GL.GenBuffer();
             BufferUsage = usage;
             BufferTarget = bufferTarget;
-            ElementSize = elementSize;
-            ElementCount = elementCount;
 
             switch (BufferUsage)
             {
@@ -70,17 +63,6 @@ namespace GreenBox3D.Graphics
             }
         }
 
-        #endregion
-
-        #region Public Properties
-
-        public BufferUsage BufferUsage { get; private set; }
-        public int ElementCount { get; private set; }
-
-        #endregion
-
-        #region Public Methods and Operators
-
         public void SetData<T>(T[] data) where T : struct
         {
             SetData(data, 0, data.Length);
@@ -88,8 +70,6 @@ namespace GreenBox3D.Graphics
 
         public void SetData<T>(T[] data, int offset, int count) where T : struct
         {
-            Create();
-
             GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
             IntPtr address = Marshal.UnsafeAddrOfPinnedArrayElement(data, offset);
 
@@ -97,12 +77,11 @@ namespace GreenBox3D.Graphics
             GL.BufferData(BufferTarget, (IntPtr)(count * Marshal.SizeOf(typeof(T))), address, BufferUsageHint);
 
             handle.Free();
+            ElementCount = count;
         }
 
         public void SetData<T>(int offsetInBytes, T[] data, int offset, int count) where T : struct
         {
-            Create();
-
             GCHandle handle = GCHandle.Alloc(data);
             IntPtr address = Marshal.UnsafeAddrOfPinnedArrayElement(data, offset);
 
@@ -112,27 +91,9 @@ namespace GreenBox3D.Graphics
             handle.Free();
         }
 
-        #endregion
-
-        #region Methods
-
         internal void Bind()
         {
             GL.BindBuffer(BufferTarget, BufferID);
-        }
-
-        internal void Create()
-        {
-            if (BufferID == -1)
-            {
-                GL.GenBuffers(1, out BufferID);
-
-                if (BufferID == -1)
-                    throw new OpenGLException();
-
-                // Bind();
-                // GL.BufferData(BufferTarget, (IntPtr)(ElementSize * ElementCount), IntPtr.Zero, BufferUsageHint);
-            }
         }
 
         protected override void Dispose(bool disposing)
@@ -145,8 +106,6 @@ namespace GreenBox3D.Graphics
 
             base.Dispose(disposing);
         }
-
-        #endregion
     }
 }
 

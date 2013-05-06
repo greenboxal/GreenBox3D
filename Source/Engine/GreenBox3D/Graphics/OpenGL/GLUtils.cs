@@ -14,67 +14,13 @@ using System.Threading.Tasks;
 using GreenBox3D.Graphics;
 using OpenTK.Graphics.OpenGL;
 
+using OPFormat = OpenTK.Graphics.OpenGL.PixelFormat;
+using OPType = OpenTK.Graphics.OpenGL.PixelType;
+
 namespace GreenBox3D.Graphics
 {
     internal static class GLUtils
     {
-        public static void GetOpenGLTextureFormat(SurfaceFormat format, out PixelInternalFormat glInternalFormat,
-                                                  out PixelFormat glFormat, out PixelType glType)
-        {
-            glInternalFormat = PixelInternalFormat.Rgba;
-            glFormat = PixelFormat.Rgba;
-            glType = PixelType.UnsignedByte;
-
-            switch (format)
-            {
-                case SurfaceFormat.Color:
-                    glInternalFormat = PixelInternalFormat.Rgba;
-                    glFormat = PixelFormat.Rgba;
-                    glType = PixelType.UnsignedByte;
-                    break;
-                case SurfaceFormat.Bgr565:
-                    glInternalFormat = PixelInternalFormat.Rgb;
-                    glFormat = PixelFormat.Rgb;
-                    glType = PixelType.UnsignedShort565;
-                    break;
-                case SurfaceFormat.Bgra4444:
-                    glInternalFormat = PixelInternalFormat.Rgba4;
-                    glFormat = PixelFormat.Rgba;
-                    glType = PixelType.UnsignedShort4444;
-                    break;
-                case SurfaceFormat.Bgra5551:
-                    glInternalFormat = PixelInternalFormat.Rgba;
-                    glFormat = PixelFormat.Rgba;
-                    glType = PixelType.UnsignedShort5551;
-                    break;
-                case SurfaceFormat.Alpha8:
-                    glInternalFormat = PixelInternalFormat.Luminance;
-                    glFormat = PixelFormat.Luminance;
-                    glType = PixelType.UnsignedByte;
-                    break;
-                case SurfaceFormat.Dxt1:
-                    glInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
-                    glFormat = (PixelFormat)All.CompressedTextureFormats;
-                    break;
-                case SurfaceFormat.Dxt3:
-                    glInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt3Ext;
-                    glFormat = (PixelFormat)All.CompressedTextureFormats;
-                    break;
-                case SurfaceFormat.Dxt5:
-                    glInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
-                    glFormat = (PixelFormat)All.CompressedTextureFormats;
-                    break;
-
-                case SurfaceFormat.Single:
-                    glInternalFormat = PixelInternalFormat.R32f;
-                    glFormat = PixelFormat.Red;
-                    glType = PixelType.Float;
-                    break;
-                default:
-                    throw new NotSupportedException();
-            }
-        }
-
         public static TextureWrapMode GetWrapMode(TextureAddressMode value)
         {
             switch (value)
@@ -244,6 +190,75 @@ namespace GreenBox3D.Graphics
                     return PolygonMode.Fill;
                 case FillMode.WireFrame:
                     return PolygonMode.Line;
+                default:
+                    throw new ArgumentException("value");
+            }
+        }
+
+        public static PixelInternalFormat GetPixelInternalFormat(SurfaceFormat value)
+        {
+            switch (value)
+            {
+                case SurfaceFormat.R:
+                    return PixelInternalFormat.R8;
+                case SurfaceFormat.Rg:
+                    return PixelInternalFormat.Rg8;
+                case SurfaceFormat.Rgb:
+                    return PixelInternalFormat.Rgb8;
+                case SurfaceFormat.Color:
+                    return PixelInternalFormat.Rgba;
+                default:
+                    throw new ArgumentException("value");
+            }
+        }
+
+        public static OPFormat GetPixelFormat(PixelFormat value)
+        {
+            switch (value)
+            {
+                case PixelFormat.R:
+                    return OPFormat.Red;
+                case PixelFormat.Rg:
+                    return OPFormat.Rg;
+                case PixelFormat.Rgb:
+                    return OPFormat.Rgb;
+                case PixelFormat.Rgba:
+                    return OPFormat.Rgba;
+                case PixelFormat.Bgr:
+                    return OPFormat.Bgr;
+                case PixelFormat.Bgra:
+                    return OPFormat.Bgra;
+                case PixelFormat.Depth:
+                    return OPFormat.DepthComponent;
+                case PixelFormat.DepthStencil:
+                    return OPFormat.DepthStencil;
+                default:
+                    throw new ArgumentException("value");
+            }
+        }
+
+        public static OPType GetPixelType(PixelType value)
+        {
+            switch (value)
+            {
+                case PixelType.Byte:
+                    return OPType.Byte;
+                case PixelType.UnsignedByte:
+                    return OPType.UnsignedByte;
+                case PixelType.Short:
+                    return OPType.Short;
+                case PixelType.UnsignedShort:
+                    return OPType.UnsignedShort;
+                case PixelType.Int:
+                    return OPType.UnsignedInt;
+                case PixelType.UnsignedInt8888:
+                    return OPType.UnsignedInt8888;
+                case PixelType.UnsignedInt8888Reversed:
+                    return OPType.UnsignedInt8888Reversed;
+                case PixelType.Float:
+                    return OPType.Float;
+                case PixelType.HalfFloat:
+                    return OPType.HalfFloat;
                 default:
                     throw new ArgumentException("value");
             }

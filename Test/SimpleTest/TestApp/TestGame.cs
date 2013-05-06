@@ -79,12 +79,10 @@ namespace TestApp
                 new VertexPositionNormalColor(new Vector3(-1.0f, 1.0f, -1.0f), new Vector3(), new Color(0, 0, 255))
             };
 
-            _indices = new IndexBuffer(IndexElementSize.ThirtyTwoBits, indices.Length,
-                                       BufferUsage.StaticDraw);
+            _indices = new IndexBuffer(IndexElementSize.ThirtyTwoBits, BufferUsage.StaticDraw);
             _indices.SetData(indices);
 
-            _vertices = new VertexBuffer(typeof(VertexPositionNormalColor),
-                                         positions.Length, BufferUsage.StaticDraw);
+            _vertices = new VertexBuffer(typeof(VertexPositionNormalColor), BufferUsage.StaticDraw);
             _vertices.SetData(positions);
         }
 

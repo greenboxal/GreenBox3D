@@ -21,16 +21,15 @@ namespace GreenBox3D.Graphics
         #region Fields
 
         internal DrawElementsType DrawElementsType;
+        internal int ElementSize;
 
         #endregion
 
         #region Constructors and Destructors
 
-        public IndexBuffer(IndexElementSize indexElementSize, int indexCount,
-                           BufferUsage usage)
+        public IndexBuffer(IndexElementSize indexElementSize, BufferUsage usage)
             : base(
-                BufferTarget.ElementArrayBuffer, GetElementSizeInBytes(indexElementSize), indexCount,
-                usage)
+                BufferTarget.ElementArrayBuffer, usage)
         {
             IndexElementSize = indexElementSize;
 
@@ -38,12 +37,15 @@ namespace GreenBox3D.Graphics
             {
                 case IndexElementSize.EightBits:
                     DrawElementsType = DrawElementsType.UnsignedByte;
+                    ElementSize = 1;
                     break;
                 case IndexElementSize.SixteenBits:
                     DrawElementsType = DrawElementsType.UnsignedShort;
+                    ElementSize = 2;
                     break;
                 case IndexElementSize.ThirtyTwoBits:
                     DrawElementsType = DrawElementsType.UnsignedInt;
+                    ElementSize = 4;
                     break;
             }
         }

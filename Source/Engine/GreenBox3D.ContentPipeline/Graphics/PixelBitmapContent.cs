@@ -118,7 +118,7 @@ namespace GreenBox3D.ContentPipeline.Graphics
             return data;
         }
 
-        public override bool TryGetFormat(out SurfaceFormat format)
+        public override bool TryGetFormat(out PixelDataType format)
         {
             return VectorUtils.TryGetSurfaceFormat(typeof(T), out format);
         }
@@ -258,7 +258,7 @@ namespace GreenBox3D.ContentPipeline.Graphics
 
             BitmapData bd = bmp.LockBits(new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height),
                                          ImageLockMode.WriteOnly,
-                                         PixelFormat.Format32bppArgb);
+                                         System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             byte* ptr = (byte*)bd.Scan0;
 
             for (int x = 0; x < bmp.Width; x++)

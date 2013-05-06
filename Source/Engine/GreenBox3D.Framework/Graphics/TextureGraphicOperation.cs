@@ -23,7 +23,7 @@ namespace GreenBox3D.Graphics
         {
             _graphicBatch = graphicBatch;
             _texture = texture;
-            _vertices = new VertexBuffer(typeof(VertexPositionTexture), 4, BufferUsage.StaticDraw);
+            _vertices = new VertexBuffer(typeof(VertexPositionTexture), BufferUsage.StaticDraw);
             _vertices.SetData(new[]
             {
                 new VertexPositionTexture(new Vector3(destinationRectangle.X, destinationRectangle.Y, 0), new Vector2(sourceRectangle.X / texture.Width, sourceRectangle.Y / texture.Height)),

@@ -18,8 +18,6 @@ namespace GreenBox3D.Graphics
     public abstract class Texture : GraphicsResource
     {
         protected readonly PixelInternalFormat InternalFormat;
-        protected readonly PixelFormat PixelFormat;
-        protected readonly PixelType PixelType;
 
         public abstract int LevelCount { get; }
         public SurfaceFormat Format { get; private set; }
@@ -32,7 +30,7 @@ namespace GreenBox3D.Graphics
             Format = format;
             TextureTarget = target;
             TextureID = GL.GenTexture();
-            GLUtils.GetOpenGLTextureFormat(format, out InternalFormat, out PixelFormat, out PixelType);
+            InternalFormat = GLUtils.GetPixelInternalFormat(format);
         }
 
         internal protected void SetLastUnitDirty()

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GreenBox3D.Graphics;
 
 namespace GreenBox3D.ContentPipeline.Graphics
 {
@@ -20,5 +21,6 @@ namespace GreenBox3D.ContentPipeline.Graphics
         }
 
         public TextureFaceCollection Faces { get; private set; }
+        public SurfaceFormat Format { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace GreenBox3D.ContentPipeline.Graphics
 
         public abstract void SetPixelData(byte[] sourceData);
         public abstract byte[] GetPixelData();
-        public abstract bool TryGetFormat(out SurfaceFormat format);
+        public abstract bool TryGetFormat(out PixelDataType format);
 
         protected abstract bool TryCopyTo(BitmapContent destinationBitmap, Rectangle sourceRegion,
                                           Rectangle destinationRegion);

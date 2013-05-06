@@ -31,17 +31,17 @@ namespace GreenBox3D.Graphics
             Height = height;
         }
 
-        public void SetData<T>(T[] data) where T : struct
+        public void SetData<T>(T[] data, PixelFormat format, PixelType type) where T : struct
         {
-            SetData(0, null, data, 0);
+            SetData(0, null, data, 0, format, type);
         }
 
-        public void SetData<T>(int level, T[] data, int startIndex) where T : struct
+        public void SetData<T>(int level, T[] data, int startIndex, PixelFormat format, PixelType type) where T : struct
         {
-            SetData(level, null, data, startIndex);
+            SetData(level, null, data, startIndex, format, type);
         }
 
-        public void SetData<T>(int level, Rectangle? rect, T[] data, int startIndex) where T : struct
+        public void SetData<T>(int level, Rectangle? rect, T[] data, int startIndex, PixelFormat format, PixelType type) where T : struct
         {
             if (level > _level)
                 throw new InvalidOperationException("This Texture2D doesn't have " + level + " mipmap level.");
@@ -53,9 +53,9 @@ namespace GreenBox3D.Graphics
             SetLastUnitDirty();
 
             if (parcial)
-                GL.TexSubImage2D(TextureTarget.Texture2D, level, rect.Value.X, rect.Value.Y, rect.Value.Width, rect.Value.Height, PixelFormat, PixelType, Marshal.UnsafeAddrOfPinnedArrayElement(data, startIndex));
+                GL.TexSubImage2D(TextureTarget.Texture2D, level, rect.Value.X, rect.Value.Y, rect.Value.Width, rect.Value.Height, GLUtils.GetPixelFormat(format), GLUtils.GetPixelType(type), Marshal.UnsafeAddrOfPinnedArrayElement(data, startIndex));
             else
-                GL.TexImage2D(TextureTarget.Texture2D, level, InternalFormat, Width, Height, 0, PixelFormat, PixelType, Marshal.UnsafeAddrOfPinnedArrayElement(data, startIndex));
+                GL.TexImage2D(TextureTarget.Texture2D, level, InternalFormat, Width, Height, 0, GLUtils.GetPixelFormat(format), GLUtils.GetPixelType(type), Marshal.UnsafeAddrOfPinnedArrayElement(data, startIndex));
 
             if (level == _level)
                 _level++;

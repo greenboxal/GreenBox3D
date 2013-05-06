@@ -30,6 +30,7 @@ namespace GreenBox3D.ContentPipeline.Writers
 
         protected override void Write(ContentWriter stream, TextureContent input)
         {
+            stream.Write((int)input.Format);
             stream.Write(input.Faces.Count);
 
             foreach (TextureFace face in input.Faces)
@@ -38,12 +39,13 @@ namespace GreenBox3D.ContentPipeline.Writers
 
                 foreach (BitmapContent bitmap in face)
                 {
-                    SurfaceFormat format;
+                    PixelDataType dt;
 
-                    if (!bitmap.TryGetFormat(out format))
+                    if (!bitmap.TryGetFormat(out dt))
                         continue;
 
-                    stream.Write((int)format);
+                    stream.Write((int)dt.Format);
+                    stream.Write((int)dt.Type);
                     stream.Write(bitmap.Width);
                     stream.Write(bitmap.Height);
 

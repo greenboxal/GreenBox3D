@@ -16,20 +16,21 @@ namespace GreenBox3D
 {
     public static class VectorUtils
     {
-        private static readonly Dictionary<Type, SurfaceFormat> _type2surfaceFormat;
+        private static readonly Dictionary<Type, PixelDataType> _type2surfaceFormat;
 
         static VectorUtils()
         {
-            _type2surfaceFormat = new Dictionary<Type, SurfaceFormat>();
+            _type2surfaceFormat = new Dictionary<Type, PixelDataType>();
 
-            _type2surfaceFormat[typeof(float)] = SurfaceFormat.Single;
-            _type2surfaceFormat[typeof(Half)] = SurfaceFormat.HalfSingle;
-            _type2surfaceFormat[typeof(Vector2)] = SurfaceFormat.Vector2;
-            _type2surfaceFormat[typeof(Vector4)] = SurfaceFormat.Vector4;
-            _type2surfaceFormat[typeof(Vector2h)] = SurfaceFormat.HalfVector2;
-            _type2surfaceFormat[typeof(Vector4h)] = SurfaceFormat.HalfVector4;
-            _type2surfaceFormat[typeof(Color)] = SurfaceFormat.Color;
-            _type2surfaceFormat[typeof(byte)] = SurfaceFormat.Alpha8;
+            _type2surfaceFormat[typeof(float)] = new PixelDataType(PixelFormat.R, PixelType.Float);
+            _type2surfaceFormat[typeof(Half)] = new PixelDataType(PixelFormat.R, PixelType.HalfFloat);
+            _type2surfaceFormat[typeof(Vector2)] = new PixelDataType(PixelFormat.Rg, PixelType.Float);
+            _type2surfaceFormat[typeof(Vector4)] = new PixelDataType(PixelFormat.Rgba, PixelType.Float);
+            _type2surfaceFormat[typeof(Vector2h)] = new PixelDataType(PixelFormat.Rg, PixelType.HalfFloat);
+            _type2surfaceFormat[typeof(Vector4h)] = new PixelDataType(PixelFormat.Rgba, PixelType.HalfFloat);
+            _type2surfaceFormat[typeof(Color)] = new PixelDataType(PixelFormat.Rgba, PixelType.UnsignedByte);
+            _type2surfaceFormat[typeof(byte)] = new PixelDataType(PixelFormat.R, PixelType.UnsignedByte);
+            _type2surfaceFormat[typeof(sbyte)] = new PixelDataType(PixelFormat.R, PixelType.Byte);
         }
 
         public static Converter<TSource, TDest> GetConverter<TSource, TDest>()
@@ -113,7 +114,7 @@ namespace GreenBox3D
             return type.IsValueType && typeof(IPackedVector).IsAssignableFrom(type);
         }
 
-        public static bool TryGetSurfaceFormat(Type type, out SurfaceFormat format)
+        public static bool TryGetSurfaceFormat(Type type, out PixelDataType format)
         {
             return _type2surfaceFormat.TryGetValue(type, out format);
         }
