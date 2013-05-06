@@ -209,6 +209,72 @@ namespace GreenBox3D.Platform.Windows
 
             Exit();
         }
+        
+        public override void InitializeGraphics(PresentationParameters parameters)
+        {
+            if (_gameWindow != null && _graphicsDeviceManager != null)
+                throw new InvalidOperationException("The graphic subsystem is already setup");
+            
+            Log.Message("Initializing Graphic subsystem");
+
+            _gameWindow = new WindowsGameWindow(this, parameters);
+            _graphicsDeviceManager = new GraphicsDeviceManager(this, parameters, _gameWindow);
+
+            if (_inputManager != null)
+                _inputManager.Initialize(_gameWindow);
+            
+            Controller.RegisterService(typeof(IGraphicsDeviceManager), _graphicsDeviceManager);
+        }
+
+        public override void InitializeInput()
+        {
+            if (_inputManager != null)
+                throw new InvalidOperationException("The input subsystem is already setup");
+
+            Log.Message("Initializing Input subsystem");
+
+            _inputManager = new InputManager();
+
+            if (_gameWindow != null)
+                _inputManager.Initialize(_gameWindow);
+
+            Mouse.SetMouseImplementation(_inputManager);
+            Keyboard.SetKeyboardImplementation(_inputManager);
+
+            Controller.RegisterService(typeof(IInputManager), _inputManager);
+        }
+
+        public override void SkipFrame()
+        {
+            _skipFrame = true;
+        }
+
+        public override void Exit()
+        {
+            _running = false;
+
+            _graphicsDeviceManager.Dispose();
+            _gameWindow.Dispose();
+        }
+
+        public override void Dispose()
+        {
+            if (_running)
+                Exit();
+        }
+
+        public void WindowResized()
+        {
+            if (_graphicsDeviceManager != null && _graphicsDeviceManager.GraphicsDevice != null)
+                _graphicsDeviceManager.Update();
+
+            Controller.OnResize();
+        }
+
+        public void SetActive(bool active)
+        {
+            Controller.SetActive(active);
+        }
 
         private void DispatchUpdate()
         {
@@ -305,63 +371,5 @@ namespace GreenBox3D.Platform.Windows
             }
         }
 
-        public override void InitializeGraphics(PresentationParameters parameters)
-        {
-            Log.Message("Initializing Graphic subsystem");
-
-            _gameWindow = new WindowsGameWindow(this, parameters);
-            _gameWindow.Create();
-
-            _graphicsDeviceManager = new GraphicsDeviceManager(this, parameters, _gameWindow);
-
-            Controller.RegisterService(typeof(IGraphicsDeviceManager), _graphicsDeviceManager);
-        }
-
-        public override void InitializeInput()
-        {
-            Log.Message("Initializing Input subsystem");
-
-            if (_gameWindow == null)
-                throw new InvalidOperationException("Graphics subsystem must be initialized before the Input subsystem");
-
-            _inputManager = new InputManager(this, _gameWindow);
-
-            Mouse.SetMouseImplementation(_gameWindow);
-            Keyboard.SetKeyboardImplementation(_gameWindow);
-
-            Controller.RegisterService(typeof(IInputManager), _inputManager);
-        }
-
-        public override void SkipFrame()
-        {
-            _skipFrame = true;
-        }
-
-        public override void Exit()
-        {
-            _running = false;
-
-            _graphicsDeviceManager.Dispose();
-            _gameWindow.Dispose();
-        }
-
-        public override void Dispose()
-        {
-            if (_running)
-                Exit();
-        }
-
-        public void WindowResized()
-        {
-            if (_graphicsDeviceManager != null && _graphicsDeviceManager.GraphicsDevice != null)
-                _graphicsDeviceManager.Update();
-
-            Controller.OnResize();
-        }
-
-        public void SetActive(bool active)
-        {
-            Controller.SetActive(active);
-        }
     }
 }

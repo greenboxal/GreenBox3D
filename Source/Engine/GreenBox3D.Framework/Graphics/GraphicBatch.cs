@@ -34,8 +34,8 @@ namespace GreenBox3D.Graphics
         public void Begin()
         {
             _opList = new List<GraphicOperation>();
-            StandardViewProjection = Matrix4.CreateOrthographic(GraphicsDevice.Viewport.Width,
-                                                                GraphicsDevice.Viewport.Height, -1, 1);
+            StandardViewProjection = Matrix4.CreateOrthographicOffCenter(0, GraphicsDevice.Viewport.Width,
+                                                                GraphicsDevice.Viewport.Height, 0, -1, 1);
         }
         
         public void Push(GraphicOperation op)

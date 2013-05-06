@@ -1,11 +1,4 @@
-﻿// TextureCollection.cs
-// 
-// Copyright (c) 2013 The GreenBox Development LLC, all rights reserved
-// 
-// This file is a proprietary part of GreenBox3D, disclosing the content
-// of this file without the owner consent may lead to legal actions
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GreenBox3D.Graphics
 {
-    public abstract class TextureCollection : IReadOnlyCollection<ITexture>
+    public abstract class SamplerStateCollection : IReadOnlyCollection<SamplerState>
     {
         #region Public Properties
 
@@ -25,13 +18,13 @@ namespace GreenBox3D.Graphics
 
         #region Public Indexers
 
-        public abstract ITexture this[int index] { get; set; }
+        public abstract SamplerState this[int index] { get; set; }
 
         #endregion
 
         #region Public Methods and Operators
 
-        public abstract IEnumerator<ITexture> GetEnumerator();
+        public abstract IEnumerator<SamplerState> GetEnumerator();
 
         #endregion
 

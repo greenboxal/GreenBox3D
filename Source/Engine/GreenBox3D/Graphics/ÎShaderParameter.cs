@@ -10,7 +10,6 @@ namespace GreenBox3D.Graphics
     {
         string Name { get; }
 
-        void SetValue(ITexture value);
         void SetValue(bool value);
         void SetValue(float value);
         void SetValue(int value);
@@ -20,7 +19,6 @@ namespace GreenBox3D.Graphics
         void SetValue(Vector4 value);
         void SetValue(Color value);
         void SetValue(Matrix4 value);
-        void SetValue(ITexture[] value);
         void SetValue(bool[] value);
         void SetValue(int[] value);
         void SetValue(float[] value);

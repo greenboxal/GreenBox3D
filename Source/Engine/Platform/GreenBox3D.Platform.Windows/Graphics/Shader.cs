@@ -18,7 +18,6 @@ namespace GreenBox3D.Platform.Windows.Graphics
         private readonly int _pixel;
         private readonly int _program;
         private readonly int _vertex;
-        internal int TextureUnitCounter;
 
         public Shader(WindowsGraphicsDevice graphicsDevice, CompiledShader shader)
             : base(graphicsDevice)
@@ -73,10 +72,6 @@ namespace GreenBox3D.Platform.Windows.Graphics
                 _input[i] = new ShaderInput(_program, shader.Input[i]);
 
             _parameters = new ShaderParameterCollection(parameters);
-
-            GL.GetInteger(GetPName.MaxCombinedTextureImageUnits, out status);
-            if (TextureUnitCounter > status)
-                throw new Exception("This shader uses too many Texture Units");
         }
 
         public ShaderInput[] Input

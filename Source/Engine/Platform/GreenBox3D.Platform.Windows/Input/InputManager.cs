@@ -10,51 +10,195 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using GreenBox3D.Input;
 
 namespace GreenBox3D.Platform.Windows.Input
 {
-    public class InputManager : IInputManager
+    public class InputManager : IInputManager, IMouse, IKeyboard
     {
-        internal readonly List<IKeyboardFilter> KeyboardFilters;
-        internal readonly List<IMouseFilter> MouseFilters;
+        private readonly List<IKeyboardFilter> _keyboardFilters;
+        private readonly List<IMouseFilter> _mouseFilters;
 
-        private readonly WindowsGamePlatform _platform;
-        private readonly WindowsGameWindow _window;
-
-        public InputManager(WindowsGamePlatform platform, WindowsGameWindow window)
+        public InputManager()
         {
-            _platform = platform;
-            _window = window;
+            _mouseFilters = new List<IMouseFilter>();
+            _keyboardFilters = new List<IKeyboardFilter>();
+        }
 
-            MouseFilters = new List<IMouseFilter>();
-            KeyboardFilters = new List<IKeyboardFilter>();
-
-            _window.SetInputManager(this);
+        public void Initialize(WindowsGameWindow window)
+        {
+            window.MouseDown += window_MouseDown;
+            window.MouseUp += window_MouseUp;
+            window.MouseMove += window_MouseMove;
+            window.MouseWheel += window_MouseWheel;
+            window.KeyUp += window_KeyUp;
+            window.KeyDown += window_KeyDown;
+            window.KeyPress += window_KeyPress;
         }
 
         public void RegisterMouseFilter(IMouseFilter filter)
         {
-            lock (MouseFilters)
-                MouseFilters.Add(filter);
+            lock (_mouseFilters)
+                _mouseFilters.Add(filter);
         }
 
         public void UnregisterMouseFilter(IMouseFilter filter)
         {
-            lock (MouseFilters)
-                MouseFilters.Remove(filter);
+            lock (_mouseFilters)
+                _mouseFilters.Remove(filter);
         }
 
         public void RegisterKeyboardFilter(IKeyboardFilter filter)
         {
-            lock (KeyboardFilters)
-                KeyboardFilters.Add(filter);
+            lock (_keyboardFilters)
+                _keyboardFilters.Add(filter);
         }
 
         public void UnregisterKeyboardFilter(IKeyboardFilter filter)
         {
-            lock (KeyboardFilters)
-                KeyboardFilters.Remove(filter);
+            lock (_keyboardFilters)
+                _keyboardFilters.Remove(filter);
+        }
+
+        MouseState IMouse.GetState()
+        {
+            return new MouseState();
+        }
+
+        void IMouse.SetPosition(int x, int y)
+        {
+            NativeMethods.SetCursorPos(x, y);
+        }
+
+        KeyboardState IKeyboard.GetState()
+        {
+            return new KeyboardState();
+        }
+
+        private void window_MouseUp(object sender, MouseEventArgs e)
+        {
+            MouseButton button;
+
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    button = MouseButton.Left;
+                    break;
+                case MouseButtons.Middle:
+                    button = MouseButton.Middle;
+                    break;
+                case MouseButtons.Right:
+                    button = MouseButton.Right;
+                    break;
+                case MouseButtons.XButton1:
+                    button = MouseButton.XButton1;
+                    break;
+                case MouseButtons.XButton2:
+                    button = MouseButton.XButton2;
+                    break;
+                default:
+                    return;
+            }
+
+            foreach (IMouseFilter filter in _mouseFilters)
+                if (filter.OnMouseUp(button, e.X, e.Y))
+                    break;
+        }
+
+        private void window_MouseDown(object sender, MouseEventArgs e)
+        {
+            MouseButton button;
+
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    button = MouseButton.Left;
+                    break;
+                case MouseButtons.Middle:
+                    button = MouseButton.Middle;
+                    break;
+                case MouseButtons.Right:
+                    button = MouseButton.Right;
+                    break;
+                case MouseButtons.XButton1:
+                    button = MouseButton.XButton1;
+                    break;
+                case MouseButtons.XButton2:
+                    button = MouseButton.XButton2;
+                    break;
+                default:
+                    return;
+            }
+
+            foreach (IMouseFilter filter in _mouseFilters)
+                if (filter.OnMouseDown(button, e.X, e.Y))
+                    break;
+        }
+
+        private void window_MouseMove(object sender, MouseEventArgs e)
+        {
+            foreach (IMouseFilter filter in _mouseFilters)
+                if (filter.OnMouseMove(e.X, e.Y))
+                    break;
+        }
+
+        private void window_MouseWheel(object sender, MouseEventArgs e)
+        {
+            foreach (IMouseFilter filter in _mouseFilters)
+                if (filter.OnMouseWheel(e.Delta, e.X, e.Y))
+                    break;
+        }
+
+        private void window_KeyUp(object sender, KeyEventArgs e)
+        {
+            Console.WriteLine((GreenBox3D.Input.Keys)e.KeyCode);
+
+            KeyModifiers mods = KeyModifiers.None;
+
+            if (e.Shift)
+                mods |= KeyModifiers.Shift;
+
+            if (e.Control)
+                mods |= KeyModifiers.Control;
+
+            if (e.Alt)
+                mods |= KeyModifiers.Alt;
+
+            foreach (IKeyboardFilter filter in _keyboardFilters)
+                if (filter.OnKeyUp((GreenBox3D.Input.Keys)e.KeyCode, mods))
+                    break;
+
+            e.Handled = true;
+        }
+
+        private void window_KeyDown(object sender, KeyEventArgs e)
+        {
+            KeyModifiers mods = KeyModifiers.None;
+
+            if (e.Shift)
+                mods |= KeyModifiers.Shift;
+
+            if (e.Control)
+                mods |= KeyModifiers.Control;
+
+            if (e.Alt)
+                mods |= KeyModifiers.Alt;
+
+            foreach (IKeyboardFilter filter in _keyboardFilters)
+                if (filter.OnKeyDown((GreenBox3D.Input.Keys)e.KeyCode, mods))
+                    break;
+
+            e.Handled = true;
+        }
+
+        private void window_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            foreach (IKeyboardFilter filter in _keyboardFilters)
+                if (filter.OnKeyChar(e.KeyChar))
+                    break;
+
+            e.Handled = true;
         }
     }
 }

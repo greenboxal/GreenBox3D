@@ -13,7 +13,6 @@ namespace GreenBox3D.Platform.Windows.Graphics
         private readonly int _location;
         private readonly string _name;
         private readonly int _size;
-        private readonly int _textureUnit;
 
         public ShaderParameter(Shader owner, int programID, int index)
         {
@@ -21,32 +20,11 @@ namespace GreenBox3D.Platform.Windows.Graphics
 
             _name = GL.GetActiveUniform(programID, index, out _size, out type);
             _location = GL.GetUniformLocation(programID, _name);
-
-            if ((type >= ActiveUniformType.Sampler1D && type <= ActiveUniformType.Sampler2DRectShadow) &&
-                (type >= ActiveUniformType.IntSampler1D && type <= ActiveUniformType.UnsignedIntSamplerBuffer))
-            {
-                _textureUnit = owner.TextureUnitCounter;
-                owner.TextureUnitCounter += _size;
-            }
-            else
-                _textureUnit = -1;
         }
 
         public string Name
         {
             get { return _name; }
-        }
-
-        public void SetValue(ITexture value)
-        {
-            if (_location == -1)
-                return;
-
-            if (_textureUnit == -1)
-                return;
-
-            GL.Uniform1(_location, _textureUnit);
-            (value as Texture).Bind(_textureUnit);
         }
 
         public void SetValue(bool value)
@@ -119,24 +97,6 @@ namespace GreenBox3D.Platform.Windows.Graphics
                 return;
 
             GL.UniformMatrix4(_location, 1, false, (float*)&value);
-        }
-
-        public void SetValue(ITexture[] value)
-        {
-            if (_location == -1)
-                return;
-
-            if (_textureUnit == -1)
-                return;
-
-            for (int i = 0; i < value.Length; i++)
-            {
-                if (i >= _size)
-                    break;
-
-                GL.Uniform1(_location, _textureUnit + i);
-                (value[i] as Texture).Bind(_textureUnit + i);
-            }
         }
 
         public unsafe void SetValue(bool[] value)

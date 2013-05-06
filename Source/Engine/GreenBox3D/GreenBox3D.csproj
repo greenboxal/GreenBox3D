@@ -70,6 +70,8 @@
     <Compile Include="Graphics\Detail\CompiledInputVariableCollection.cs" />
     <Compile Include="Graphics\Detail\CompiledShader.cs" />
     <Compile Include="Graphics\Detail\CompiledShaderCollection.cs" />
+    <Compile Include="Graphics\Enums\TextureAddressMode.cs" />
+    <Compile Include="Graphics\Enums\TextureFilter.cs" />
     <Compile Include="Graphics\IShader.cs" />
     <Compile Include="Graphics\ITexture.cs" />
     <Compile Include="Graphics\ITexture2D.cs" />
@@ -83,8 +85,11 @@
     <Compile Include="Graphics\Enums\ShaderParameterType.cs" />
     <Compile Include="Graphics\GraphicsDevice.cs" />
     <Compile Include="Graphics\GraphicsResource.cs" />
+    <Compile Include="Graphics\SamplerState.cs" />
+    <Compile Include="Graphics\SamplerStateCollection.cs" />
     <Compile Include="Graphics\ShaderManager.cs" />
     <Compile Include="Graphics\ShaderParameterCollection.cs" />
+    <Compile Include="Graphics\StateManager.cs" />
     <Compile Include="Graphics\TextureCollection.cs" />
     <Compile Include="Graphics\IGraphicsDeviceManager.cs" />
     <Compile Include="Graphics\Enums\IndexElementSize.cs" />

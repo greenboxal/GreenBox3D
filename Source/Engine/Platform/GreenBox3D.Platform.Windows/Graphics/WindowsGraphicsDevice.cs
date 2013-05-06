@@ -20,26 +20,73 @@ namespace GreenBox3D.Platform.Windows.Graphics
     public class WindowsGraphicsDevice : GraphicsDevice
     {
         private static readonly ILogger Log = LogManager.GetLogger(typeof(WindowsGraphicsDevice));
-        internal readonly GraphicsContext MainContext;
 
-        private readonly BufferManager _bufferManager;
-        private readonly Dictionary<int, GraphicsContext> _contexts;
+        internal Shader ActiveShader;
 
         private readonly GraphicsMode _graphicsMode;
         private readonly WindowsGamePlatform _platform;
-        private readonly ShaderManager _shaderManager;
-        private readonly TextureManager _textureManager;
         private readonly WindowsGameWindow _window;
-        internal Shader ActiveShader;
+
+        internal readonly GraphicsContext MainContext;
+        private readonly Dictionary<int, GraphicsContext> _contexts;
+
+        private readonly ShaderManager _shaderManager;
+        private readonly BufferManager _bufferManager;
+        private readonly TextureManager _textureManager;
+        private readonly StateManager _stateManager;
+
+        private readonly GLTextureCollection _textures;
+        private readonly GLSamplerStateCollection _samplers;
+
+        private PresentationParameters _presentationParameters;
+        private Viewport _viewport;
+        private bool _vsync;
+
         private bool _disposed;
         private IndexBuffer _indices;
         private bool _indicesDirty;
-        private PresentationParameters _presentationParameters;
         private VertexBuffer _vertices;
         private bool _verticesDirty;
 
-        private Viewport _viewport;
-        private bool _vsync;
+        public override ShaderManager ShaderManager { get { return _shaderManager; } }
+        public override BufferManager BufferManager { get { return _bufferManager; } }
+        public override TextureManager TextureManager { get { return _textureManager; } }
+        public override StateManager StateManager { get { return _stateManager; } }
+        public override TextureCollection Textures { get { return _textures; } }
+        public override SamplerStateCollection SamplerStates { get { return _samplers; } }
+
+        public override PresentationParameters PresentationParameters
+        {
+            get { return _presentationParameters; }
+        }
+
+        public override Viewport Viewport
+        {
+            get { return _viewport; }
+            set { SetViewport(value); }
+        }
+
+        public bool VSync
+        {
+            get { return _vsync; }
+            set
+            {
+                if (_vsync != value)
+                {
+                    if (value)
+                        MainContext.SwapInterval = -1;
+                    else
+                        MainContext.SwapInterval = 0;
+
+                    _vsync = value;
+                }
+            }
+        }
+
+        public override bool IsDisposed
+        {
+            get { return _disposed; }
+        }
 
         public WindowsGraphicsDevice(WindowsGamePlatform platform, PresentationParameters parameters,
                                      WindowsGameWindow window)
@@ -48,9 +95,6 @@ namespace GreenBox3D.Platform.Windows.Graphics
             _window = window;
             _presentationParameters = parameters;
             _contexts = new Dictionary<int, GraphicsContext>();
-            _bufferManager = new GLBufferManager(this);
-            _shaderManager = new GLShaderManager(this);
-            _textureManager = new GLTextureManager(this);
 
             GraphicsContext.ShareContexts = true;
 
@@ -84,54 +128,13 @@ namespace GreenBox3D.Platform.Windows.Graphics
             SetViewport(new Viewport(0, 0, _presentationParameters.BackBufferWidth,
                                      _presentationParameters.BackBufferHeight));
             Log.Message("OpenGL context acquired: {0}", MainContext);
-        }
 
-        public override bool IsDisposed
-        {
-            get { return _disposed; }
-        }
-
-        public bool VSync
-        {
-            get { return _vsync; }
-            set
-            {
-                if (_vsync != value)
-                {
-                    if (value)
-                        MainContext.SwapInterval = -1;
-                    else
-                        MainContext.SwapInterval = 0;
-
-                    _vsync = value;
-                }
-            }
-        }
-
-        public override BufferManager BufferManager
-        {
-            get { return _bufferManager; }
-        }
-
-        public override ShaderManager ShaderManager
-        {
-            get { return _shaderManager; }
-        }
-
-        public override TextureManager TextureManager
-        {
-            get { return _textureManager; }
-        }
-
-        public override PresentationParameters PresentationParameters
-        {
-            get { return _presentationParameters; }
-        }
-
-        public override Viewport Viewport
-        {
-            get { return _viewport; }
-            set { SetViewport(value); }
+            _bufferManager = new GLBufferManager(this);
+            _shaderManager = new GLShaderManager(this);
+            _textureManager = new GLTextureManager(this);
+            _stateManager = new GLStateManager(this);
+            _textures = new GLTextureCollection();
+            _samplers = new GLSamplerStateCollection(this);
         }
 
         private void SetViewport(Viewport viewport)
@@ -317,6 +320,9 @@ namespace GreenBox3D.Platform.Windows.Graphics
 
         private void SetRenderingState()
         {
+            _textures.Apply();
+            _samplers.Apply();
+
             if (_indicesDirty)
             {
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, _indices.BufferID);

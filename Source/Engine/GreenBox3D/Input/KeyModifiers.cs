@@ -19,7 +19,6 @@ namespace GreenBox3D.Input
         None = 0,
         Shift = 1,
         Control = 2,
-        Capital = 4,
-        Alt = 8,
+        Alt = 4,
     }
 }

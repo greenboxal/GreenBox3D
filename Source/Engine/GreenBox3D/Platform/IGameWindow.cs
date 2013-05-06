@@ -20,6 +20,8 @@ namespace GreenBox3D.Platform
         Rectangle ClientBounds { get; }
         bool IsCursorVisible { get; set; }
 
+        event EventHandler ClientSizeChanged;
+
         void Resize(int width, int height);
     }
 }

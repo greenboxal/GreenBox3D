@@ -11,71 +11,17 @@ namespace GreenBox3D.Platform.Windows.Graphics
 {
     public class Texture2D : Texture, ITexture2D
     {
-        private bool _hasTexture;
         private int _level;
-
-        public Texture2D(GraphicsDevice graphicsDevice, SurfaceFormat format, int width, int height)
-            : base(graphicsDevice, format)
-        {
-            Target = TextureTarget.Texture2D;
-            ;
-
-            Width = width;
-            Height = height;
-        }
 
         public int Width { get; private set; }
         public int Height { get; private set; }
+        public override int LevelCount { get { return _level; } }
 
-        public override int LevelCount
+        public Texture2D(GraphicsDevice graphicsDevice, SurfaceFormat format, int width, int height)
+            : base(graphicsDevice, format, TextureTarget.Texture2D)
         {
-            get { return _level; }
-        }
-
-        public void SetData<T>(int level, Rectangle? rect, T[] data, int startIndex) where T : struct
-        {
-            Create();
-
-            if (LevelCount > level)
-                throw new ArgumentException("Level can be higher than the actual LevelCount", "level");
-
-            GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
-
-            try
-            {
-                if (rect.HasValue)
-                {
-                    Create(true);
-
-                    GL.TexSubImage2D(TextureTarget.Texture2D, level, rect.Value.X, rect.Value.Y, rect.Value.Width,
-                                     rect.Value.Height, PixelFormat, PixelType,
-                                     Marshal.UnsafeAddrOfPinnedArrayElement(data, startIndex));
-                }
-                else
-                {
-
-                    GL.BindTexture(TextureTarget.Texture2D, TextureID);
-                    GL.TexImage2D(TextureTarget.Texture2D, level, InternalFormat, Width, Height, 0, PixelFormat,
-                                  PixelType, Marshal.UnsafeAddrOfPinnedArrayElement(data, startIndex));
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-                }
-            }
-            finally
-            {
-                if (handle.IsAllocated)
-                    handle.Free();
-            }
-
-            if (GL.GetError() != ErrorCode.NoError)
-                throw new OpenGLException();
-
-            if (level == _level)
-                _level++;
-
-            _hasTexture = true;
+            Width = width;
+            Height = height;
         }
 
         public void SetData<T>(T[] data) where T : struct
@@ -88,27 +34,26 @@ namespace GreenBox3D.Platform.Windows.Graphics
             SetData(level, null, data, startIndex);
         }
 
-        protected override void Create(bool texImage = false)
+        public void SetData<T>(int level, Rectangle? rect, T[] data, int startIndex) where T : struct
         {
-            if (TextureID == -1)
-            {
-                TextureID = GL.GenTexture();
+            if (level > _level)
+                throw new InvalidOperationException("This Texture2D doesn't have " + level + " mipmap level.");
 
-                if (TextureID == -1)
-                    throw new OpenGLException();
-            }
+            bool parcial = rect.HasValue && (rect.Value.X != 0 || rect.Value.Y != 0 || rect.Value.Width != Width || rect.Value.Height != Height);
+            GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
 
-            if (texImage && !_hasTexture)
-            {
-                GL.BindTexture(TextureTarget.Texture2D, TextureID);
-                GL.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat, Width, Height, 0, PixelFormat, PixelType,
-                              IntPtr.Zero);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-                _hasTexture = true;
-            }
+            GL.BindTexture(TextureTarget.Texture2D, TextureID);
+            SetLastUnitDirty();
+
+            if (parcial)
+                GL.TexSubImage2D(TextureTarget.Texture2D, level, rect.Value.X, rect.Value.Y, rect.Value.Width, rect.Value.Height, PixelFormat, PixelType, Marshal.UnsafeAddrOfPinnedArrayElement(data, startIndex));
+            else
+                GL.TexImage2D(TextureTarget.Texture2D, level, InternalFormat, Width, Height, 0, PixelFormat, PixelType, Marshal.UnsafeAddrOfPinnedArrayElement(data, startIndex));
+
+            if (level == _level)
+                _level++;
+
+            handle.Free();
         }
     }
 }
