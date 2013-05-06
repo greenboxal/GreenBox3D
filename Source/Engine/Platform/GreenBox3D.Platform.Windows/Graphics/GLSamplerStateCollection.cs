@@ -11,6 +11,7 @@ namespace GreenBox3D.Platform.Windows.Graphics
 {
     public class GLSamplerStateCollection : SamplerStateCollection
     {
+        private GraphicsDevice _owner;
         private readonly SamplerState[] _samplers;
         private BitVector32 _state;
 
@@ -29,7 +30,7 @@ namespace GreenBox3D.Platform.Windows.Graphics
 
                 if (_samplers[index] != value)
                 {
-                    (value as GLSamplerState).Bond();
+                    (value as GLSamplerState).Bond(_owner);
                     _samplers[index] = value;
                     _state[1 << index] = true;
                 }
@@ -39,6 +40,8 @@ namespace GreenBox3D.Platform.Windows.Graphics
         public GLSamplerStateCollection(WindowsGraphicsDevice graphicsDevice)
         {
             int count;
+
+            _owner = graphicsDevice;
 
             GL.GetInteger(GetPName.MaxCombinedTextureImageUnits, out count);
             _samplers = new SamplerState[count];

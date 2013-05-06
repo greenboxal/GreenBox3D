@@ -30,6 +30,9 @@ namespace GreenBox3D.Graphics
         public abstract TextureCollection Textures { get; }
         public abstract SamplerStateCollection SamplerStates { get; }
 
+        public abstract BlendState BlendState { get; set; }
+        public abstract RasterizerState RasterizerState { get; set; }
+
         public abstract PresentationParameters PresentationParameters { get; }
         public abstract Viewport Viewport { get; set; }
         public abstract bool IsDisposed { get; }

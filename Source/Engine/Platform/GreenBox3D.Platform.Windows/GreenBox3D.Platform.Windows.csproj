@@ -52,7 +52,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\GLBlendState.cs" />
     <Compile Include="Graphics\GLBufferManager.cs" />
+    <Compile Include="Graphics\GLRasterizerState.cs" />
     <Compile Include="Graphics\GLSamplerState.cs" />
     <Compile Include="Graphics\GLSamplerStateCollection.cs" />
     <Compile Include="Graphics\GLShaderManager.cs" />

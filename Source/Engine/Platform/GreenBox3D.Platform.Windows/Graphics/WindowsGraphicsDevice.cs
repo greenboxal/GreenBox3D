@@ -38,6 +38,9 @@ namespace GreenBox3D.Platform.Windows.Graphics
         private readonly GLTextureCollection _textures;
         private readonly GLSamplerStateCollection _samplers;
 
+        private GLBlendState _blendState;
+        private GLRasterizerState _rasterizerState;
+
         private PresentationParameters _presentationParameters;
         private Viewport _viewport;
         private bool _vsync;
@@ -55,6 +58,49 @@ namespace GreenBox3D.Platform.Windows.Graphics
         public override TextureCollection Textures { get { return _textures; } }
         public override SamplerStateCollection SamplerStates { get { return _samplers; } }
 
+        public override BlendState BlendState
+        {
+            get { return _blendState; }
+            set
+            {
+                bool doEnable = _blendState == null;
+
+                if (_blendState != value)
+                {
+                    _blendState = value as GLBlendState;
+
+                    if (_blendState == null)
+                    {
+                        GL.Disable(EnableCap.Blend);
+                        return;
+                    }
+
+                    if (doEnable)
+                        GL.Enable(EnableCap.Blend);
+
+                    _blendState.Bond(this);
+                    _blendState.ApplyState();
+                }
+            }
+        }
+
+        public override RasterizerState RasterizerState
+        {
+            get { return _rasterizerState; }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("value");
+
+                if (_rasterizerState != value)
+                {
+                    _rasterizerState = value as GLRasterizerState;
+                    _rasterizerState.Bond(this);
+                    _rasterizerState.ApplyState();
+                }
+            }
+        }
+
         public override PresentationParameters PresentationParameters
         {
             get { return _presentationParameters; }
@@ -63,7 +109,13 @@ namespace GreenBox3D.Platform.Windows.Graphics
         public override Viewport Viewport
         {
             get { return _viewport; }
-            set { SetViewport(value); }
+            set
+            {
+                _viewport = value;
+                GL.Viewport(value.X, value.Y, value.Width,
+                            value.Height);
+                GL.DepthRange(value.MinDepth, value.MaxDepth);
+            }
         }
 
         public bool VSync
@@ -122,27 +174,22 @@ namespace GreenBox3D.Platform.Windows.Graphics
             }
 
             MainContext = CreateNewContext(Thread.CurrentThread.ManagedThreadId);
-            MainContext.MakeCurrent(new WinWindowInfo(_window.Handle, null));
+            MakeCurrent();
             MainContext.LoadAll();
 
-            SetViewport(new Viewport(0, 0, _presentationParameters.BackBufferWidth,
-                                     _presentationParameters.BackBufferHeight));
             Log.Message("OpenGL context acquired: {0}", MainContext);
-
+            
             _bufferManager = new GLBufferManager(this);
             _shaderManager = new GLShaderManager(this);
             _textureManager = new GLTextureManager(this);
             _stateManager = new GLStateManager(this);
             _textures = new GLTextureCollection();
             _samplers = new GLSamplerStateCollection(this);
-        }
 
-        private void SetViewport(Viewport viewport)
-        {
-            _viewport = viewport;
-            GL.Viewport(viewport.X, viewport.Y, viewport.Width,
-                        viewport.Height);
-            GL.DepthRange(viewport.MinDepth, viewport.MaxDepth);
+            BlendState = BlendState.Opaque;
+            RasterizerState = RasterizerState.CullNone;
+            Viewport = new Viewport(0, 0, _presentationParameters.BackBufferWidth,
+                                    _presentationParameters.BackBufferHeight);
         }
 
         protected override bool MakeCurrentInternal()

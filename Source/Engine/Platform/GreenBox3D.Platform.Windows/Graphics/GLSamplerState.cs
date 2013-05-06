@@ -131,8 +131,11 @@ namespace GreenBox3D.Platform.Windows.Graphics
             }
         }
 
-        public void Bond()
+        public void Bond(GraphicsDevice graphicsDevice)
         {
+            if (graphicsDevice != GraphicsDevice)
+                throw new InvalidOperationException("A SamplerState can only be bound to the GraphicsDevice that created it");
+
             _bound = true;
         }
 

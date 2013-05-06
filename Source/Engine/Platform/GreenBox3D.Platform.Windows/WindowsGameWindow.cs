@@ -117,6 +117,11 @@ namespace GreenBox3D.Platform.Windows
             _platform.SetActive(false);
         }
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            _platform.Exit();
+        }
+
         private void UpdateBorderStyle()
         {
             if (_allowUserResizing)

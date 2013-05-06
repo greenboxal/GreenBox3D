@@ -8,6 +8,11 @@ namespace GreenBox3D.Graphics
 {
     public abstract class SamplerState : GraphicsResource
     {
+        public static SamplerState PointWrap { get { return GraphicsDevice.ActiveDevice.StateManager.SamplerPointWrap; } }
+        public static SamplerState PointClamp { get { return GraphicsDevice.ActiveDevice.StateManager.SamplerPointClamp; } }
+        public static SamplerState LinearWrap { get { return GraphicsDevice.ActiveDevice.StateManager.SamplerLinearWrap; } }
+        public static SamplerState LinearClamp { get { return GraphicsDevice.ActiveDevice.StateManager.SamplerLinearClamp; } }
+
         protected SamplerState(GraphicsDevice graphicsDevice)
             : base(graphicsDevice)
         {
