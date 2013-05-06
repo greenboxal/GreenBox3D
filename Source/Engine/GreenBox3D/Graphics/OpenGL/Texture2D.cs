@@ -62,6 +62,29 @@ namespace GreenBox3D.Graphics
 
             handle.Free();
         }
+
+        public void SetData(int level, Rectangle? rect, PixelBuffer buffer, int startIndex, PixelFormat format, PixelType type)
+        {
+            if (level > _level)
+                throw new InvalidOperationException("This Texture2D doesn't have " + level + " mipmap level.");
+
+            bool parcial = rect.HasValue && (rect.Value.X != 0 || rect.Value.Y != 0 || rect.Value.Width != Width || rect.Value.Height != Height);
+
+            GL.BindTexture(TextureTarget.Texture2D, TextureID);
+            SetLastUnitDirty();
+
+            buffer.Bind();
+
+            if (parcial)
+                GL.TexSubImage2D(TextureTarget.Texture2D, level, rect.Value.X, rect.Value.Y, rect.Value.Width, rect.Value.Height, GLUtils.GetPixelFormat(format), GLUtils.GetPixelType(type), (IntPtr)startIndex);
+            else
+                GL.TexImage2D(TextureTarget.Texture2D, level, InternalFormat, Width, Height, 0, GLUtils.GetPixelFormat(format), GLUtils.GetPixelType(type), (IntPtr)startIndex);
+
+            buffer.Unbind();
+
+            if (level == _level)
+                _level++;
+        }
     }
 }
 

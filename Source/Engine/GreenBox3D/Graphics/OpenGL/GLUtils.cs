@@ -16,6 +16,7 @@ using OpenTK.Graphics.OpenGL;
 
 using OPFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using OPType = OpenTK.Graphics.OpenGL.PixelType;
+using OBAccess = OpenTK.Graphics.OpenGL.BufferAccess;
 
 namespace GreenBox3D.Graphics
 {
@@ -259,6 +260,21 @@ namespace GreenBox3D.Graphics
                     return OPType.Float;
                 case PixelType.HalfFloat:
                     return OPType.HalfFloat;
+                default:
+                    throw new ArgumentException("value");
+            }
+        }
+
+        internal static OBAccess GetBufferAccess(BufferAccess value)
+        {
+            switch (value)
+            {
+                case BufferAccess.ReadOnly:
+                    return OBAccess.ReadOnly;
+                case BufferAccess.ReadWrite:
+                    return OBAccess.ReadWrite;
+                case BufferAccess.WriteOnly:
+                    return OBAccess.ReadWrite;
                 default:
                     throw new ArgumentException("value");
             }

@@ -69,6 +69,7 @@
     <Compile Include="DefaultLogger.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameTime.cs" />
+    <Compile Include="Graphics\Enums\BufferAccess.cs" />
     <Compile Include="Graphics\Enums\SurfaceFormat.cs" />
     <Compile Include="Graphics\IVertexType.cs" />
     <Compile Include="Graphics\OpenGL\BlendState.cs" />
@@ -95,7 +96,7 @@
     <Compile Include="Graphics\OpenGL\HardwareBuffer.cs" />
     <Compile Include="Graphics\OpenGL\IndexBuffer.cs" />
     <Compile Include="Graphics\OpenGL\OpenGLException.cs" />
-    <Compile Include="Graphics\OpenGL\PixelBufferObject.cs" />
+    <Compile Include="Graphics\OpenGL\PixelBuffer.cs" />
     <Compile Include="Graphics\OpenGL\Shader.cs" />
     <Compile Include="Graphics\OpenGL\ShaderInput.cs" />
     <Compile Include="Graphics\OpenGL\ShaderParameter.cs" />

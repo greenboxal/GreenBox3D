@@ -18,6 +18,8 @@ namespace GreenBox3D.Graphics
 {
     public abstract class HardwareBuffer : GraphicsResource
     {
+        private bool _isLocked;
+
         internal int BufferID;
         internal BufferTarget BufferTarget;
         internal BufferUsageHint BufferUsageHint;
@@ -91,9 +93,38 @@ namespace GreenBox3D.Graphics
             handle.Free();
         }
 
+        public IntPtr LockBits(BufferAccess access)
+        {
+            if (_isLocked)
+                throw new InvalidOperationException("This buffer is already locked elsewhere");
+
+            _isLocked = true;
+
+            Bind();
+            IntPtr address = GL.MapBuffer(BufferTarget, GLUtils.GetBufferAccess(access));
+            Unbind();
+
+            return address;
+        }
+
+        public void UnlockBits()
+        {
+            if (!_isLocked)
+                return;
+
+            Bind();
+            GL.UnmapBuffer(BufferTarget);
+            Unbind();
+        }
+
         internal void Bind()
         {
             GL.BindBuffer(BufferTarget, BufferID);
+        }
+
+        internal void Unbind()
+        {
+            GL.BindBuffer(BufferTarget, 0);
         }
 
         protected override void Dispose(bool disposing)

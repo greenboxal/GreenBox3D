@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
 
-namespace GreenBox3D.Graphics.OpenGL
+namespace GreenBox3D.Graphics
 {
-    public sealed class PixelBufferObject : HardwareBuffer
+    public sealed class PixelBuffer : HardwareBuffer
     {
-        public PixelBufferObject(BufferUsage usage)
+        public PixelBuffer(BufferUsage usage)
             : base(BufferTarget.PixelUnpackBuffer, usage)
         {
         }
