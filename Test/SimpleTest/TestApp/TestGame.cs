@@ -24,13 +24,14 @@ namespace TestApp
         private ContentManager _contentManager;
 
         private GraphicsDevice _graphicsDevice;
+        private IInputManager _inputManager;
+
         private GraphicBatch _graphicBatch;
 
-        private IIndexBuffer _indices;
-        private IInputManager _inputManager;
-        private IShader _shader;
-        private ITexture2D _tex;
-        private IVertexBuffer _vertices;
+        private IndexBuffer _indices;
+        private Shader _shader;
+        private Texture2D _tex;
+        private VertexBuffer _vertices;
 
         public TestGame()
         {
@@ -52,8 +53,8 @@ namespace TestApp
             _contentManager = new ContentManager(_graphicsDevice);
             _graphicBatch = new GraphicBatch(_graphicsDevice);
 
-            _shader = _contentManager.LoadContent<IShader>("Shaders/Simple");
-            _tex = _contentManager.LoadContent<ITexture2D>("Image1");
+            _shader = _contentManager.LoadContent<Shader>("Shaders/Simple");
+            _tex = _contentManager.LoadContent<Texture2D>("Image1");
             _arial = _contentManager.LoadContent<Font>("Fonts/Arial");
 
             int[] indices = new[]
@@ -75,15 +76,15 @@ namespace TestApp
                 new VertexPositionNormalColor(new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(), new Color(0, 255, 0)),
                 new VertexPositionNormalColor(new Vector3(1.0f, -1.0f, -1.0f), new Vector3(), new Color(0, 0, 255)),
                 new VertexPositionNormalColor(new Vector3(1.0f, 1.0f, -1.0f), new Vector3(), new Color(0, 255, 0)),
-                new VertexPositionNormalColor(new Vector3(-1.0f, 1.0f, -1.0f), new Vector3(), new Color(0, 0, 255)),
+                new VertexPositionNormalColor(new Vector3(-1.0f, 1.0f, -1.0f), new Vector3(), new Color(0, 0, 255))
             };
 
-            _indices = _graphicsDevice.BufferManager.CreateIndexBuffer(IndexElementSize.ThirtyTwoBits, indices.Length,
-                                                                       BufferUsage.StaticDraw);
+            _indices = new IndexBuffer(IndexElementSize.ThirtyTwoBits, indices.Length,
+                                       BufferUsage.StaticDraw);
             _indices.SetData(indices);
 
-            _vertices = _graphicsDevice.BufferManager.CreateVertexBuffer(typeof(VertexPositionNormalColor),
-                                                                         positions.Length, BufferUsage.StaticDraw);
+            _vertices = new VertexBuffer(typeof(VertexPositionNormalColor),
+                                         positions.Length, BufferUsage.StaticDraw);
             _vertices.SetData(positions);
         }
 

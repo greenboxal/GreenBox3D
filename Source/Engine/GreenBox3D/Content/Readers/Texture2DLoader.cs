@@ -15,7 +15,7 @@ using GreenBox3D.Graphics;
 namespace GreenBox3D.Content.Readers
 {
     [ContentTypeReader(Extension = ".tex")]
-    public class Texture2DLoader : ContentTypeReader<ITexture2D>
+    public class Texture2DLoader : ContentTypeReader<Texture2D>
     {
         #region Constructors and Destructors
 
@@ -29,13 +29,13 @@ namespace GreenBox3D.Content.Readers
 
         #region Methods
 
-        protected override ITexture2D Load(ContentManager manager, ContentReader reader)
+        protected override Texture2D Load(ContentManager manager, ContentReader reader)
         {
             // A Texture2D has only 1 face
             reader.ReadInt32();
 
             int mipmapCount = reader.ReadInt32();
-            ITexture2D texture = null;
+            Texture2D texture = null;
 
             for (int i = 0; i < mipmapCount; i++)
             {
@@ -44,7 +44,7 @@ namespace GreenBox3D.Content.Readers
                 int height = reader.ReadInt32();
 
                 if (texture == null)
-                    texture = manager.GraphicsDevice.TextureManager.CreateTexture2D(format, width, height);
+                    texture = new Texture2D(format, width, height);
 
                 int len = reader.ReadInt32();
                 byte[] data = reader.ReadBytes(len);

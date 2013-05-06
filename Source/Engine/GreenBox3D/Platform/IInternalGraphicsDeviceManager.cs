@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GreenBox3D.Graphics
+namespace GreenBox3D.Platform
 {
-    public interface IVertexType
+    public interface IInternalGraphicsDeviceManager : IGraphicsDeviceManager
     {
-        VertexDeclaration VertexDeclaration { get; }
+        void Update();
     }
 }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace GreenBox3D.Graphics
 {
-    public class GraphicsResource : IGraphicsResource
+    public class GraphicsResource
     {
         #region Fields
 
@@ -23,6 +23,12 @@ namespace GreenBox3D.Graphics
         #endregion
 
         #region Constructors and Destructors
+
+        protected GraphicsResource()
+            : this(GraphicsDevice.ActiveDevice)
+        {
+            
+        }
 
         protected GraphicsResource(GraphicsDevice graphicsDevice)
         {

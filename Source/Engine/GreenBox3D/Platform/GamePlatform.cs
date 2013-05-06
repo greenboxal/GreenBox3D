@@ -36,7 +36,6 @@ namespace GreenBox3D.Platform
         public abstract double UpdateTime { get; }
 
         public abstract bool Running { get; }
-        public abstract bool VSync { get; set; }
         public abstract IGameWindow Window { get; }
         public abstract void Dispose();
 

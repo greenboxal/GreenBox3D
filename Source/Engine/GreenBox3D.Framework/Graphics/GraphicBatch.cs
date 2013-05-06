@@ -9,8 +9,8 @@ namespace GreenBox3D.Graphics
 {
     public class GraphicBatch : GraphicsResource
     {
-        internal IShader StandardShader;
-        internal IShaderParameter StandardShaderMatrixParameter;
+        internal Shader StandardShader;
+        internal ShaderParameter StandardShaderMatrixParameter;
         internal Matrix4 StandardViewProjection;
 
         private List<GraphicOperation> _opList;
@@ -26,7 +26,7 @@ namespace GreenBox3D.Graphics
             if (StandardShader == null)
             {
                 ContentManager temp = new ContentManager(GraphicsDevice);
-                StandardShader = temp.LoadContent<IShader>("Shaders/SpriteTexture");
+                StandardShader = temp.LoadContent<Shader>("Shaders/SpriteTexture");
                 StandardShaderMatrixParameter = StandardShader.Parameters["WVP"];
             }
         }

@@ -25,7 +25,7 @@ namespace GreenBox3D.Content.Readers
             Font font = new Font(name, height);
 
             for (int i = 0; i < pageCount; i++)
-                font.Pages.Add(reader.ReadRawObject<ITexture2D>());
+                font.Pages.Add(reader.ReadRawObject<Texture2D>());
 
             for (int i = 0; i < glyphCount; i++)
             {

@@ -8,12 +8,12 @@ namespace GreenBox3D.Graphics
 {
     public static class GraphicOperations
     {
-        public static void Draw(this GraphicBatch self, ITexture2D texture, Rectangle destinationRectangle, Color color)
+        public static void Draw(this GraphicBatch self, Texture2D texture, Rectangle destinationRectangle, Color color)
         {
             Draw(self, texture, destinationRectangle, null, color);
         }
 
-        public static void Draw(this GraphicBatch self, ITexture2D texture,
+        public static void Draw(this GraphicBatch self, Texture2D texture,
                                 Vector2 position,
                                 Color color)
         {
@@ -21,7 +21,7 @@ namespace GreenBox3D.Graphics
                  color);
         }
 
-        public static void Draw(this GraphicBatch self, ITexture2D texture,
+        public static void Draw(this GraphicBatch self, Texture2D texture,
                                 Vector2 position, Rectangle? sourceRectangle,
                                 Color color)
         {
@@ -29,7 +29,7 @@ namespace GreenBox3D.Graphics
                  sourceRectangle, color);
         }
 
-        public static void Draw(this GraphicBatch self, ITexture2D texture, Rectangle destinationRectangle, Rectangle? sourceRectangle, Color color)
+        public static void Draw(this GraphicBatch self, Texture2D texture, Rectangle destinationRectangle, Rectangle? sourceRectangle, Color color)
         {
             Rectangle src;
 

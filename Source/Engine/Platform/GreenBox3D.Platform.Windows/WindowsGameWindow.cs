@@ -16,10 +16,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GreenBox3D.Graphics;
+using OpenTK.Platform.Windows;
 
 namespace GreenBox3D.Platform.Windows
 {
-    public class WindowsGameWindow : Form, IGameWindow
+    public class WindowsGameWindow : Form, IInternalGameWindow
     {
         private readonly WindowsGamePlatform _platform;
         private readonly PresentationParameters _creationParameters;
@@ -134,6 +135,11 @@ namespace GreenBox3D.Platform.Windows
                 MaximizeBox = false;
                 FormBorderStyle = FormBorderStyle.FixedSingle;
             }
+        }
+
+        public OpenTK.Platform.IWindowInfo WindowInfo
+        {
+            get { return new WinWindowInfo(Handle, null); }
         }
     }
 }

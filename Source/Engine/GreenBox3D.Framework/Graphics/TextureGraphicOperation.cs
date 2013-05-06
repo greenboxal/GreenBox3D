@@ -9,16 +9,15 @@ namespace GreenBox3D.Graphics
     public class TextureGraphicOperation : GraphicOperation
     {
         private readonly GraphicBatch _graphicBatch;
-        private readonly ITexture2D _texture;
-        private readonly IVertexBuffer _vertices;
+        private readonly Texture2D _texture;
+        private readonly VertexBuffer _vertices;
         private readonly Color _color;
 
-        public TextureGraphicOperation(GraphicBatch graphicBatch, ITexture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Color color)
+        public TextureGraphicOperation(GraphicBatch graphicBatch, Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Color color)
         {
             _graphicBatch = graphicBatch;
             _texture = texture;
-            _vertices = _graphicBatch.GraphicsDevice.BufferManager.CreateVertexBuffer(typeof(VertexPositionTexture), 4,
-                                                                                      BufferUsage.StaticDraw);
+            _vertices = new VertexBuffer(typeof(VertexPositionTexture), 4, BufferUsage.StaticDraw);
             _vertices.SetData(new[]
             {
                 new VertexPositionTexture(new Vector3(destinationRectangle.X, destinationRectangle.Y, 0), new Vector2(sourceRectangle.X / texture.Width, sourceRectangle.Y / texture.Height)),
@@ -32,7 +31,7 @@ namespace GreenBox3D.Graphics
         public override void Render()
         {
             _graphicBatch.GraphicsDevice.Textures[0] = _texture;
-            _graphicBatch.GraphicsDevice.SamplerStates[0] = _graphicBatch.GraphicsDevice.StateManager.SamplerLinearWrap;
+            _graphicBatch.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
             _graphicBatch.StandardShader.Apply();
             _graphicBatch.StandardShaderMatrixParameter.SetValue(_graphicBatch.StandardViewProjection);

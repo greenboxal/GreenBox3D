@@ -17,13 +17,13 @@ namespace GreenBox3D.Graphics
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct VertexPositionNormalColor : IVertexType
     {
-        public static readonly VertexElement[] Declaration =
+        public static readonly VertexDeclaration Declaration = new VertexDeclaration(
             new[]
             {
                 new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position),
                 new VertexElement(12, VertexElementFormat.Vector3, VertexElementUsage.Normal),
                 new VertexElement(24, VertexElementFormat.Color, VertexElementUsage.Color),
-            };
+            });
 
         public Vector3 Position;
         public Vector3 Normal;
@@ -36,7 +36,7 @@ namespace GreenBox3D.Graphics
             Color = color;
         }
 
-        VertexElement[] IVertexType.VertexDeclaration
+        VertexDeclaration IVertexType.VertexDeclaration
         {
             get { return Declaration; }
         }

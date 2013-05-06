@@ -52,29 +52,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\GLBlendState.cs" />
-    <Compile Include="Graphics\GLBufferManager.cs" />
-    <Compile Include="Graphics\GLRasterizerState.cs" />
-    <Compile Include="Graphics\GLSamplerState.cs" />
-    <Compile Include="Graphics\GLSamplerStateCollection.cs" />
-    <Compile Include="Graphics\GLShaderManager.cs" />
-    <Compile Include="Graphics\GLStateManager.cs" />
-    <Compile Include="Graphics\GLTextureCollection.cs" />
-    <Compile Include="Graphics\GLTextureManager.cs" />
-    <Compile Include="Graphics\GLUtils.cs" />
-    <Compile Include="Graphics\InternalVertexElement.cs" />
-    <Compile Include="Graphics\HardwareBuffer.cs" />
-    <Compile Include="Graphics\IndexBuffer.cs" />
-    <Compile Include="Graphics\OpenGLException.cs" />
-    <Compile Include="Graphics\Shader.cs" />
-    <Compile Include="Graphics\ShaderInput.cs" />
-    <Compile Include="Graphics\ShaderParameter.cs" />
-    <Compile Include="Graphics\Texture.cs" />
-    <Compile Include="Graphics\Texture2D.cs" />
-    <Compile Include="Graphics\VertexBuffer.cs" />
-    <Compile Include="Graphics\VertexDeclaration.cs" />
-    <Compile Include="Graphics\WindowsGraphicsDevice.cs" />
-    <Compile Include="Graphics\GraphicsDeviceManager.cs" />
     <Compile Include="Input\InputManager.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

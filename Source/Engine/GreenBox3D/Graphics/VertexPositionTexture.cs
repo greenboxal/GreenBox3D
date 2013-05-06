@@ -10,12 +10,12 @@ namespace GreenBox3D.Graphics
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct VertexPositionTexture : IVertexType
     {
-        public static readonly VertexElement[] Declaration =
+        public static readonly VertexDeclaration Declaration = new VertexDeclaration(
             new[]
             {
                 new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position),
                 new VertexElement(12, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate),
-            };
+            });
 
         public Vector3 Position;
         public Vector2 TextureCoord;
@@ -26,7 +26,7 @@ namespace GreenBox3D.Graphics
             TextureCoord = texCoord;
         }
 
-        VertexElement[] IVertexType.VertexDeclaration
+        VertexDeclaration IVertexType.VertexDeclaration
         {
             get { return Declaration; }
         }

@@ -15,7 +15,7 @@ using GreenBox3D.Graphics.Detail;
 namespace GreenBox3D.Content.Readers
 {
     [ContentTypeReader(Extension = ".fx")]
-    public class ShaderLoader : ContentTypeReader<IShader>
+    public class ShaderLoader : ContentTypeReader<Shader>
     {
         #region Constructors and Destructors
 
@@ -29,7 +29,7 @@ namespace GreenBox3D.Content.Readers
 
         #region Methods
 
-        protected override IShader Load(ContentManager manager, ContentReader reader)
+        protected override Shader Load(ContentManager manager, ContentReader reader)
         {
             CompiledShader shader = new CompiledShader(reader.ReadString(), reader.ReadInt32(), reader.ReadString(),
                                                        reader.ReadString(), reader.ReadString(), reader.ReadString(),
@@ -44,7 +44,7 @@ namespace GreenBox3D.Content.Readers
                                      reader.ReadInt32()
                                      ));
 
-            return manager.GraphicsDevice.ShaderManager.CreateShader(shader);
+            return new Shader(manager.GraphicsDevice, shader);
         }
 
         #endregion

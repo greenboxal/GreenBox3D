@@ -14,13 +14,13 @@ namespace GreenBox3D
         {
             Name = name;
             Height = height;
-            Pages = new Collection<ITexture2D>();
+            Pages = new Collection<Texture2D>();
             Glyphs = new Dictionary<char, FontGlyph>();
         }
 
         public string Name { get; private set; }
         public int Height { get; private set; }
-        public Collection<ITexture2D> Pages { get; private set; }
+        public Collection<Texture2D> Pages { get; private set; }
         public Dictionary<char, FontGlyph> Glyphs { get; private set; }
 
         public FontGlyph GetGlyph(char c)

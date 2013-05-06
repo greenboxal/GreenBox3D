@@ -13,9 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GreenBox3D.Graphics;
 using GreenBox3D.Input;
-using GreenBox3D.Platform.Windows.Graphics;
 using GreenBox3D.Platform.Windows.Input;
-using OpenTK.Graphics.OpenGL;
 
 namespace GreenBox3D.Platform.Windows
 {
@@ -26,7 +24,7 @@ namespace GreenBox3D.Platform.Windows
         private readonly Stopwatch _updateTimer;
 
         private WindowsGameWindow _gameWindow;
-        private GraphicsDeviceManager _graphicsDeviceManager;
+        private IInternalGraphicsDeviceManager _graphicsDeviceManager;
         private InputManager _inputManager;
         private double _nextRender;
         private double _nextUpdate;
@@ -56,12 +54,6 @@ namespace GreenBox3D.Platform.Windows
         public override IGameWindow Window
         {
             get { return _gameWindow; }
-        }
-
-        public override bool VSync
-        {
-            get { return ((WindowsGraphicsDevice)_graphicsDeviceManager.GraphicsDevice).VSync; }
-            set { ((WindowsGraphicsDevice)_graphicsDeviceManager.GraphicsDevice).VSync = value; }
         }
 
         public override double RenderFrequency
@@ -218,7 +210,7 @@ namespace GreenBox3D.Platform.Windows
             Log.Message("Initializing Graphic subsystem");
 
             _gameWindow = new WindowsGameWindow(this, parameters);
-            _graphicsDeviceManager = new GraphicsDeviceManager(this, parameters, _gameWindow);
+            _graphicsDeviceManager = new GraphicsDeviceManager(parameters, _gameWindow);
 
             if (_inputManager != null)
                 _inputManager.Initialize(_gameWindow);
