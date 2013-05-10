@@ -14,10 +14,11 @@ namespace GreenBox3D.Input
 {
     public enum MouseButton
     {
-        Left,
-        Middle,
-        Right,
-        XButton1,
-        XButton2,
+        None = 0,
+        Left = 1,
+        Middle = 2,
+        Right = 4,
+        XButton1 = 8,
+        XButton2 = 10
     }
 }

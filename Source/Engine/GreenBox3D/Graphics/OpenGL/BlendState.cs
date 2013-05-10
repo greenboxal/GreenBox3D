@@ -182,6 +182,7 @@ namespace GreenBox3D.Graphics
 
         internal void ApplyState()
         {
+            
             GL.BlendFuncSeparate(GLUtils.GetBlendingFactorSrc(_colorSourceBlend),
                                  GLUtils.GetBlendingFactorDest(_colorDestinationBlend),
                                  GLUtils.GetBlendingFactorSrc(_alphaSourceBlend),

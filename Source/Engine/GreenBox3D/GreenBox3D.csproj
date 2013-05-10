@@ -93,6 +93,7 @@
     <Compile Include="Graphics\GraphicsResource.cs" />
     <Compile Include="Graphics\OpenGL\GLUtils.cs" />
     <Compile Include="Graphics\GraphicsDeviceManager.cs" />
+    <Compile Include="Graphics\OpenGL\GraphicsState.cs" />
     <Compile Include="Graphics\OpenGL\HardwareBuffer.cs" />
     <Compile Include="Graphics\OpenGL\IndexBuffer.cs" />
     <Compile Include="Graphics\OpenGL\OpenGLException.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Graphics\OpenGL\ShaderParameter.cs" />
     <Compile Include="Graphics\OpenGL\Texture.cs" />
     <Compile Include="Graphics\OpenGL\Texture2D.cs" />
+    <Compile Include="Graphics\OpenGL\SavedVertexState.cs" />
     <Compile Include="Graphics\OpenGL\VertexBuffer.cs" />
     <Compile Include="Graphics\OpenGL\VertexDeclaration.cs" />
     <Compile Include="Graphics\OpenGL\RasterizerState.cs" />

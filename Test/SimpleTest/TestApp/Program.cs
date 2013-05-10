@@ -16,7 +16,7 @@ namespace TestApp
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             using (TestGame game = new TestGame())
                 game.Run();

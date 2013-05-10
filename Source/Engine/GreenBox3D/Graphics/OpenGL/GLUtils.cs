@@ -22,6 +22,23 @@ namespace GreenBox3D.Graphics
 {
     internal static class GLUtils
     {
+        public static BeginMode GetBeginMode(PrimitiveType primitiveType)
+        {
+            switch (primitiveType)
+            {
+                case PrimitiveType.LineList:
+                    return BeginMode.Lines;
+                case PrimitiveType.LineStrip:
+                    return BeginMode.LineStrip;
+                case PrimitiveType.TriangleList:
+                    return BeginMode.Triangles;
+                case PrimitiveType.TriangleStrip:
+                    return BeginMode.TriangleStrip;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
         public static TextureWrapMode GetWrapMode(TextureAddressMode value)
         {
             switch (value)

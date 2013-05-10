@@ -72,9 +72,16 @@ namespace GreenBox3D.Graphics
 
         public void SetData<T>(T[] data, int offset, int count) where T : struct
         {
+            if (data == null)
+            {
+                Bind();
+                GL.BufferData(BufferTarget, (IntPtr)(count * Marshal.SizeOf(typeof(T))), IntPtr.Zero, BufferUsageHint);
+                return;
+            }
+
             GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
             IntPtr address = Marshal.UnsafeAddrOfPinnedArrayElement(data, offset);
-
+            
             Bind();
             GL.BufferData(BufferTarget, (IntPtr)(count * Marshal.SizeOf(typeof(T))), address, BufferUsageHint);
 
@@ -84,6 +91,9 @@ namespace GreenBox3D.Graphics
 
         public void SetData<T>(int offsetInBytes, T[] data, int offset, int count) where T : struct
         {
+            if (data == null)
+                throw new ArgumentNullException("data");
+
             GCHandle handle = GCHandle.Alloc(data);
             IntPtr address = Marshal.UnsafeAddrOfPinnedArrayElement(data, offset);
 
@@ -115,24 +125,26 @@ namespace GreenBox3D.Graphics
             Bind();
             GL.UnmapBuffer(BufferTarget);
             Unbind();
+
+            _isLocked = false;
         }
 
-        internal void Bind()
+        public virtual void Bind()
         {
             GL.BindBuffer(BufferTarget, BufferID);
         }
 
-        internal void Unbind()
+        public virtual void Unbind()
         {
             GL.BindBuffer(BufferTarget, 0);
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (BufferID != -1)
+            if (BufferID != 0)
             {
-                GL.DeleteBuffers(1, ref BufferID);
-                BufferID = -1;
+                GL.DeleteBuffer(BufferID);
+                BufferID = 0;
             }
 
             base.Dispose(disposing);

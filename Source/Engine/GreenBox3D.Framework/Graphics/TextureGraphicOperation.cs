@@ -43,7 +43,10 @@ namespace GreenBox3D.Graphics
             _graphicBatch.StandardShaderMatrixParameter.SetValue(_graphicBatch.StandardViewProjection);
             _graphicBatch.StandardShader.Parameters["Tint"].SetValue(_color);
             _graphicBatch.StandardShader.Parameters["Texture"].SetValue(0);
-            _graphicBatch.GraphicsDevice.SetVertexBuffer(_vertices);
+
+            _vertices.Bind();
+            _vertices.VertexDeclaration.Apply();
+
             _graphicBatch.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 4);
         }
 

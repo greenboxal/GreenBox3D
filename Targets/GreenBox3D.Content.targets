@@ -235,7 +235,7 @@
       Condition=" '@(_NestedContentItemsToCopyToOutputDirectory)' != '' "
       Inputs="@(_NestedContentItemsToCopyToOutputDirectory)"
       Outputs="@(_NestedContentItemsToCopyToOutputDirectory->'$(OutDir)%(TargetPath)')">
-    <Warning Text="@(_NestedContentItemsToCopyToOutputDirectory) @(_NestedContentItemsToCopyToOutputDirectory->'$(OutDir)%(TargetPath)')"/>
+ 
     <!--
     Not using SkipUnchangedFiles="true" because the application may want to change
     one of these files and not have an incremental build replace it.

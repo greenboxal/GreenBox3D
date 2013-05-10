@@ -43,6 +43,7 @@
     <Compile Include="Content\Readers\FontTypeReader.cs" />
     <Compile Include="Font.cs" />
     <Compile Include="FontGlyph.cs" />
+    <Compile Include="Graphics\FontGraphicOperation.cs" />
     <Compile Include="Graphics\GraphicBatch.cs" />
     <Compile Include="Graphics\GraphicOperation.cs" />
     <Compile Include="Graphics\GraphicOperations.cs" />

@@ -19,5 +19,6 @@ namespace GreenBox3D.Input
         Shift = 1,
         Control = 2,
         Alt = 4,
+        Caps = 8
     }
 }

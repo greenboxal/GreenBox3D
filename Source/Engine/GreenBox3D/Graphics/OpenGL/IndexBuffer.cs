@@ -18,14 +18,10 @@ namespace GreenBox3D.Graphics
 {
     public sealed class IndexBuffer : HardwareBuffer
     {
-        #region Fields
-
         internal DrawElementsType DrawElementsType;
         internal int ElementSize;
 
-        #endregion
-
-        #region Constructors and Destructors
+        public IndexElementSize IndexElementSize { get; private set; }
 
         public IndexBuffer(IndexElementSize indexElementSize, BufferUsage usage)
             : base(
@@ -50,32 +46,23 @@ namespace GreenBox3D.Graphics
             }
         }
 
-        #endregion
-
-        #region Public Properties
-
-        public IndexElementSize IndexElementSize { get; private set; }
-
-        #endregion
-
-        #region Methods
-
-        private static int GetElementSizeInBytes(IndexElementSize size)
+        public override void Bind()
         {
-            switch (size)
-            {
-                case IndexElementSize.EightBits:
-                    return 1;
-                case IndexElementSize.SixteenBits:
-                    return 2;
-                case IndexElementSize.ThirtyTwoBits:
-                    return 4;
-                default:
-                    throw new NotSupportedException();
-            }
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, BufferID);
+            GraphicsDevice.State.ActiveIndexBuffer = this;
+
+            if (GraphicsDevice.State.ActiveVertexState != null)
+                GraphicsDevice.State.ActiveVertexState.IndexBuffer = this;
         }
 
-        #endregion
+        public override void Unbind()
+        {
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
+            GraphicsDevice.State.ActiveIndexBuffer = null;
+
+            if (GraphicsDevice.State.ActiveVertexState != null)
+                GraphicsDevice.State.ActiveVertexState.IndexBuffer = null;
+        }
     }
 }
 

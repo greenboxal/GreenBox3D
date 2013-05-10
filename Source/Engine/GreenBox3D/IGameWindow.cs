@@ -18,6 +18,7 @@ namespace GreenBox3D
         bool AllowUserResizing { get; set; }
         Rectangle ClientBounds { get; }
         bool IsCursorVisible { get; set; }
+        IntPtr NativeHandle { get; }
 
         event EventHandler ClientSizeChanged;
 

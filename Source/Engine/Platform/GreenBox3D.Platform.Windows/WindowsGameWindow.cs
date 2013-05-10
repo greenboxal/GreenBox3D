@@ -27,6 +27,11 @@ namespace GreenBox3D.Platform.Windows
         private bool _isCursorVisible;
         private bool _allowUserResizing;
 
+        public IntPtr NativeHandle
+        {
+            get { return Handle; }
+        }
+
         public string Title
         {
             get { return Text; }

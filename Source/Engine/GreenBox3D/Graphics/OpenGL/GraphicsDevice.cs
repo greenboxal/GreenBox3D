@@ -31,7 +31,8 @@ namespace GreenBox3D.Graphics
             get { return _currentDevice; }
         }
 
-        internal Shader ActiveShader;
+        internal GraphicsState State;
+
         internal readonly SamplerState SamplerPointWrap;
         internal readonly SamplerState SamplerPointClamp;
         internal readonly SamplerState SamplerLinearWrap;
@@ -39,6 +40,7 @@ namespace GreenBox3D.Graphics
 
         private readonly GraphicsMode _graphicsMode;
         private readonly IInternalGameWindow _window;
+        private PresentationParameters _presentationParameters;
 
         internal readonly GraphicsContext MainContext;
         private readonly Dictionary<int, GraphicsContext> _contexts;
@@ -49,15 +51,9 @@ namespace GreenBox3D.Graphics
         private BlendState _blendState;
         private RasterizerState _rasterizerState;
 
-        private PresentationParameters _presentationParameters;
         private Viewport _viewport;
         private bool _vsync;
-
         private bool _disposed;
-        private IndexBuffer _indices;
-        private bool _indicesDirty;
-        private VertexBuffer _vertices;
-        private bool _verticesDirty;
 
         public TextureCollection Textures { get { return _textures; } }
         public SamplerStateCollection SamplerStates { get { return _samplers; } }
@@ -147,6 +143,8 @@ namespace GreenBox3D.Graphics
         internal GraphicsDevice(PresentationParameters parameters,
                                      IInternalGameWindow window)
         {
+            State = new GraphicsState();
+
             _window = window;
             _presentationParameters = parameters;
             _contexts = new Dictionary<int, GraphicsContext>();
@@ -262,61 +260,29 @@ namespace GreenBox3D.Graphics
             Clear(options, Color.Black);
         }
 
-        public void SetVertexBuffer(VertexBuffer vertexBuffer)
-        {
-            if (_vertices != vertexBuffer)
-            {
-                _vertices = vertexBuffer;
-                _verticesDirty = true;
-            }
-        }
-
-        public void SetIndexBuffer(IndexBuffer indexBuffer)
-        {
-            if (_indices != indexBuffer)
-            {
-                _indices = indexBuffer;
-                _indicesDirty = true;
-            }
-        }
-
         public void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertex,
                                                    int startIndex, int numVertices)
         {
-            IntPtr indexOffsetInBytes = (IntPtr)(startIndex * _indices.ElementSize);
+            if (State.ActiveShader == null)
+                throw new InvalidOperationException("A shader must be applied before calling this method");
 
-            if (_vertices == null)
-                throw new InvalidOperationException("A VertexBuffer must be set before calling this method");
-
-            if (_indices == null)
-                throw new InvalidOperationException("An IndexBuffer must be set before calling this method");
-
-            if (ActiveShader == null)
-                throw new InvalidOperationException("An Effect must be applied before calling this method");
+            if (State.ActiveIndexBuffer == null)
+                throw new InvalidOperationException("An index buffer must be binded before calling this method");
 
             SetRenderingState();
-            _vertices.VertexDeclaration.Bind(IntPtr.Zero);
-
-            GL.DrawElementsBaseVertex(GetBeginMode(primitiveType), numVertices, _indices.DrawElementsType,
-                                      indexOffsetInBytes,
+            GL.DrawElementsBaseVertex(GLUtils.GetBeginMode(primitiveType), numVertices,
+                                      State.ActiveIndexBuffer.DrawElementsType,
+                                      (IntPtr)(startIndex * State.ActiveIndexBuffer.ElementSize),
                                       baseVertex);
         }
 
         public void DrawPrimitives(PrimitiveType primitiveType, int startVertex, int numVertices)
         {
-            if (_vertices == null)
-                throw new InvalidOperationException("A VertexBuffer must be set before calling this method");
-
-            if (_indices == null)
-                throw new InvalidOperationException("An IndexBuffer must be set before calling this method");
-
-            if (ActiveShader == null)
-                throw new InvalidOperationException("An Effect must be applied before calling this method");
+            if (State.ActiveShader == null)
+                throw new InvalidOperationException("A shader must be applied before calling this method");
 
             SetRenderingState();
-            _vertices.VertexDeclaration.Bind(IntPtr.Zero);
-
-            GL.DrawArrays(GetBeginMode(primitiveType), startVertex, numVertices);
+            GL.DrawArrays(GLUtils.GetBeginMode(primitiveType), startVertex, numVertices);
         }
 
         public void Present()
@@ -342,11 +308,6 @@ namespace GreenBox3D.Graphics
             }
         }
 
-        internal void SetPresentationParameters(PresentationParameters presentationParameters)
-        {
-            _presentationParameters = presentationParameters;
-        }
-
         private GraphicsContext CreateNewContext(int threadId)
         {
             GraphicsContext context = new GraphicsContext(_graphicsMode, _window.WindowInfo, 4, 2, GraphicsContextFlags.Default);
@@ -360,18 +321,6 @@ namespace GreenBox3D.Graphics
         {
             _textures.Apply();
             _samplers.Apply();
-
-            if (_indicesDirty)
-            {
-                GL.BindBuffer(BufferTarget.ElementArrayBuffer, _indices.BufferID);
-                _indicesDirty = false;
-            }
-
-            if (_verticesDirty)
-            {
-                GL.BindBuffer(BufferTarget.ArrayBuffer, _vertices.BufferID);
-                _verticesDirty = false;
-            }
         }
 
         private bool MakeCurrentInternal()
@@ -403,21 +352,9 @@ namespace GreenBox3D.Graphics
             return true;
         }
 
-        private static BeginMode GetBeginMode(PrimitiveType primitiveType)
+        internal void SetPresentationParameters(PresentationParameters presentationParameters)
         {
-            switch (primitiveType)
-            {
-                case PrimitiveType.LineList:
-                    return BeginMode.LineLoop;
-                case PrimitiveType.LineStrip:
-                    return BeginMode.LineStrip;
-                case PrimitiveType.TriangleList:
-                    return BeginMode.TriangleFan;
-                case PrimitiveType.TriangleStrip:
-                    return BeginMode.TriangleStrip;
-                default:
-                    throw new NotSupportedException();
-            }
+            _presentationParameters = presentationParameters;
         }
     }
 }

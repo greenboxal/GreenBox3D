@@ -97,11 +97,11 @@ namespace GreenBox3D.Graphics
 
         public void Apply()
         {
-            if (this == GraphicsDevice.ActiveShader)
+            if (GraphicsDevice.State.ActiveShader == this)
                 return;
 
             GL.UseProgram(_program);
-            GraphicsDevice.ActiveShader = this;
+            GraphicsDevice.State.ActiveShader = this;
         }
     }
 }

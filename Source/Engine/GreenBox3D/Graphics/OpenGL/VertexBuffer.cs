@@ -17,7 +17,7 @@ namespace GreenBox3D.Graphics
 {
     public sealed class VertexBuffer : HardwareBuffer
     {
-        #region Constructors and Destructors
+        public VertexDeclaration VertexDeclaration { get; private set; }
 
         public VertexBuffer(VertexDeclaration vertexDeclaration, BufferUsage usage)
             : base(BufferTarget.ArrayBuffer, usage)
@@ -29,14 +29,6 @@ namespace GreenBox3D.Graphics
             : this(CreateVertexDeclaration(elementType), usage)
         {
         }
-
-        #endregion
-
-        #region Public Properties
-
-        public VertexDeclaration VertexDeclaration { get; private set; }
-
-        #endregion
 
         private static VertexDeclaration CreateVertexDeclaration(Type elementType)
         {

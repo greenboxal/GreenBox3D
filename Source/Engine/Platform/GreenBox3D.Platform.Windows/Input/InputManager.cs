@@ -151,8 +151,6 @@ namespace GreenBox3D.Platform.Windows.Input
 
         private void window_KeyUp(object sender, KeyEventArgs e)
         {
-            Console.WriteLine((GreenBox3D.Input.Keys)e.KeyCode);
-
             KeyModifiers mods = KeyModifiers.None;
 
             if (e.Shift)

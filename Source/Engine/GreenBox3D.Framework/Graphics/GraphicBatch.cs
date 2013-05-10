@@ -21,8 +21,7 @@ namespace GreenBox3D.Graphics
 
         private List<GraphicOperation> _opList;
 
-        public GraphicBatch(GraphicsDevice graphicsDevice)
-            : base(graphicsDevice)
+        public GraphicBatch()
         {
             CreateSharedResources();
         }

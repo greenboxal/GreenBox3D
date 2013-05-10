@@ -18,10 +18,6 @@ namespace GreenBox3D.Graphics
 {
     public sealed class VertexDeclaration
     {
-        private static VertexDeclaration _lastUsed;
-        private static IntPtr _lastUsedPointer;
-        private static Shader _lastUsedShader;
-
         private readonly VertexElement[] _elements;
         private readonly int _stride;
 
@@ -47,15 +43,17 @@ namespace GreenBox3D.Graphics
             return (VertexElement[])_elements.Clone();
         }
 
-        public void Bind(IntPtr baseAddress)
+        public void Apply()
         {
-            if (_lastUsed == this && _lastUsedPointer == baseAddress && _lastUsedShader == GraphicsDevice.ActiveDevice.ActiveShader)
-                return;
+            Apply(IntPtr.Zero);
+        }
 
-            for (int i = 0; i < GraphicsDevice.ActiveDevice.ActiveShader.Input.Length; i++)
+        public void Apply(IntPtr baseAddress)
+        {
+            for (int i = 0; i < GraphicsDevice.ActiveDevice.State.ActiveShader.Input.Length; i++)
             {
                 VertexElement element = null;
-                ShaderInput input = GraphicsDevice.ActiveDevice.ActiveShader.Input[i];
+                ShaderInput input = GraphicsDevice.ActiveDevice.State.ActiveShader.Input[i];
 
                 if (input.Index == -1)
                     continue;
@@ -81,10 +79,6 @@ namespace GreenBox3D.Graphics
                     GL.DisableVertexAttribArray(input.Index);
                 }
             }
-
-            _lastUsed = this;
-            _lastUsedPointer = baseAddress;
-            _lastUsedShader = GraphicsDevice.ActiveDevice.ActiveShader;
         }
 
         private static int CalculateStride(IEnumerable<VertexElement> elements)

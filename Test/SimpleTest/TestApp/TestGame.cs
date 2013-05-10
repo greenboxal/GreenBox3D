@@ -20,18 +20,10 @@ namespace TestApp
     public class TestGame : Game
     {
         private static readonly ILogger Log = LogManager.GetLogger(typeof(TestGame));
-        private Font _arial;
         private ContentManager _contentManager;
 
         private GraphicsDevice _graphicsDevice;
         private IInputManager _inputManager;
-
-        private GraphicBatch _graphicBatch;
-
-        private IndexBuffer _indices;
-        private Shader _shader;
-        private Texture2D _tex;
-        private VertexBuffer _vertices;
 
         public TestGame()
         {
@@ -51,39 +43,6 @@ namespace TestApp
             _graphicsDevice = GetService<IGraphicsDeviceManager>().GraphicsDevice;
             _inputManager = GetService<IInputManager>();
             _contentManager = new ContentManager(_graphicsDevice);
-            _graphicBatch = new GraphicBatch(_graphicsDevice);
-
-            _shader = _contentManager.LoadContent<Shader>("Shaders/Simple");
-            _tex = _contentManager.LoadContent<Texture2D>("Image1");
-            _arial = _contentManager.LoadContent<Font>("Fonts/Arial");
-
-            int[] indices = new[]
-            {
-                0, 1, 2, 2, 3, 0,
-                3, 2, 6, 6, 7, 3,
-                7, 6, 5, 5, 4, 7,
-                4, 0, 3, 3, 7, 4,
-                0, 1, 5, 5, 4, 0,
-                1, 5, 6, 6, 2, 1
-            };
-
-            VertexPositionNormalColor[] positions = new[]
-            {
-                new VertexPositionNormalColor(new Vector3(-1.0f, -1.0f, 1.0f), new Vector3(), new Color(255, 0, 0)),
-                new VertexPositionNormalColor(new Vector3(1.0f, -1.0f, 1.0f), new Vector3(), new Color(0, 255, 0)),
-                new VertexPositionNormalColor(new Vector3(1.0f, 1.0f, 1.0f), new Vector3(), new Color(0, 0, 255)),
-                new VertexPositionNormalColor(new Vector3(-1.0f, 1.0f, 1.0f), new Vector3(), new Color(255, 0, 0)),
-                new VertexPositionNormalColor(new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(), new Color(0, 255, 0)),
-                new VertexPositionNormalColor(new Vector3(1.0f, -1.0f, -1.0f), new Vector3(), new Color(0, 0, 255)),
-                new VertexPositionNormalColor(new Vector3(1.0f, 1.0f, -1.0f), new Vector3(), new Color(0, 255, 0)),
-                new VertexPositionNormalColor(new Vector3(-1.0f, 1.0f, -1.0f), new Vector3(), new Color(0, 0, 255))
-            };
-
-            _indices = new IndexBuffer(IndexElementSize.ThirtyTwoBits, BufferUsage.StaticDraw);
-            _indices.SetData(indices);
-
-            _vertices = new VertexBuffer(typeof(VertexPositionNormalColor), BufferUsage.StaticDraw);
-            _vertices.SetData(positions);
         }
 
         protected override void Update(GameTime gameTime)
@@ -93,24 +52,6 @@ namespace TestApp
         protected override void Render(GameTime gameTime)
         {
             _graphicsDevice.Clear(Color.CornflowerBlue);
-
-            _graphicsDevice.SetIndexBuffer(_indices);
-            _graphicsDevice.SetVertexBuffer(_vertices);
-
-            _shader.Apply();
-
-            _shader.Parameters["WorldViewProjection"].SetValueTranspose(
-                Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45),
-                                                     _graphicsDevice.Viewport.AspectRatio, 1, 5) *
-                Matrix4.LookAt(0, 0, 3, 0, 0, 0, 0, 1, 0));
-            // _shader.Parameters["Alpha"].SetValue(1.0f);
-
-            _graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleStrip, 0, 0, _indices.ElementCount);
-
-            _graphicBatch.Begin();
-            _graphicBatch.Draw(_tex, new Vector2(0, 0), Color.White);
-            _graphicBatch.End();
-
             _graphicsDevice.Present();
         }
 
@@ -125,6 +66,7 @@ namespace TestApp
 
         protected override void Shutdown()
         {
+
         }
     }
 }
