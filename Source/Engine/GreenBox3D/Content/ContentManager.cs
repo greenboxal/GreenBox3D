@@ -16,20 +16,21 @@ namespace GreenBox3D.Content
 {
     public class ContentManager : IDisposable
     {
-        #region Fields
-
         private readonly Dictionary<string, object> _cache;
         private readonly ContentCachePolicy _cachePolicy;
         private readonly GraphicsDevice _graphicsDevice;
         private readonly Dictionary<string, WeakReference> _weakCache;
 
-        #endregion
-
-        #region Constructors and Destructors
-
         static ContentManager()
         {
             CheckContentChecksum = true;
+        }
+
+        public static bool CheckContentChecksum { get; set; }
+
+        public GraphicsDevice GraphicsDevice
+        {
+            get { return _graphicsDevice; }
         }
 
         public ContentManager(GraphicsDevice graphicsDevice, ContentCachePolicy cachePolicy = ContentCachePolicy.Cache)
@@ -47,21 +48,6 @@ namespace GreenBox3D.Content
                     break;
             }
         }
-
-        #endregion
-
-        #region Public Properties
-
-        public static bool CheckContentChecksum { get; set; }
-
-        public GraphicsDevice GraphicsDevice
-        {
-            get { return _graphicsDevice; }
-        }
-
-        #endregion
-
-        #region Public Methods and Operators
 
         public void Dispose()
         {
@@ -84,6 +70,19 @@ namespace GreenBox3D.Content
                     _cache[filename] = value;
                     break;
             }
+        }
+
+        public bool RemoveFromCache(string filename)
+        {
+            switch (_cachePolicy)
+            {
+                case ContentCachePolicy.Cache:
+                    return _weakCache.Remove(filename);
+                case ContentCachePolicy.KeepAlive:
+                    return _weakCache.Remove(filename);
+            }
+
+            return false;
         }
 
         public void InvalidateCache()
@@ -117,8 +116,8 @@ namespace GreenBox3D.Content
                         {
                             if (reference.IsAlive && type.IsInstanceOfType(reference.Target))
                                 return (T)reference.Target;
-                            else
-                                return null;
+
+                            return null;
                         }
 
                         break;
@@ -131,8 +130,8 @@ namespace GreenBox3D.Content
                         {
                             if (type.IsInstanceOfType(value))
                                 return (T)value;
-                            else
-                                return null;
+
+                            return null;
                         }
 
                         break;
@@ -141,7 +140,5 @@ namespace GreenBox3D.Content
 
             return RuntimeContentLoader.LoadContent<T>(this, filename);
         }
-
-        #endregion
     }
 }

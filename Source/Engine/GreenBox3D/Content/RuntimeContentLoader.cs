@@ -11,41 +11,32 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using GreenBox3D.Graphics;
 
 namespace GreenBox3D.Content
 {
     internal class RuntimeContentLoader
     {
-        #region Fields
-
-        private static readonly Dictionary<Type, ReaderDescriptor> _readers;
-
-        #endregion
-
-        #region Constructors and Destructors
+        private static readonly Dictionary<Type, ReaderDescriptor> Readers;
 
         static RuntimeContentLoader()
         {
             AssemblyName[] references = Assembly.GetEntryAssembly().GetReferencedAssemblies();
 
-            _readers = new Dictionary<Type, ReaderDescriptor>();
+            Readers = new Dictionary<Type, ReaderDescriptor>();
 
             foreach (ReaderDescriptor descriptor in from assembly in references.Select(Assembly.Load)
                                                     from type in assembly.GetTypes()
                                                     where Attribute.IsDefined(type, typeof(ContentTypeReaderAttribute))
                                                     select new ReaderDescriptor(type))
-                _readers.Add(descriptor.Loadee, descriptor);
+                Readers.Add(descriptor.Loadee, descriptor);
         }
-
-        #endregion
-
-        #region Public Methods and Operators
-
+        
         public static T LoadContent<T>(ContentManager manager, string filename) where T : class
         {
             ReaderDescriptor descriptor;
 
-            if (!_readers.TryGetValue(typeof(T), out descriptor))
+            if (!Readers.TryGetValue(typeof(T), out descriptor))
                 return null;
 
             IContentTypeReader reader = (IContentTypeReader)Activator.CreateInstance(descriptor.Type);
@@ -59,18 +50,21 @@ namespace GreenBox3D.Content
             stream.Close();
 
             if (result != null)
+            {
                 manager.CacheObject(filename, result);
+
+                if (result is GraphicsResource)
+                    (result as GraphicsResource).Disposing += (sender, e) => manager.RemoveFromCache(filename);
+            }
 
             return (T)result;
         }
 
-        #endregion
-
-        public static object StartLoadRawObject(ContentManager manager, Type type, Stream stream)
+        internal static object StartLoadRawObject(ContentManager manager, Type type, Stream stream)
         {
             ReaderDescriptor descriptor;
 
-            if (!_readers.TryGetValue(type, out descriptor))
+            if (!Readers.TryGetValue(type, out descriptor))
                 return null;
 
             return ((IContentTypeReader)Activator.CreateInstance(descriptor.Type)).Load(manager, stream);
@@ -78,15 +72,9 @@ namespace GreenBox3D.Content
 
         private class ReaderDescriptor
         {
-            #region Fields
-
             public readonly string Extension;
             public readonly Type Loadee;
             public readonly Type Type;
-
-            #endregion
-
-            #region Constructors and Destructors
 
             public ReaderDescriptor(Type type)
             {
@@ -94,8 +82,6 @@ namespace GreenBox3D.Content
                 Loadee = type.BaseType.GenericTypeArguments[0];
                 Extension = type.GetCustomAttribute<ContentTypeReaderAttribute>().Extension;
             }
-
-            #endregion
         }
     }
 }
