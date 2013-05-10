@@ -181,6 +181,7 @@
     <Compile Include="Platform\IInternalGraphicsDeviceManager.cs" />
     <Compile Include="Platform\IPlatformController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskDispatcher.cs" />
     <Compile Include="Utilities\ContentCrc32.cs" />
   </ItemGroup>
   <ItemGroup>

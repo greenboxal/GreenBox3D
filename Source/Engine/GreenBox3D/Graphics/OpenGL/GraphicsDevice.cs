@@ -58,6 +58,8 @@ namespace GreenBox3D.Graphics
         public TextureCollection Textures { get { return _textures; } }
         public SamplerStateCollection SamplerStates { get { return _samplers; } }
 
+        public Game Owner { get; private set; }
+
         public BlendState BlendState
         {
             get { return _blendState; }
@@ -140,11 +142,12 @@ namespace GreenBox3D.Graphics
             get { return _disposed; }
         }
 
-        internal GraphicsDevice(PresentationParameters parameters,
+        internal GraphicsDevice(Game owner, PresentationParameters parameters,
                                      IInternalGameWindow window)
         {
             State = new GraphicsState();
 
+            Owner = owner;
             _window = window;
             _presentationParameters = parameters;
             _contexts = new Dictionary<int, GraphicsContext>();

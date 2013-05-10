@@ -43,12 +43,12 @@ namespace GreenBox3D.Graphics
 
         ~GraphicsResource()
         {
-            Dispose(false);
+            DoDispose(false);
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            DoDispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -61,6 +61,11 @@ namespace GreenBox3D.Graphics
                 Disposing(this, EventArgs.Empty);
 
             _disposed = true;
+        }
+
+        private void DoDispose(bool disposing)
+        {
+            GraphicsDevice.Owner.Dispatcher.RunOnGraphicThread(GraphicsDevice, () => Dispose(disposing));
         }
     }
 }

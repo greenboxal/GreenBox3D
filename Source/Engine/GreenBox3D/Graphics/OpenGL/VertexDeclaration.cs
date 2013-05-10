@@ -50,6 +50,9 @@ namespace GreenBox3D.Graphics
 
         public void Apply(IntPtr baseAddress)
         {
+            if (GraphicsDevice.ActiveDevice.State.ActiveShader == null)
+                throw new InvalidOperationException("A Shader must be applied prior to this call");
+
             for (int i = 0; i < GraphicsDevice.ActiveDevice.State.ActiveShader.Input.Length; i++)
             {
                 VertexElement element = null;

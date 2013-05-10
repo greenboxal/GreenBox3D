@@ -22,60 +22,33 @@ namespace GreenBox3D
         private readonly Dictionary<Type, object> _services;
 
         private bool _isActive;
-
-        public Game()
-        {
-            _services = new Dictionary<Type, object>();
-
-            Platform = GamePlatform.Create(this);
-        }
-
         public bool IsActive
         {
             get { return _isActive; }
         }
+
+        public TaskDispatcher Dispatcher { get; private set; }
 
         public IGameWindow Window
         {
             get { return Platform.Window; }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
         public GamePlatform Platform { get; private set; }
 
-        public virtual void Dispose()
+        public Game()
         {
-            Platform.Dispose();
+            _services = new Dictionary<Type, object>();
+
+            Platform = GamePlatform.Create(this);
+            Dispatcher = new TaskDispatcher();
         }
 
-        void IPlatformController.Initialize()
+        public void Run()
         {
-            Initialize();
-        }
+            Log.Message("GreenBox3D starting");
 
-        void IPlatformController.Update(GameTime gameTime)
-        {
-            Update(gameTime);
-        }
-
-        void IPlatformController.Render(GameTime gameTime)
-        {
-            Render(gameTime);
-        }
-
-        void IPlatformController.OnResize()
-        {
-            OnResize();
-        }
-
-        void IPlatformController.Shutdown()
-        {
-            Shutdown();
-        }
-
-        void IPlatformController.SetActive(bool active)
-        {
-            _isActive = active;
+            Platform.Run();
         }
 
         public object GetService(Type serviceType)
@@ -108,13 +81,6 @@ namespace GreenBox3D
             _services.Remove(serviceType);
         }
 
-        public void Run()
-        {
-            Log.Message("GreenBox3D starting");
-
-            Platform.Run();
-        }
-
         public void SurpressRender()
         {
             Platform.SkipFrame();
@@ -123,6 +89,11 @@ namespace GreenBox3D
         public void Exit()
         {
             Platform.Exit();
+        }
+
+        public virtual void Dispose()
+        {
+            Platform.Dispose();
         }
 
         protected virtual void Initialize()
@@ -143,6 +114,39 @@ namespace GreenBox3D
 
         protected virtual void Shutdown()
         {
+        }
+
+        void IPlatformController.Initialize()
+        {
+            Initialize();
+        }
+
+        void IPlatformController.Update(GameTime gameTime)
+        {
+            Dispatcher.UpdateMainThread(-1);
+            Dispatcher.UpdateGraphicThread(5);
+
+            Update(gameTime);
+        }
+
+        void IPlatformController.Render(GameTime gameTime)
+        {
+            Render(gameTime);
+        }
+
+        void IPlatformController.OnResize()
+        {
+            OnResize();
+        }
+
+        void IPlatformController.SetActive(bool active)
+        {
+            _isActive = active;
+        }
+
+        void IPlatformController.Shutdown()
+        {
+            Shutdown();
         }
     }
 }

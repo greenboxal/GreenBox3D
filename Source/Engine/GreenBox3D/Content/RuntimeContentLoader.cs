@@ -27,7 +27,7 @@ namespace GreenBox3D.Content
 
             foreach (ReaderDescriptor descriptor in from assembly in references.Select(Assembly.Load)
                                                     from type in assembly.GetTypes()
-                                                    where Attribute.IsDefined(type, typeof(ContentTypeReaderAttribute))
+                                                    where (Attribute.IsDefined(type, typeof(ContentTypeReaderAttribute)) && type.BaseType != null)
                                                     select new ReaderDescriptor(type))
                 Readers.Add(descriptor.Loadee, descriptor);
         }

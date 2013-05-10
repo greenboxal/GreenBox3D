@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GreenBox3D.Graphics
 {
-    public abstract class GraphicOperation : IDisposable
+    internal abstract class GraphicOperation : IDisposable
     {
         public abstract void Render();
         public abstract void Dispose();

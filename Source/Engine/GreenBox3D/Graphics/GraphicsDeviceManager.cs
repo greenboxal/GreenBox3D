@@ -18,11 +18,11 @@ namespace GreenBox3D.Graphics
         private readonly GraphicsDevice _graphicsDevice;
         private readonly IInternalGameWindow _window;
 
-        public GraphicsDeviceManager(PresentationParameters parameters, IInternalGameWindow window)
+        public GraphicsDeviceManager(Game owner, PresentationParameters parameters, IInternalGameWindow window)
         {
             _window = window;
 
-            _graphicsDevice = new GraphicsDevice(parameters, window);
+            _graphicsDevice = new GraphicsDevice(owner, parameters, window);
             _graphicsDevice.MakeCurrent();
 
             (this as IInternalGraphicsDeviceManager).Update();

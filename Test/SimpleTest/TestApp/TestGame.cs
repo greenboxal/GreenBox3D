@@ -25,6 +25,12 @@ namespace TestApp
         private GraphicsDevice _graphicsDevice;
         private IInputManager _inputManager;
 
+        private Font _font;
+        private GraphicBatch _batch;
+
+        private int _fpsAcc;
+        private double _fps, _fpsCounter;
+
         public TestGame()
         {
             FileManager.RegisterLoader(new FolderFileLoader("Data"));
@@ -40,18 +46,37 @@ namespace TestApp
             Platform.InitializeGraphics(presentationParameters);
             Platform.InitializeInput();
 
+            Dispatcher.SpawnDefaultThreads();
+
             _graphicsDevice = GetService<IGraphicsDeviceManager>().GraphicsDevice;
             _inputManager = GetService<IInputManager>();
             _contentManager = new ContentManager(_graphicsDevice);
+
+            _font = _contentManager.LoadContent<Font>("Fonts/Arial");
+            _batch = new GraphicBatch();
         }
 
         protected override void Update(GameTime gameTime)
         {
+            _fpsAcc++;
+            _fpsCounter += gameTime.ElapsedTime.TotalSeconds;
+
+            if (_fpsCounter >= 1.0f)
+            {
+                _fps = _fpsAcc / _fpsCounter;
+                _fpsCounter = 0;
+                _fpsAcc = 0;
+            }
         }
 
         protected override void Render(GameTime gameTime)
         {
             _graphicsDevice.Clear(Color.CornflowerBlue);
+
+            _batch.Begin();
+            _batch.DrawString(_fps.ToString(), _font, new Vector2(0, 0), Color.White);
+            _batch.End();
+
             _graphicsDevice.Present();
         }
 

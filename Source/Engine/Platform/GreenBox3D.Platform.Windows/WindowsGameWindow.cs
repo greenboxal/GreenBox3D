@@ -26,10 +26,11 @@ namespace GreenBox3D.Platform.Windows
 
         private bool _isCursorVisible;
         private bool _allowUserResizing;
+        private IntPtr _handle;
 
         public IntPtr NativeHandle
         {
-            get { return Handle; }
+            get { return _handle; }
         }
 
         public string Title
@@ -112,19 +113,28 @@ namespace GreenBox3D.Platform.Windows
             }
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            _handle = Handle;
+            base.OnLoad(e);
+        }
+
         protected override void OnActivated(EventArgs e)
         {
             _platform.SetActive(true);
+            base.OnActivated(e);
         }
 
         protected override void OnDeactivate(EventArgs e)
         {
             _platform.SetActive(false);
+            base.OnDeactivate(e);
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
             _platform.Exit();
+            base.OnClosing(e);
         }
 
         private void UpdateBorderStyle()
@@ -143,7 +153,7 @@ namespace GreenBox3D.Platform.Windows
 
         public OpenTK.Platform.IWindowInfo WindowInfo
         {
-            get { return new WinWindowInfo(Handle, null); }
+            get { return new WinWindowInfo(_handle, null); }
         }
     }
 }
