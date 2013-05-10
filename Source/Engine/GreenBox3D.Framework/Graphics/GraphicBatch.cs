@@ -63,6 +63,8 @@ namespace GreenBox3D.Graphics
             {
                 StandardShader.Dispose();
             }
+
+            base.Dispose(disposing);
         }
     }
 }

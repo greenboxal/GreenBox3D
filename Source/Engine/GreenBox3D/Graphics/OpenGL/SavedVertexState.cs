@@ -38,6 +38,8 @@ namespace GreenBox3D.Graphics
                 GL.DeleteVertexArray(ArrayID);
                 ArrayID = 0;
             }
+
+            base.Dispose(disposing);
         }
     }
 }

@@ -9,19 +9,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GreenBox3D.Content;
 
 namespace GreenBox3D.Graphics
 {
-    public class GraphicsResource
+    public class GraphicsResource : IDisposableContent
     {
-        #region Fields
-
         private readonly GraphicsDevice _graphicsDevice;
         private bool _disposed;
+        
+        public GraphicsDevice GraphicsDevice
+        {
+            get { return _graphicsDevice; }
+        }
 
-        #endregion
+        public bool IsDisposed
+        {
+            get { return _disposed; }
+        }
 
-        #region Constructors and Destructors
+        public event EventHandler<EventArgs> Disposing;
 
         protected GraphicsResource()
             : this(GraphicsDevice.ActiveDevice)
@@ -36,65 +43,24 @@ namespace GreenBox3D.Graphics
 
         ~GraphicsResource()
         {
-            if (!_graphicsDevice.IsDisposed)
-                Dispose(false);
+            Dispose(false);
         }
-
-        #endregion
-
-        #region Public Events
-
-        public event EventHandler<EventArgs> Disposing;
-
-        #endregion
-
-        #region Public Properties
-
-        public GraphicsDevice GraphicsDevice
-        {
-            get { return _graphicsDevice; }
-        }
-
-        public bool IsDisposed
-        {
-            get { return _disposed; }
-        }
-
-        #endregion
-
-        #region Public Methods and Operators
 
         public void Dispose()
         {
-            // Dispose of managed objects as well
-            if (!_graphicsDevice.IsDisposed)
-                Dispose(true);
-
-            // Since we have been manually disposed, do not call the finalizer on this object
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        ///     The method that derived classes should override to implement disposing of managed and native resources.
-        /// </summary>
-        /// <param name="disposing">True if managed objects should be disposed.</param>
-        /// <remarks>Native resources should always be released regardless of the value of the disposing parameter.</remarks>
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
                 return;
 
-            // Do not trigger the event if called from the finalizer
             if (disposing && Disposing != null)
                 Disposing(this, EventArgs.Empty);
 
             _disposed = true;
         }
-
-        #endregion
     }
 }

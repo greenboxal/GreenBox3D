@@ -58,6 +58,7 @@
     <Compile Include="Content\ContentReader.cs" />
     <Compile Include="Content\ContentTypeReader.cs" />
     <Compile Include="Content\ContentTypeReaderAttribute.cs" />
+    <Compile Include="Content\IDisposableContent.cs" />
     <Compile Include="Content\RuntimeContentLoader.cs" />
     <Compile Include="Content\FileManager.cs" />
     <Compile Include="Content\FolderFileLoader.cs" />

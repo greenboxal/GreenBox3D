@@ -158,6 +158,8 @@ namespace GreenBox3D.Graphics
                 GL.DeleteSampler(SamplerID);
                 SamplerID = -1;
             }
+
+            base.Dispose(disposing);
         }
 
         private void ThrowIfBound()
