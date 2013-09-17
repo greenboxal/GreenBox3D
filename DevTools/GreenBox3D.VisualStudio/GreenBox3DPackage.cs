@@ -15,22 +15,20 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Project;
 
 namespace GreenBox3D.VisualStudio
 {
     [Guid(GuidList.GreenBox3DPackage)]
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true, RegisterUsing = RegistrationMethod.CodeBase)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
-    [ProvideProjectFactory(typeof(ContentProjectFactory), "Content Project",
-        "GreenBox3D Content Project (*.gbcontentproj);*.gbcontentproj", "gbcontentproj", "gbcontentproj",
-        @"Templates\Projects\ContentProject")]
+    [ProvideProjectFactory(typeof(GameProjectFactory), "GreenBox3D", "GreenBox3D Projects (*.csproj);*.csproj", null, null, "\\..\\NullPath", LanguageVsTemplate = "CSharp")]
     public sealed class GreenBox3DPackage : Package
     {
         protected override void Initialize()
         {
             base.Initialize();
-            RegisterProjectFactory(new ContentProjectFactory(this));
+
+            RegisterProjectFactory(new GameProjectFactory(this));
         }
     }
 }

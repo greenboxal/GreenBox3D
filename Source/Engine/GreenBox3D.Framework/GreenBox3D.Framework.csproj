@@ -40,13 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleLogRouter.cs" />
+    <Compile Include="ConsoleManager.cs" />
     <Compile Include="Content\Readers\FontTypeReader.cs" />
+    <Compile Include="CVar.cs" />
     <Compile Include="Font.cs" />
     <Compile Include="FontGlyph.cs" />
     <Compile Include="Graphics\FontGraphicOperation.cs" />
     <Compile Include="Graphics\GraphicBatch.cs" />
     <Compile Include="Graphics\GraphicOperation.cs" />
     <Compile Include="Graphics\TextureGraphicOperation.cs" />
+    <Compile Include="IConsoleCommand.cs" />
+    <Compile Include="IConsoleSink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

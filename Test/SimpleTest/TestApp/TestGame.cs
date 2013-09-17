@@ -74,7 +74,7 @@ namespace TestApp
             _graphicsDevice.Clear(Color.CornflowerBlue);
 
             _batch.Begin();
-            _batch.DrawString(_fps.ToString(), _font, new Vector2(0, 0), Color.White);
+            _batch.DrawString(_fps.ToString(), _font, new Vector2(600, 0), Color.White);
             _batch.End();
 
             _graphicsDevice.Present();
@@ -91,7 +91,6 @@ namespace TestApp
 
         protected override void Shutdown()
         {
-
         }
     }
 }

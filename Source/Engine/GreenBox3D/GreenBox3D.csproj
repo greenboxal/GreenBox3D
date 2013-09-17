@@ -13,6 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <ProductVersion>12.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -25,6 +27,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\..\..\Build\$(Configuration)\</OutputPath>
@@ -36,6 +39,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
@@ -51,7 +55,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleManager.cs" />
     <Compile Include="Content\ContentCachePolicy.cs" />
     <Compile Include="Content\ContentHeader.cs" />
     <Compile Include="Content\ContentManager.cs" />
@@ -66,11 +69,11 @@
     <Compile Include="Content\IFileLoader.cs" />
     <Compile Include="Content\Readers\ShaderTypeReader.cs" />
     <Compile Include="Content\Readers\Texture2DLoader.cs" />
-    <Compile Include="CVar.cs" />
     <Compile Include="DefaultLogger.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameTime.cs" />
     <Compile Include="Graphics\Enums\BufferAccess.cs" />
+    <Compile Include="Graphics\Enums\CubeMapFace.cs" />
     <Compile Include="Graphics\Enums\SurfaceFormat.cs" />
     <Compile Include="Graphics\IVertexType.cs" />
     <Compile Include="Graphics\OpenGL\BlendState.cs" />
@@ -99,6 +102,8 @@
     <Compile Include="Graphics\OpenGL\IndexBuffer.cs" />
     <Compile Include="Graphics\OpenGL\OpenGLException.cs" />
     <Compile Include="Graphics\OpenGL\PixelBuffer.cs" />
+    <Compile Include="Graphics\OpenGL\RenderTarget2D.cs" />
+    <Compile Include="Graphics\OpenGL\RenderTargetBinding.cs" />
     <Compile Include="Graphics\OpenGL\Shader.cs" />
     <Compile Include="Graphics\OpenGL\ShaderInput.cs" />
     <Compile Include="Graphics\OpenGL\ShaderParameter.cs" />
@@ -120,8 +125,6 @@
     <Compile Include="Graphics\PixelDataType.cs" />
     <Compile Include="Graphics\VertexPositionNormalColor.cs" />
     <Compile Include="Graphics\VertexPositionTexture.cs" />
-    <Compile Include="IConsoleCommand.cs" />
-    <Compile Include="IConsoleSink.cs" />
     <Compile Include="IGraphicsDeviceManager.cs" />
     <Compile Include="Input\IKeyboard.cs" />
     <Compile Include="Input\IMouse.cs" />
@@ -164,7 +167,9 @@
     <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Quaterniond.cs" />
     <Compile Include="Math\Rectangle.cs" />
+    <Compile Include="Math\RectF.cs" />
     <Compile Include="Math\Size.cs" />
+    <Compile Include="Math\SizeF.cs" />
     <Compile Include="Math\Vector2.cs" />
     <Compile Include="Math\Vector2d.cs" />
     <Compile Include="Math\Vector2h.cs" />

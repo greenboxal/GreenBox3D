@@ -16,7 +16,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace GreenBox3D.Graphics
 {
-    public sealed class Texture2D : Texture
+    public class Texture2D : Texture
     {
         private int _level;
 

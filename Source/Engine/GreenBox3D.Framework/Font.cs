@@ -35,5 +35,33 @@ namespace GreenBox3D
             Glyphs.TryGetValue(c, out glyph);
             return glyph;
         }
+
+        public Vector2 MeasureString(string text)
+        {
+            int x = 0;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                FontGlyph glyph;
+                int offset;
+
+                glyph = GetGlyph(text[i]);
+
+                if (glyph == null)
+                {
+                    glyph = GetGlyph((char)0);
+
+                    if (glyph == null)
+                        continue;
+                }
+
+                x += glyph.Advance;
+
+                if (i < text.Length - 1 && glyph.Kerning.TryGetValue(text[i + 1], out offset))
+                    x += offset;
+            }
+
+            return new Vector2(x, Height);
+        }
     }
 }

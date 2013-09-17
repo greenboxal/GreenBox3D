@@ -15,6 +15,8 @@ namespace GreenBox3D
     /// </summary>
     public static class MathHelper
     {
+        private const float AreCloseEpsilon = 2.22044604925031E-16f;
+
         #region Fields
 
         /// <summary>
@@ -308,5 +310,30 @@ namespace GreenBox3D
         }
 
         #endregion
+
+        public static bool AreClose(float a, float b)
+        {
+            if (a == b)
+                return true;
+
+            double c = (Math.Abs(a) + Math.Abs(b) + 10f) * AreCloseEpsilon;
+            double d = a - b;
+
+            if (-c < d)
+                return c > d;
+
+            return false;
+        }
+
+        public static bool AreClose(SizeF a, SizeF b)
+        {
+            return AreClose(a.Width, b.Width) && AreClose(a.Height, b.Height);
+        }
+
+
+        public static bool AreClose(RectF a, RectF b)
+        {
+            return AreClose(a.X, b.X) && AreClose(a.Y, b.Y) && AreClose(a.Width, b.Width) && AreClose(a.Height, b.Height);
+        }
     }
 }

@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5B8D8D4B-CCB2-4642-9F14-23DCB313BAF1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GreenBox.Missile</RootNamespace>
+    <AssemblyName>GreenBox.Missile</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\..\Build\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>..\..\..\Build\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Callbacks.cs" />
+    <Compile Include="Data\UpdateSourceTrigger.cs" />
+    <Compile Include="DependencyObject.cs" />
+    <Compile Include="DependencyObjectType.cs" />
+    <Compile Include="DependencyProperty.cs" />
+    <Compile Include="DependencyPropertyKey.cs" />
+    <Compile Include="Expression.cs" />
+    <Compile Include="FrameworkPropertyMetadata.cs" />
+    <Compile Include="Int32Rect.cs" />
+    <Compile Include="Int32RectConverter.cs" />
+    <Compile Include="LayoutEngine.cs" />
+    <Compile Include="MathUtils.cs" />
+    <Compile Include="Media\DrawingContext.cs" />
+    <Compile Include="Media\Renderer\BrushKind.cs" />
+    <Compile Include="Media\Renderer\DefaultRenderer\DefaultRenderer.cs" />
+    <Compile Include="Media\Renderer\DefaultRenderer\VisualHandle.cs" />
+    <Compile Include="Media\Renderer\IBrushHandle.cs" />
+    <Compile Include="Media\Renderer\IRenderer.cs" />
+    <Compile Include="Media\Renderer\IVisualHandle.cs" />
+    <Compile Include="Media\VisualTreeHelper.cs" />
+    <Compile Include="Point.cs" />
+    <Compile Include="PointConverter.cs" />
+    <Compile Include="PresentationManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyMetadata.cs" />
+    <Compile Include="PropertyValueSource.cs" />
+    <Compile Include="Rect.cs" />
+    <Compile Include="RectConverter.cs" />
+    <Compile Include="Size.cs" />
+    <Compile Include="SizeChangedInfo.cs" />
+    <Compile Include="SizeConverter.cs" />
+    <Compile Include="Threading\Dispatcher.cs" />
+    <Compile Include="Threading\DispatcherEventArgs.cs" />
+    <Compile Include="Threading\DispatcherFrame.cs" />
+    <Compile Include="Threading\DispatcherHookEventArgs.cs" />
+    <Compile Include="Threading\DispatcherHooks.cs" />
+    <Compile Include="Threading\DispatcherObject.cs" />
+    <Compile Include="Threading\DispatcherOperation.cs" />
+    <Compile Include="Threading\DispatcherOperationStatus.cs" />
+    <Compile Include="Threading\DispatcherOperationTaskProxy.cs" />
+    <Compile Include="Threading\DispatcherOperationWaitEvent.cs" />
+    <Compile Include="Threading\DispatcherOperationWaitFrame.cs" />
+    <Compile Include="Threading\DispatcherPriority.cs" />
+    <Compile Include="Threading\DispatcherPriorityAwaitable.cs" />
+    <Compile Include="Threading\DispatcherPriorityAwaiter.cs" />
+    <Compile Include="Threading\DispatcherProcessingDisabled.cs" />
+    <Compile Include="Threading\DispatcherSynchronizationContext.cs" />
+    <Compile Include="Threading\DispatcherTimer.cs" />
+    <Compile Include="Threading\DispatcherUnhandledExceptionEventArgs.cs" />
+    <Compile Include="Threading\DispatcherUnhandledExceptionFilterEventArgs.cs" />
+    <Compile Include="Threading\ExceptionFilterUtility.cs" />
+    <Compile Include="Threading\OperationQueue.cs" />
+    <Compile Include="UIElement.cs" />
+    <Compile Include="UIElement.Properties.cs" />
+    <Compile Include="UIPropertyMetadata.cs" />
+    <Compile Include="PropertyValueEntry.cs" />
+    <Compile Include="Media\Visual.cs" />
+    <Compile Include="Vector.cs" />
+    <Compile Include="VectorConverter.cs" />
+    <Compile Include="Visibility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Engine\GreenBox3D.Framework\GreenBox3D.Framework.csproj">
+      <Project>{3badcca1-a8d8-466e-8d40-7212287244c1}</Project>
+      <Name>GreenBox3D.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Engine\GreenBox3D\GreenBox3D.csproj">
+      <Project>{33b775dd-55e6-402d-ba64-49078edbc11a}</Project>
+      <Name>GreenBox3D</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

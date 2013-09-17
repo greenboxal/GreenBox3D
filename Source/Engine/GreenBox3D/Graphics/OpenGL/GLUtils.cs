@@ -296,6 +296,31 @@ namespace GreenBox3D.Graphics
                     throw new ArgumentException("value");
             }
         }
+
+        internal static void GetRenderBufferDepthStorage(DepthFormat depthFormat, out RenderbufferStorage depthStorage, out RenderbufferStorage stencilStorage)
+        {
+            switch (depthFormat)
+            {
+                case DepthFormat.None:
+                    depthStorage = 0;
+                    stencilStorage = 0;
+                    break;
+                case DepthFormat.Depth16:
+                    depthStorage = RenderbufferStorage.DepthComponent16;
+                    stencilStorage = 0;
+                    break;
+                case DepthFormat.Depth24:
+                    depthStorage = RenderbufferStorage.DepthComponent24;
+                    stencilStorage = 0;
+                    break;
+                case DepthFormat.Depth24Stencil8:
+                    depthStorage = RenderbufferStorage.DepthComponent24;
+                    stencilStorage = RenderbufferStorage.StencilIndex8;
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
     }
 }
 

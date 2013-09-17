@@ -52,6 +52,7 @@ namespace GreenBox3D.Graphics
         private RasterizerState _rasterizerState;
 
         private Viewport _viewport;
+        private Rectangle _scissorRectangle;
         private bool _vsync;
         private bool _disposed;
 
@@ -59,6 +60,16 @@ namespace GreenBox3D.Graphics
         public SamplerStateCollection SamplerStates { get { return _samplers; } }
 
         public Game Owner { get; private set; }
+
+        public Rectangle ScissorRectangle
+        {
+            get { return _scissorRectangle; }
+            set
+            {
+                _scissorRectangle = value;
+                GL.Scissor(_scissorRectangle.X, _scissorRectangle.Y, _scissorRectangle.Width, _scissorRectangle.Height);
+            }
+        }
 
         public BlendState BlendState
         {

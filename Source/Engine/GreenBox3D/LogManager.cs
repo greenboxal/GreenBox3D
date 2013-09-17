@@ -27,8 +27,6 @@ namespace GreenBox3D
         {
             Routers = new List<ILogRouter>();
             _loggerType = typeof(DefaultLogger);
-
-            RegisterRouter(new ConsoleLogRouter());
         }
 
         #endregion
