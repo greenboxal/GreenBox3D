@@ -7,7 +7,7 @@
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(GB3DDevToolsPath)' == ''">
-    <GB3DDevToolsPath>..\Build\$(Configuration)\</GB3DDevToolsPath>
+    <GB3DDevToolsPath>$(SolutionDir)Build\$(Configuration)\</GB3DDevToolsPath>
   </PropertyGroup>
 
   <UsingTask TaskName="BuildContent" AssemblyFile="$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll" />
@@ -16,7 +16,7 @@
 
   <!-- Check DevTools presence -->
   <Target Name="_CheckGB3DDevTools">
-    <Error Condition="Exists('$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll')" Text="GreenBox3D Developer Tools are missing or not correctly installed" />
+    <Error Condition="!Exists('$(GB3DDevToolsPath)GreenBox3D.ContentPipeline.Task.dll')" Text="GreenBox3D Developer Tools are missing or not correctly installed" />
   </Target>
 
   <!--
